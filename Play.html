@@ -16,14 +16,13 @@
         .emoji-floater { position: absolute; font-size: 40px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.7; }
         @keyframes floatRandom { 100% { transform: translate(100px, -100px) rotate(360deg); } }
 
-        /* HEADER CỰC GỌN DÀNH CHO MOBILE */
+        /* HEADER MOBILE GỌN GÀNG */
         .sticky-header { position: fixed; top: 0; width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
         
         .btn-tool { 
             background: var(--glass); color: var(--text); border: 1px solid var(--border); 
             padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; 
-            text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box;
+            text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;
         }
         .btn-tool:hover { background: var(--primary-grad); color: #000; border-color: transparent; }
         .btn-exit { width: auto; padding: 8px 15px; border-radius: 50px; background: var(--primary-grad); color: #000; border: none; }
@@ -308,7 +307,6 @@
         jumpTimer = setInterval(() => { w -= 5; f.style.width = w + '%'; if(w <= 0) { clearInterval(jumpTimer); move(1); } }, 50);
     }
 
-    // ĐÃ XÓA TÍNH NĂNG XÂY NHÀ 3D
     function updateStats() {
         const p = Math.round((score / (done || 1)) * 100);
         document.getElementById('score-text').innerText = `Tỷ lệ đúng: ${p}%`;
@@ -337,7 +335,14 @@
         document.getElementById('final-score').innerText = p + '%';
         document.getElementById('final-rank').innerText = p === 100 ? "🏆 THỦ KHOA RHM" : (p >= 80 ? "🥇 CHUYÊN GIA" : "🥈 CẦN CỐ GẮNG");
         document.getElementById('end-screen').style.display = 'flex';
+
+        // LƯU LẠI VẾT CHIẾN THẦN (ĐẠT 100%)
+        if(p === 100) {
+            const id = new URLSearchParams(window.location.search).get('id');
+            localStorage.setItem('done_' + id, 'true');
+        }
     }
+    
     function closeEndScreen() { document.getElementById('end-screen').style.display = 'none'; }
 
     function changeTheme(v) {
