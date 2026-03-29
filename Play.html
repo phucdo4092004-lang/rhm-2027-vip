@@ -12,17 +12,14 @@
 
         body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); margin: 0; overflow: hidden; height: 100vh; background: #000; transition: 0.3s; }
         
-        /* VŨ TRỤ VÀ CHUYỂN CẢNH */
         #universe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background: var(--bg-theme); transition: filter 1.5s ease-in-out, background 1s; }
         #floating-objects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
         .emoji-floater { position: absolute; font-size: 40px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.7; }
         @keyframes floatRandom { 100% { transform: translate(100px, -100px) rotate(360deg); } }
 
-        /* HIỆU ỨNG NỔ KHI VƯỢT MỐC 5% */
         .milestone-burst { position: absolute; animation: burst 1.5s ease-out forwards; z-index: 9999; font-size: 50px; pointer-events: none;}
         @keyframes burst { 0% { transform: translate(0, 0) scale(0.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(360deg); opacity: 0; } }
 
-        /* HEADER MOBILE */
         .sticky-header { position: fixed; top: 0; width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
         .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; }
         .btn-tool:hover { background: var(--primary-grad); color: #000; border-color: transparent; }
@@ -31,7 +28,6 @@
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
         .title-text { font-weight: 900; color: var(--primary); font-size: 14px; text-shadow: 0 0 10px var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
 
-        /* MENU ẨN */
         .drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
@@ -39,7 +35,6 @@
         .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
         .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 16px; border: 1px dashed #facc15; text-align: center; }
 
-        /* PHÒNG THI */
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
         .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
         .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -55,17 +50,14 @@
         .sc-red { color: #ff4d4d; font-weight: 800; }
         .sc-blue { color: #4da6ff; font-weight: 800; }
 
-        /* ĐIỀU HƯỚNG MŨI TÊN */
         .nav-arrow { position: fixed; top: 50%; background: var(--glass); backdrop-filter: blur(10px); border: 2px solid var(--primary); color: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; z-index: 100; transform: translateY(-50%); transition: 0.2s;}
         .nav-arrow:hover { background: var(--primary); color: #000; transform: translateY(-50%) scale(1.1); box-shadow: 0 0 15px var(--primary);}
         #nav-prev { left: 10px; } #nav-next { right: 10px; }
         
-        /* THANH TIẾN ĐỘ PHẦN TRĂM MỚI TẠI ĐÁY */
         .progress-bar-bg { position: fixed; bottom: 0; left: 0; height: 8px; width: 100%; background: rgba(255,255,255,0.1); z-index: 1000; }
         .progress-bar { height: 100%; background: var(--primary-grad); width: 0%; transition: width 0.4s ease; box-shadow: 0 -2px 15px var(--primary); }
         .progress-percent-badge { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); font-weight: 900; color: var(--primary); font-size: 13px; z-index: 1001; background: rgba(0,0,0,0.7); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--primary); backdrop-filter: blur(5px); letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
 
-        /* BẢN ĐỒ CHIẾN DỊCH */
         .node-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
         .node { aspect-ratio: 1; border-radius: 10px; background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 1px solid var(--border); font-size: 12px;}
         .node-correct { background: #10b981; color: #fff; border-color: #10b981; }
@@ -102,21 +94,15 @@
         <h3 style="margin:0; color:var(--primary); font-weight:900;">⚙️ TÙY CHỈNH</h3>
         <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
     </div>
-    
-    <div class="setting-group">
-        <div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div>
-    </div>
-
+    <div class="setting-group"><div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div></div>
     <div class="setting-group" style="flex-direction: row; gap: 10px;">
         <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
         <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
     </div>
-
     <div class="setting-group">
         <select id="voice-sel" class="btn-tool" style="outline:none; text-align:center;"></select>
         <button class="btn-tool btn-speak" onclick="speak()">🔊 ĐỌC ĐỀ BÀI</button>
     </div>
-
     <div class="setting-group">
         <select class="btn-tool" id="theme-selector" onchange="changeTheme(this.value)" style="outline:none; text-align:center;">
             <option value="space">🌌 Chủ đề: Vũ Trụ</option>
@@ -131,7 +117,6 @@
         </select>
         <button onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG/TỐI</button>
     </div>
-
     <div class="setting-group">
         <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--primary-grad); color:#000; border:none;">🗺️ XEM BẢN ĐỒ CÂU HỎI</button>
     </div>
@@ -151,18 +136,16 @@
 </div>
 
 <div class="progress-percent-badge" id="progress-percent-text">TIẾN ĐỘ: 0%</div>
-<div class="progress-bar-bg">
-    <div class="progress-bar" id="progress-bar"></div>
-</div>
+<div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
 
-<div class="donate-badge" onclick="copySTK()">💖 Donate Phúc: <b style="color:#ff00de;">BIDV 8812766209</b></div>
+<div class="donate-badge" onclick="copySTK()">💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color:#ff00de;">BIDV 8812766209</b></div>
 
 <div id="end-screen">
     <div class="end-box">
         <h2 style="color:var(--primary); font-weight:900; margin-top:0; text-transform: uppercase;">CHIẾN DỊCH HOÀN TẤT!</h2>
         <div style="font-size: 60px; font-weight: 900; text-shadow: 0 0 20px rgba(255,255,255,0.3);" id="final-score">100%</div>
         <div id="final-rank" style="color: #facc15; font-weight: 800; margin-bottom: 30px; font-size: 16px; letter-spacing: 1px;">THỦ KHOA RHM</div>
-        <button class="btn-end" style="background:linear-gradient(90deg, #10b981, #059669); color:#fff;" onclick="closeEndScreen()">👀 Xem lại chi tiết bài</button>
+        <button class="btn-end" style="background:linear-gradient(90deg, #10b981, #059669); color:#fff;" onclick="showReviewMode()">👀 Xem lại dạng cuộn dọc</button>
         <button class="btn-end" style="background:var(--primary-grad); color:#000;" onclick="initGame('wrong')">🔥 Phục thù câu sai</button>
         <button class="btn-end" style="background:#fff; color:#000;" onclick="initGame('all')">🔄 Chơi lại từ đầu</button>
     </div>
@@ -170,22 +153,12 @@
 
 <script>
     let originalQ = []; let questions = []; let currentIdx = 0; let score = 0; let done = 0;
-    let streak = 0; let fontSize = 18; let audioCtx = null;
-    let synth = window.speechSynthesis; let viVoices = [];
-    let lastLevel5Percent = 0; 
+    let streak = 0; let fontSize = 18; let jumpTimer = null; let audioCtx = null;
+    let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
 
-    function toggleMenu() {
-        document.getElementById('settings-drawer').classList.toggle('open');
-        document.getElementById('drawer-overlay').classList.toggle('show');
-    }
-
-    function parseSC(txt) {
-        return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
-                  .replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>')
-                  .replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>')
-                  .replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>')
-                  .replace(/\[BR\]/gi, '<br>');
-    }
+    function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
+    function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>').replace(/\[BR\]/gi, '<br>'); }
+    function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
     const themes = {
         space: { bg: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] },
@@ -202,7 +175,6 @@
     function toggleMode() { const h = document.documentElement; h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark'); }
     function toggleMap() { document.getElementById('map-drawer').classList.toggle('open'); }
     function adjSize(v) { fontSize += v; document.querySelectorAll('.question-title').forEach(e => e.style.fontSize = fontSize + 'px'); }
-    function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
     function populateVoices() {
         viVoices = synth.getVoices().filter(v => v.lang.includes('vi'));
@@ -217,10 +189,10 @@
         q.opts.forEach((o, i) => text += `Lựa chọn ${i+1}: ${o.text.replace(/<[^>]*>?/gm, '')}. `);
         const utter = new SpeechSynthesisUtterance(text);
         if(viVoices.length > 0) utter.voice = viVoices[document.getElementById('voice-sel').value];
-        synth.speak(utter);
-        toggleMenu(); 
+        synth.speak(utter); toggleMenu(); 
     }
 
+    // TẤM KHIÊN CHỐNG RÁC - DỌN SẠCH CÁC CHỮ DƯ THỪA TỪ SHEETS
     window.onload = function() {
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
@@ -235,12 +207,22 @@
             line = line.trim(); if(!line) return;
             if(line.match(/^Câu\s*\d+:/i)) {
                 if(q) originalQ.push(q);
-                q = { title: parseSC(line.replace(/^Câu\s*\d+:/i, '').trim()), opts: [], ans: null };
-            } else if(line.startsWith('*')) {
-                if(q) q.opts.push({ text: parseSC(line.substring(1).trim()), isC: true });
-            } else if(line.startsWith('•')) {
-                if(q) q.opts.push({ text: parseSC(line.substring(1).trim()), isC: false });
-            } else if(q && q.opts.length === 0) { q.title += "<br>" + parseSC(line); }
+                // Xóa cả chữ "Câu X:" và chữ "Chọn 1 đáp án"
+                let cleanedTitle = line.replace(/^Câu\s*\d+:/i, '').replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
+                q = { title: parseSC(cleanedTitle), opts: [], ans: null, userPick: -1, isParsingOpts: false };
+            } else if (q) {
+                if(line.startsWith('*')) {
+                    q.isParsingOpts = true; // Bật khiên chống rác
+                    q.opts.push({ text: parseSC(line.substring(1).trim()), isC: true });
+                } else if(line.startsWith('•')) {
+                    q.isParsingOpts = true; // Bật khiên chống rác
+                    q.opts.push({ text: parseSC(line.substring(1).trim()), isC: false });
+                } else if(!q.isParsingOpts) {
+                    // Nếu chưa thấy đáp án nào thì vẫn là đang đọc câu hỏi
+                    let cleanedLine = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
+                    q.title += "<br>" + parseSC(cleanedLine);
+                }
+            }
         });
         if(q) originalQ.push(q);
         
@@ -252,10 +234,24 @@
 
     function initGame(mode) {
         document.getElementById('end-screen').style.display = 'none';
+        
+        // Khôi phục lại giao diện phòng thi nếu đang từ Chế độ Xem lại (Review Mode) quay về
+        const cont = document.getElementById('quiz-container');
+        cont.style.display = 'flex';
+        cont.style.height = '100vh';
+        cont.style.overflowY = 'visible';
+        cont.style.padding = '15px';
+        cont.style.marginTop = '0';
+        
+        document.querySelector('.progress-bar-bg').style.display = 'block';
+        document.getElementById('progress-percent-text').style.display = 'block';
+        document.getElementById('nav-prev').style.display = 'flex';
+        document.getElementById('nav-next').style.display = 'flex';
+
         questions = mode === 'all' ? JSON.parse(JSON.stringify(originalQ)) : questions.filter(x => x.ans === false);
-        questions.forEach(q => q.ans = null);
+        questions.forEach(q => { q.ans = null; q.userPick = -1; });
         currentIdx = 0; score = 0; done = 0; streak = 0; lastLevel5Percent = 0;
-        document.getElementById('quiz-container').innerHTML = '';
+        cont.innerHTML = '';
         render(); buildMap(); show(0); updateStats();
     }
 
@@ -263,7 +259,7 @@
         const cont = document.getElementById('quiz-container');
         questions.forEach((q, i) => {
             const div = document.createElement('div'); div.className = 'question-box'; div.id = 'q-'+i;
-            // Đã xóa chữ CÂU X/Y và thanh loading dài dòng
+            // Đã xóa hoàn toàn chữ Câu 1/50 dư thừa
             div.innerHTML = `<div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
                              <div class="opts"></div>`;
             const oCont = div.querySelector('.opts');
@@ -271,7 +267,10 @@
             q.opts.forEach((opt, oIdx) => {
                 const oDiv = document.createElement('div'); oDiv.className = 'option'; oDiv.innerHTML = opt.text;
                 oDiv.onclick = function() {
-                    if(q.ans !== null) return; q.ans = opt.isC; done++;
+                    if(q.ans !== null) return; 
+                    q.ans = opt.isC; 
+                    q.userPick = oIdx; // Lưu lại đáp án sếp vừa bấm
+                    done++;
                     Array.from(oCont.children).forEach(c => c.classList.add('disabled'));
                     
                     if(opt.isC) { 
@@ -284,11 +283,11 @@
                     
                     updateStats(); updateNode(i); 
                     
-                    // AUTO NEXT CHO TẤT CẢ (SAU 1.2 GIÂY)
+                    // AUTO NEXT SIÊU TỐC ĐÚNG 2 GIÂY (2000ms)
                     setTimeout(() => {
                         if(i >= questions.length - 1) showEndScreen();
                         else move(1);
-                    }, 1200);
+                    }, 2000);
                 };
                 oCont.appendChild(oDiv);
             });
@@ -314,14 +313,11 @@
         let n = currentIdx + d; if(n >= 0 && n < questions.length) show(n);
     }
 
-    // HIỆU ỨNG VƯỢT 5% VÀ ĐỔI MÀU CHUYỂN CẢNH
     function updateStats() {
         const p = Math.round((score / (done || 1)) * 100);
         const prog = (done / questions.length) * 100;
         
         document.getElementById('score-text').innerHTML = `Đã làm: ${done}/${questions.length} <br> Tỷ lệ đúng: ${p}%`;
-        
-        // HIỂN THỊ PHẦN TRĂM DƯỚI ĐÁY
         document.getElementById('progress-bar').style.width = prog + '%';
         document.getElementById('progress-percent-text').innerText = `TIẾN ĐỘ: ${Math.floor(prog)}%`;
 
@@ -380,8 +376,59 @@
             localStorage.setItem('done_' + id, 'true');
         }
     }
-    
-    function closeEndScreen() { document.getElementById('end-screen').style.display = 'none'; }
+
+    // TÍNH NĂNG MỚI: XEM LẠI BÀI DẠNG CUỘN DỌC
+    function showReviewMode() {
+        document.getElementById('end-screen').style.display = 'none';
+        
+        // Ẩn các nút điều hướng và thanh tiến độ
+        document.getElementById('nav-prev').style.display = 'none';
+        document.getElementById('nav-next').style.display = 'none';
+        document.querySelector('.progress-bar-bg').style.display = 'none';
+        document.getElementById('progress-percent-text').style.display = 'none';
+
+        const cont = document.getElementById('quiz-container');
+        // Đổi container thành cuộn dọc
+        cont.style.display = 'block';
+        cont.style.height = 'calc(100vh - 70px)';
+        cont.style.marginTop = '70px';
+        cont.style.overflowY = 'auto';
+        cont.style.padding = '20px 15px 100px 15px'; // padding bottom để không lấp mất nội dung
+        
+        cont.innerHTML = '<h2 style="text-align:center; color:var(--primary); font-weight:900; letter-spacing:1px; margin-bottom:30px;">📜 BẢNG VÀNG ÔN TẬP</h2>';
+
+        questions.forEach((q, i) => {
+            let box = document.createElement('div');
+            box.className = 'question-box active'; 
+            box.style.position = 'relative';
+            box.style.marginBottom = '25px';
+            box.style.margin = '0 auto 25px auto';
+            box.style.animation = 'none'; // Tắt hiệu ứng nhảy
+
+            let statusColor = q.ans === true ? '#10b981' : (q.ans === false ? '#ef4444' : 'gray');
+            let statusText = q.ans === true ? '✅ ĐÚNG' : (q.ans === false ? '❌ SAI' : '⚠️ BỎ QUA');
+            box.style.borderColor = statusColor;
+
+            let html = `<div style="text-align:center; margin-bottom: 15px;">
+                            <span style="background:rgba(255,255,255,0.1); color:${statusColor}; padding: 6px 15px; border-radius: 20px; font-weight: 900; font-size: 12px; border: 1px solid ${statusColor};">CÂU ${i+1} - ${statusText}</span>
+                        </div>
+                        <div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
+                        <div class="opts">`;
+
+            q.opts.forEach((opt, oIdx) => {
+                let optClass = 'option disabled';
+                // Bôi màu cho kết quả
+                if (opt.isC) optClass += ' correct';
+                else if (q.userPick === oIdx) optClass += ' wrong';
+
+                html += `<div class="${optClass}" style="margin-bottom:8px;">${opt.text}</div>`;
+            });
+
+            html += `</div>`;
+            box.innerHTML = html;
+            cont.appendChild(box);
+        });
+    }
 
     function changeTheme(v) {
         const t = themes[v]; document.documentElement.style.setProperty('--primary', t.p);
