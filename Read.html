@@ -25,6 +25,10 @@
         .btn-menu { width: auto; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none;}
 
+        /* NÚT BAY LÊN ĐỈNH (BACK TO TOP) */
+        .btn-top { position: fixed; bottom: 80px; right: 20px; background: var(--primary); color: #fff; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; font-weight: bold; border: none; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); z-index: 1000; transition: 0.3s; align-items: center; justify-content: center;}
+        .btn-top:hover { transform: translateY(-5px); }
+
         /* MENU ẨN (SETTINGS DRAWER) */
         .drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100vh; background: var(--card); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
@@ -89,10 +93,17 @@
         <div id="content" style="text-align: center; color: gray; margin-top: 30px; font-weight: 700;">Đang kết nối CSDL...</div>
     </div>
 
+    <button class="btn-top" id="btnTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
 <script>
     let fSize = 18; 
     let synth = window.speechSynthesis;
     let allVoices = [];
+
+    // Hiển thị nút bay lên đỉnh khi kéo xuống
+    window.onscroll = function() {
+        document.getElementById('btnTop').style.display = document.documentElement.scrollTop > 300 ? "flex" : "none";
+    };
 
     function toggleMenu() {
         document.getElementById('settings-drawer').classList.toggle('open');
