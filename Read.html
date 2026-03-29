@@ -7,24 +7,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #007bff; --primary-grad: linear-gradient(90deg, #007bff, #00c6ff); --accent: #ff00de; }
-        [data-theme="dark"] { --bg: #020617; --card: rgba(15, 23, 42, 0.85); --text: #f8fafc; --glass: rgba(255,255,255,0.1); --border: rgba(255,255,255,0.1); }
+        [data-theme="dark"] { --bg: #020617; --card: rgba(15, 23, 42, 0.85); --text: #f8fafc; --glass: rgba(255,255,255,0.1); --border: rgba(255,255,255,0.15); }
         [data-theme="light"] { --bg: #f8f9fa; --card: rgba(255, 255, 255, 0.95); --text: #1e293b; --glass: rgba(0,0,0,0.05); --border: rgba(0,0,0,0.1); }
         
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.8; transition: 0.3s; }
         
         /* HEADER KÍNH MỜ */
-        .header { position: sticky; top: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border);}
+        .header { position: sticky; top: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border);}
         
-        /* NÚT BẤM BO TRÒN */
+        /* NÚT BẤM BO TRÒN (PILL-SHAPE) */
         .btn-tool { 
             background: var(--glass); color: var(--primary); border: 1px solid var(--primary); 
             padding: 8px 20px; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 13px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); text-decoration: none; display: flex; align-items: center; gap: 5px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease; text-decoration: none; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .btn-tool:hover { background: var(--primary-grad); color: #fff; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,123,255,0.4); border-color: transparent;}
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; box-shadow: 0 5px 15px rgba(255,0,222,0.4); }
-        .btn-speak:hover { box-shadow: 0 8px 25px rgba(255,0,222,0.6); }
+        .btn-speak:hover { box-shadow: 0 8px 25px rgba(255,0,222,0.7); }
 
         .container { max-width: 850px; margin: 40px auto; padding: 40px; background: var(--card); backdrop-filter: blur(20px); border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid var(--border); }
         #content { font-size: 18px; text-align: justify; }
@@ -34,6 +34,7 @@
         .sc-red { color: #ff4d4d; font-weight: 800; background: rgba(255,77,77,0.1); padding: 2px 8px; border-radius: 8px;}
         .sc-blue { color: #00c6ff; font-weight: 800; background: rgba(0,198,255,0.1); padding: 2px 8px; border-radius: 8px;}
 
+        /* DONATE KÍNH MỜ */
         .donate-badge { position: fixed; bottom: 20px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed #ff00de; padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s;}
         .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(255,0,222,0.5); }
     </style>
@@ -44,7 +45,7 @@
         <div style="display:flex; gap:10px; align-items: center; flex-wrap: wrap;">
             <button class="btn-tool" onclick="adjSize(2)">A+</button>
             <button class="btn-tool" onclick="adjSize(-2)">A-</button>
-            <select id="voice-select" class="btn-tool" style="outline: none; appearance: none; text-align:center; padding: 8px 15px;"></select>
+            <select id="voice-select" class="btn-tool" style="outline: none; appearance: none; text-align:center; padding: 8px 15px; background: rgba(255,255,255,0.1);"></select>
             <button class="btn-tool btn-speak" onclick="speak()">🔊 ĐỌC BÀI</button>
             <button class="btn-tool" onclick="toggleMode()">🌓 CHẾ ĐỘ</button>
         </div>
