@@ -110,12 +110,15 @@
         document.getElementById('drawer-overlay').classList.toggle('show');
     }
 
+    // BỘ GIẢI MÃ ĐÃ ĐƯỢC NÂNG CẤP (TỰ ĐỘNG XUỐNG DÒNG)
     function parseSC(txt) {
+        if (!txt) return "";
         return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
                   .replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>')
                   .replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>')
                   .replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>')
-                  .replace(/\[BR\]/gi, '<br><br>');
+                  .replace(/\[BR\]/gi, '<br>')
+                  .replace(/\n/g, '<br>'); // Dòng lệnh thần thánh tự động chuyển dấu enter thành thẻ <br>
     }
     
     function adjSize(v) { fSize += v; document.getElementById('content').style.fontSize = fSize + 'px'; }
