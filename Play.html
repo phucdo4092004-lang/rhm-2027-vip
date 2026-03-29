@@ -12,17 +12,14 @@
 
         body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); margin: 0; overflow: hidden; height: 100vh; background: #000; transition: 0.3s; }
         
-        /* VŨ TRỤ VÀ CHUYỂN CẢNH */
         #universe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background: var(--bg-theme); transition: filter 1.5s ease-in-out, background 1s; }
         #floating-objects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
         .emoji-floater { position: absolute; font-size: 40px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.7; }
         @keyframes floatRandom { 100% { transform: translate(100px, -100px) rotate(360deg); } }
 
-        /* HIỆU ỨNG NỔ KHI VƯỢT MỐC 5% */
         .milestone-burst { position: absolute; animation: burst 1.5s ease-out forwards; z-index: 9999; font-size: 50px; pointer-events: none;}
         @keyframes burst { 0% { transform: translate(0, 0) scale(0.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(360deg); opacity: 0; } }
 
-        /* HEADER MOBILE */
         .sticky-header { position: fixed; top: 0; width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
         .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; }
         .btn-tool:hover { background: var(--primary-grad); color: #000; border-color: transparent; }
@@ -31,7 +28,6 @@
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
         .title-text { font-weight: 900; color: var(--primary); font-size: 14px; text-shadow: 0 0 10px var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
 
-        /* MENU ẨN */
         .drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
@@ -39,10 +35,9 @@
         .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
         .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 16px; border: 1px dashed #facc15; text-align: center; }
 
-        /* PHÒNG THI */
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
         .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
-        .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .question-box.active { display: block; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; }
@@ -55,17 +50,14 @@
         .sc-red { color: #ff4d4d; font-weight: 800; }
         .sc-blue { color: #4da6ff; font-weight: 800; }
 
-        /* ĐIỀU HƯỚNG MŨI TÊN */
         .nav-arrow { position: fixed; top: 50%; background: var(--glass); backdrop-filter: blur(10px); border: 2px solid var(--primary); color: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; z-index: 100; transform: translateY(-50%); transition: 0.2s;}
         .nav-arrow:hover { background: var(--primary); color: #000; transform: translateY(-50%) scale(1.1); box-shadow: 0 0 15px var(--primary);}
         #nav-prev { left: 10px; } #nav-next { right: 10px; }
         
-        /* THANH TIẾN ĐỘ PHẦN TRĂM MỚI TẠI ĐÁY */
         .progress-bar-bg { position: fixed; bottom: 0; left: 0; height: 8px; width: 100%; background: rgba(255,255,255,0.1); z-index: 1000; }
         .progress-bar { height: 100%; background: var(--primary-grad); width: 0%; transition: width 0.4s ease; box-shadow: 0 -2px 15px var(--primary); }
         .progress-percent-badge { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); font-weight: 900; color: var(--primary); font-size: 13px; z-index: 1001; background: rgba(0,0,0,0.7); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--primary); backdrop-filter: blur(5px); letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
 
-        /* BẢN ĐỒ CHIẾN DỊCH */
         .node-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
         .node { aspect-ratio: 1; border-radius: 10px; background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 1px solid var(--border); font-size: 12px;}
         .node-correct { background: #10b981; color: #fff; border-color: #10b981; }
@@ -155,7 +147,7 @@
     <div class="progress-bar" id="progress-bar"></div>
 </div>
 
-<div class="donate-badge" onclick="copySTK()">💖 Donate Phúc: <b style="color:#ff00de;">BIDV 8812766209</b></div>
+<div class="donate-badge" onclick="copySTK()">💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color:#ff00de;">BIDV 8812766209</b></div>
 
 <div id="end-screen">
     <div class="end-box">
@@ -171,21 +163,11 @@
 <script>
     let originalQ = []; let questions = []; let currentIdx = 0; let score = 0; let done = 0;
     let streak = 0; let fontSize = 18; let audioCtx = null;
-    let synth = window.speechSynthesis; let viVoices = [];
-    let lastLevel5Percent = 0; 
+    let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
 
-    function toggleMenu() {
-        document.getElementById('settings-drawer').classList.toggle('open');
-        document.getElementById('drawer-overlay').classList.toggle('show');
-    }
-
-    function parseSC(txt) {
-        return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
-                  .replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>')
-                  .replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>')
-                  .replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>')
-                  .replace(/\[BR\]/gi, '<br>');
-    }
+    function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
+    function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>').replace(/\[BR\]/gi, '<br>'); }
+    function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
     const themes = {
         space: { bg: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] },
@@ -202,7 +184,6 @@
     function toggleMode() { const h = document.documentElement; h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark'); }
     function toggleMap() { document.getElementById('map-drawer').classList.toggle('open'); }
     function adjSize(v) { fontSize += v; document.querySelectorAll('.question-title').forEach(e => e.style.fontSize = fontSize + 'px'); }
-    function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
     function populateVoices() {
         viVoices = synth.getVoices().filter(v => v.lang.includes('vi'));
@@ -217,8 +198,7 @@
         q.opts.forEach((o, i) => text += `Lựa chọn ${i+1}: ${o.text.replace(/<[^>]*>?/gm, '')}. `);
         const utter = new SpeechSynthesisUtterance(text);
         if(viVoices.length > 0) utter.voice = viVoices[document.getElementById('voice-sel').value];
-        synth.speak(utter);
-        toggleMenu(); 
+        synth.speak(utter); toggleMenu(); 
     }
 
     window.onload = function() {
@@ -263,7 +243,6 @@
         const cont = document.getElementById('quiz-container');
         questions.forEach((q, i) => {
             const div = document.createElement('div'); div.className = 'question-box'; div.id = 'q-'+i;
-            // Đã xóa chữ CÂU X/Y và thanh loading dài dòng
             div.innerHTML = `<div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
                              <div class="opts"></div>`;
             const oCont = div.querySelector('.opts');
@@ -284,11 +263,11 @@
                     
                     updateStats(); updateNode(i); 
                     
-                    // AUTO NEXT CHO TẤT CẢ (SAU 1.2 GIÂY)
+                    // CHUYỂN CÂU SIÊU TỐC TRONG 0.5 GIÂY CHO CẢ ĐÚNG LẪN SAI
                     setTimeout(() => {
                         if(i >= questions.length - 1) showEndScreen();
                         else move(1);
-                    }, 1200);
+                    }, 500); 
                 };
                 oCont.appendChild(oDiv);
             });
@@ -310,99 +289,62 @@
         document.getElementById('nav-next').style.display = i < questions.length - 1 ? 'flex' : 'none';
     }
 
-    function move(d) {
-        let n = currentIdx + d; if(n >= 0 && n < questions.length) show(n);
-    }
+    function move(d) { let n = currentIdx + d; if(n >= 0 && n < questions.length) show(n); }
 
-    // HIỆU ỨNG VƯỢT 5% VÀ ĐỔI MÀU CHUYỂN CẢNH
     function updateStats() {
-        const p = Math.round((score / (done || 1)) * 100);
-        const prog = (done / questions.length) * 100;
-        
+        const p = Math.round((score / (done || 1)) * 100); const prog = (done / questions.length) * 100;
         document.getElementById('score-text').innerHTML = `Đã làm: ${done}/${questions.length} <br> Tỷ lệ đúng: ${p}%`;
         
-        // HIỂN THỊ PHẦN TRĂM DƯỚI ĐÁY
         document.getElementById('progress-bar').style.width = prog + '%';
         document.getElementById('progress-percent-text').innerText = `TIẾN ĐỘ: ${Math.floor(prog)}%`;
 
         let current5Percent = Math.floor(prog / 5);
-        if(current5Percent > lastLevel5Percent && prog > 0) {
-            lastLevel5Percent = current5Percent;
-            triggerLevelUpEffect(prog);
-        }
+        if(current5Percent > lastLevel5Percent && prog > 0) { lastLevel5Percent = current5Percent; triggerLevelUpEffect(prog); }
     }
 
     function triggerLevelUpEffect(prog) {
         document.getElementById('universe').style.filter = `hue-rotate(${lastLevel5Percent * 25}deg)`;
-        const themeKey = document.getElementById('theme-selector').value;
-        const t = themes[themeKey];
+        const t = themes[document.getElementById('theme-selector').value];
         for(let i=0; i<25; i++) {
-            const e = document.createElement('div');
-            e.className = 'milestone-burst';
-            e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
-            e.style.left = '50vw'; e.style.top = '50vh';
-            e.style.setProperty('--tx', `${(Math.random() - 0.5) * 600}px`);
-            e.style.setProperty('--ty', `${(Math.random() - 0.5) * 600}px`);
-            document.body.appendChild(e);
-            setTimeout(() => e.remove(), 1500);
+            const e = document.createElement('div'); e.className = 'milestone-burst'; e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
+            e.style.left = '50vw'; e.style.top = '50vh'; e.style.setProperty('--tx', `${(Math.random() - 0.5) * 600}px`); e.style.setProperty('--ty', `${(Math.random() - 0.5) * 600}px`);
+            document.body.appendChild(e); setTimeout(() => e.remove(), 1500);
         }
-        const toast = document.getElementById('streak-toast'); 
-        toast.innerText = `🌟 ĐẠT MỐC ${Math.floor(prog)}% 🌟`;
-        toast.style.background = 'linear-gradient(45deg, #10b981, #059669)';
-        toast.classList.add('show'); 
+        const toast = document.getElementById('streak-toast'); toast.innerText = `🌟 ĐẠT MỐC ${Math.floor(prog)}% 🌟`;
+        toast.style.background = 'linear-gradient(45deg, #10b981, #059669)'; toast.classList.add('show'); 
         setTimeout(() => { toast.classList.remove('show'); toast.style.background = 'linear-gradient(45deg, #ff0f7b, #f89b29)'; }, 2500);
     }
 
     function buildMap() {
         const g = document.getElementById('node-grid'); g.innerHTML = '';
-        questions.forEach((_, i) => {
-            const n = document.createElement('div'); n.className = 'node'; n.id = 'node-'+i; n.innerText = i+1;
-            n.onclick = () => { move(i - currentIdx); toggleMap(); };
-            g.appendChild(n);
-        });
+        questions.forEach((_, i) => { const n = document.createElement('div'); n.className = 'node'; n.id = 'node-'+i; n.innerText = i+1; n.onclick = () => { move(i - currentIdx); toggleMap(); }; g.appendChild(n); });
     }
 
     function updateNode(i) { document.getElementById('node-'+i).classList.add(questions[i].ans ? 'node-correct' : 'node-wrong'); }
-
-    function showStreak() {
-        const t = document.getElementById('streak-toast'); t.innerText = `🔥 COMBO x${streak}`;
-        t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
-    }
+    function showStreak() { const t = document.getElementById('streak-toast'); t.innerText = `🔥 COMBO x${streak}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
 
     function showEndScreen() {
         const p = Math.round((score / questions.length) * 100);
         document.getElementById('final-score').innerText = p + '%';
         document.getElementById('final-rank').innerText = p === 100 ? "🏆 THỦ KHOA RHM" : (p >= 80 ? "🥇 CHUYÊN GIA" : "🥈 CẦN CỐ GẮNG");
         document.getElementById('end-screen').style.display = 'flex';
-
-        if(p === 100) {
-            const id = new URLSearchParams(window.location.search).get('id');
-            localStorage.setItem('done_' + id, 'true');
-        }
+        if(p === 100) { const id = new URLSearchParams(window.location.search).get('id'); localStorage.setItem('done_' + id, 'true'); }
     }
-    
     function closeEndScreen() { document.getElementById('end-screen').style.display = 'none'; }
 
     function changeTheme(v) {
         const t = themes[v]; document.documentElement.style.setProperty('--primary', t.p);
-        document.getElementById('universe').style.background = t.bg;
-        document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
-        
+        document.getElementById('universe').style.background = t.bg; document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
         const f = document.getElementById('floating-objects'); f.innerHTML = '';
         for(let i=0; i<12; i++) {
-            const e = document.createElement('div'); e.className = 'emoji-floater';
-            e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
-            e.style.left = Math.random()*90+'vw'; e.style.top = Math.random()*90+'vh';
-            e.style.animationDuration = (15 + Math.random()*15) + 's';
-            f.appendChild(e);
+            const e = document.createElement('div'); e.className = 'emoji-floater'; e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
+            e.style.left = Math.random()*90+'vw'; e.style.top = Math.random()*90+'vh'; e.style.animationDuration = (15 + Math.random()*15) + 's'; f.appendChild(e);
         }
     }
 
     function playSfx(isC) {
         if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
-        o.frequency.value = isC ? 880 : 200; g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-        o.start(); o.stop(audioCtx.currentTime + 0.2);
+        o.connect(g); g.connect(audioCtx.destination); o.frequency.value = isC ? 880 : 200; g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2); o.start(); o.stop(audioCtx.currentTime + 0.2);
     }
 </script>
 </body>
