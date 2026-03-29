@@ -22,55 +22,49 @@
         .milestone-burst { position: absolute; animation: burst 1.5s ease-out forwards; z-index: 9999; font-size: 50px; pointer-events: none;}
         @keyframes burst { 0% { transform: translate(0, 0) scale(0.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(360deg); opacity: 0; } }
 
-        /* HEADER MOBILE GỌN GÀNG */
+        /* HEADER MOBILE */
         .sticky-header { position: fixed; top: 0; width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
-        
-        .btn-tool { 
-            background: var(--glass); color: var(--text); border: 1px solid var(--border); 
-            padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; 
-            text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;
-        }
+        .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; }
         .btn-tool:hover { background: var(--primary-grad); color: #000; border-color: transparent; }
         .btn-exit { width: auto; padding: 8px 15px; border-radius: 50px; background: var(--primary-grad); color: #000; border: none; }
         .btn-menu { width: auto; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
-        
         .title-text { font-weight: 900; color: var(--primary); font-size: 14px; text-shadow: 0 0 10px var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
 
-        /* MENU ẨN (SETTINGS DRAWER) */
+        /* MENU ẨN */
         .drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
         .drawer-overlay.show { display: block; }
-        
         .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
         .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 16px; border: 1px dashed #facc15; text-align: center; }
 
         /* PHÒNG THI */
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
-        .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
+        .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
         .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .progress-text-top { text-align: center; color: var(--primary); font-weight: 900; font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; background: rgba(0,242,254,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--primary);}
-        
         .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; }
         .option:hover { border-left-color: var(--primary); background: rgba(0, 242, 254, 0.1); transform: translateX(5px); }
         .correct { background: rgba(16, 185, 129, 0.15) !important; border-left: 4px solid #10b981 !important; border-color: #10b981 !important; color: #10b981 !important; }
         .wrong { background: rgba(239, 68, 68, 0.15) !important; border-left: 4px solid #ef4444 !important; border-color: #ef4444 !important; color: #ef4444 !important; }
         .disabled { pointer-events: none; opacity: 0.6; }
 
-        /* SHORTCODE */
         .sc-img { display: block; max-width: 100%; border-radius: 12px; margin: 15px auto; border: 2px solid var(--primary); }
         .sc-red { color: #ff4d4d; font-weight: 800; }
         .sc-blue { color: #4da6ff; font-weight: 800; }
 
-        /* ĐIỀU HƯỚNG & TIẾN ĐỘ */
+        /* ĐIỀU HƯỚNG MŨI TÊN */
         .nav-arrow { position: fixed; top: 50%; background: var(--glass); backdrop-filter: blur(10px); border: 2px solid var(--primary); color: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; z-index: 100; transform: translateY(-50%); transition: 0.2s;}
         .nav-arrow:hover { background: var(--primary); color: #000; transform: translateY(-50%) scale(1.1); box-shadow: 0 0 15px var(--primary);}
         #nav-prev { left: 10px; } #nav-next { right: 10px; }
-        .progress-bar { position: fixed; bottom: 0; left: 0; height: 6px; background: var(--primary-grad); width: 0%; transition: width 0.4s ease; z-index: 1000; box-shadow: 0 0 15px var(--primary);}
         
+        /* THANH TIẾN ĐỘ PHẦN TRĂM MỚI TẠI ĐÁY */
+        .progress-bar-bg { position: fixed; bottom: 0; left: 0; height: 8px; width: 100%; background: rgba(255,255,255,0.1); z-index: 1000; }
+        .progress-bar { height: 100%; background: var(--primary-grad); width: 0%; transition: width 0.4s ease; box-shadow: 0 -2px 15px var(--primary); }
+        .progress-percent-badge { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); font-weight: 900; color: var(--primary); font-size: 13px; z-index: 1001; background: rgba(0,0,0,0.7); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--primary); backdrop-filter: blur(5px); letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
+
         /* BẢN ĐỒ CHIẾN DỊCH */
         .node-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
         .node { aspect-ratio: 1; border-radius: 10px; background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 1px solid var(--border); font-size: 12px;}
@@ -85,11 +79,8 @@
         .end-box { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 24px; padding: 30px; text-align: center; width: 90%; max-width: 400px; }
         .btn-end { width: 100%; padding: 14px; margin: 6px 0; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 13px; transition: 0.2s;}
         
-        .jump-loader { display: none; margin-top: 20px; text-align: center; }
-        .jump-bar-fill { height: 6px; background: var(--primary-grad); width: 100%; margin-top: 8px; border-radius: 10px; box-shadow: 0 0 10px var(--primary);}
-        
-        .donate-badge { position: fixed; bottom: 20px; left: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed #ff00de; padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s;}
-        .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(255,0,222,0.5); }
+        .donate-badge { position: fixed; bottom: 60px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed #ff00de; padding: 8px 15px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s;}
+        .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(245,158,11,0.5); }
     </style>
 </head>
 <body>
@@ -159,9 +150,12 @@
     <div class="node-grid" id="node-grid"></div>
 </div>
 
-<div class="progress-bar" id="progress-bar"></div>
+<div class="progress-percent-badge" id="progress-percent-text">TIẾN ĐỘ: 0%</div>
+<div class="progress-bar-bg">
+    <div class="progress-bar" id="progress-bar"></div>
+</div>
 
-<div class="donate-badge" onclick="copySTK()">💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color:#ff00de;">BIDV 8812766209</b></div>
+<div class="donate-badge" onclick="copySTK()">💖 Donate Phúc: <b style="color:#ff00de;">BIDV 8812766209</b></div>
 
 <div id="end-screen">
     <div class="end-box">
@@ -176,9 +170,9 @@
 
 <script>
     let originalQ = []; let questions = []; let currentIdx = 0; let score = 0; let done = 0;
-    let streak = 0; let fontSize = 18; let jumpTimer = null; let audioCtx = null;
+    let streak = 0; let fontSize = 18; let audioCtx = null;
     let synth = window.speechSynthesis; let viVoices = [];
-    let lastLevel5Percent = 0; // Biến lưu mốc 5% để tạo hiệu ứng nổ
+    let lastLevel5Percent = 0; 
 
     function toggleMenu() {
         document.getElementById('settings-drawer').classList.toggle('open');
@@ -228,7 +222,7 @@
     }
 
     window.onload = function() {
-        const id = newSearchParams(window.location.search).get('id');
+        const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
         if(!id) { location.href='index.html'; return; }
         document.getElementById('de-title').innerText = title || "BỘ ĐỀ RHM";
@@ -257,7 +251,6 @@
     };
 
     function initGame(mode) {
-        if(jumpTimer) clearInterval(jumpTimer);
         document.getElementById('end-screen').style.display = 'none';
         questions = mode === 'all' ? JSON.parse(JSON.stringify(originalQ)) : questions.filter(x => x.ans === false);
         questions.forEach(q => q.ans = null);
@@ -270,12 +263,9 @@
         const cont = document.getElementById('quiz-container');
         questions.forEach((q, i) => {
             const div = document.createElement('div'); div.className = 'question-box'; div.id = 'q-'+i;
-            div.innerHTML = `<div style="text-align:center; width:100%;">
-                                <div class="progress-text-top">CÂU ${i+1} / ${questions.length}</div>
-                             </div>
-                             <div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
-                             <div class="opts"></div>
-                             <div class="jump-loader" id="loader-${i}"></div>`; // Dọn sạch nội dung thẻ loader ban đầu
+            // Đã xóa chữ CÂU X/Y và thanh loading dài dòng
+            div.innerHTML = `<div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
+                             <div class="opts"></div>`;
             const oCont = div.querySelector('.opts');
             
             q.opts.forEach((opt, oIdx) => {
@@ -284,24 +274,21 @@
                     if(q.ans !== null) return; q.ans = opt.isC; done++;
                     Array.from(oCont.children).forEach(c => c.classList.add('disabled'));
                     
-                    // NẾU TRẢ LỜI ĐÚNG -> TỰ ĐỘNG CHUYỂN CÂU
                     if(opt.isC) { 
                         this.classList.add('correct'); score++; streak++; playSfx(true); 
                         if(streak >= 3) showStreak(); 
-                        updateStats(); updateNode(i); 
-                        startJump(i); // Tự động nhảy
-                    }
-                    // NẾU TRẢ LỜI SAI -> DỪNG LẠI CHỜ SẾP ĐỌC ĐÁP ÁN
-                    else { 
+                    } else { 
                         this.classList.add('wrong'); streak = 0; playSfx(false); 
                         Array.from(oCont.children).forEach((c, x) => { if(q.opts[x].isC) c.classList.add('correct'); }); 
-                        updateStats(); updateNode(i); 
-                        
-                        // Bật thông báo màu đỏ nhắc nhở sếp
-                        const l = document.getElementById(`loader-${i}`);
-                        l.style.display = 'block';
-                        l.innerHTML = `<div style="font-size:13px; font-weight:900; color:#ef4444; padding: 12px; background: rgba(239,68,68,0.15); border-radius: 12px; border: 1px dashed #ef4444; margin-top: 15px;">❌ Sếp chọn sai rồi! Xem kỹ lại đáp án đúng, sau đó bấm mũi tên <b>❯</b> để đi tiếp nhé!</div>`;
                     }
+                    
+                    updateStats(); updateNode(i); 
+                    
+                    // AUTO NEXT CHO TẤT CẢ (SAU 1.2 GIÂY)
+                    setTimeout(() => {
+                        if(i >= questions.length - 1) showEndScreen();
+                        else move(1);
+                    }, 1200);
                 };
                 oCont.appendChild(oDiv);
             });
@@ -324,24 +311,7 @@
     }
 
     function move(d) {
-        if(jumpTimer) clearInterval(jumpTimer);
         let n = currentIdx + d; if(n >= 0 && n < questions.length) show(n);
-    }
-
-    // Tự động chuyển câu mượt mà trong 1.25s
-    function startJump(i) {
-        if(i >= questions.length - 1) { setTimeout(showEndScreen, 1500); return; }
-        const l = document.getElementById(`loader-${i}`); 
-        l.style.display = 'block'; 
-        // Render thanh loading xanh vèo vèo
-        l.innerHTML = `<div style="font-size:11px; font-weight:900; color:var(--primary); letter-spacing:1px;">TỰ ĐỘNG CHUYỂN CÂU...</div>
-                       <div style="width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:10px;margin-top:8px;overflow:hidden;">
-                           <div class="jump-bar-fill" id="fill-${i}" style="margin:0;"></div>
-                       </div>`;
-                       
-        const f = document.getElementById(`fill-${i}`);
-        let w = 100;
-        jumpTimer = setInterval(() => { w -= 4; f.style.width = w + '%'; if(w <= 0) { clearInterval(jumpTimer); move(1); } }, 50);
     }
 
     // HIỆU ỨNG VƯỢT 5% VÀ ĐỔI MÀU CHUYỂN CẢNH
@@ -350,9 +320,11 @@
         const prog = (done / questions.length) * 100;
         
         document.getElementById('score-text').innerHTML = `Đã làm: ${done}/${questions.length} <br> Tỷ lệ đúng: ${p}%`;
+        
+        // HIỂN THỊ PHẦN TRĂM DƯỚI ĐÁY
         document.getElementById('progress-bar').style.width = prog + '%';
+        document.getElementById('progress-percent-text').innerText = `TIẾN ĐỘ: ${Math.floor(prog)}%`;
 
-        // Xử lý hiệu ứng nổ và chuyển màu mỗi 5%
         let current5Percent = Math.floor(prog / 5);
         if(current5Percent > lastLevel5Percent && prog > 0) {
             lastLevel5Percent = current5Percent;
@@ -361,26 +333,19 @@
     }
 
     function triggerLevelUpEffect(prog) {
-        // Đổi màu nền dần dần
         document.getElementById('universe').style.filter = `hue-rotate(${lastLevel5Percent * 25}deg)`;
-
-        // Nổ Emoji theo chủ đề
         const themeKey = document.getElementById('theme-selector').value;
         const t = themes[themeKey];
         for(let i=0; i<25; i++) {
             const e = document.createElement('div');
             e.className = 'milestone-burst';
             e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
-            e.style.left = '50vw';
-            e.style.top = '50vh';
-            // Tạo hướng nổ ngẫu nhiên
+            e.style.left = '50vw'; e.style.top = '50vh';
             e.style.setProperty('--tx', `${(Math.random() - 0.5) * 600}px`);
             e.style.setProperty('--ty', `${(Math.random() - 0.5) * 600}px`);
             document.body.appendChild(e);
             setTimeout(() => e.remove(), 1500);
         }
-
-        // Hiện chữ chúc mừng
         const toast = document.getElementById('streak-toast'); 
         toast.innerText = `🌟 ĐẠT MỐC ${Math.floor(prog)}% 🌟`;
         toast.style.background = 'linear-gradient(45deg, #10b981, #059669)';
@@ -410,7 +375,6 @@
         document.getElementById('final-rank').innerText = p === 100 ? "🏆 THỦ KHOA RHM" : (p >= 80 ? "🥇 CHUYÊN GIA" : "🥈 CẦN CỐ GẮNG");
         document.getElementById('end-screen').style.display = 'flex';
 
-        // LƯU VẾT NẾU ĐƯỢC 100%
         if(p === 100) {
             const id = new URLSearchParams(window.location.search).get('id');
             localStorage.setItem('done_' + id, 'true');
@@ -422,7 +386,6 @@
     function changeTheme(v) {
         const t = themes[v]; document.documentElement.style.setProperty('--primary', t.p);
         document.getElementById('universe').style.background = t.bg;
-        // Reset filter
         document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
         
         const f = document.getElementById('floating-objects'); f.innerHTML = '';
