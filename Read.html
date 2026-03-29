@@ -12,31 +12,23 @@
         
         body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.8; transition: 0.3s; }
         
-        /* HEADER MOBILE GỌN GÀNG */
         .header { position: sticky; top: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100; border-bottom: 1px solid var(--border);}
         
-        .btn-tool { 
-            background: var(--glass); color: var(--text); border: 1px solid var(--border); 
-            padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 13px;
-            transition: all 0.3s ease; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;
-        }
+        .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 13px; transition: all 0.3s ease; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;}
         .btn-tool:hover { background: var(--primary-grad); color: #fff; border-color: transparent;}
         .btn-exit { width: auto; padding: 8px 15px; border-radius: 50px; background: var(--primary-grad); color: #fff; border: none; }
         .btn-menu { width: auto; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none;}
 
-        /* NÚT BAY LÊN ĐỈNH (BACK TO TOP) */
         .btn-top { position: fixed; bottom: 80px; right: 20px; background: var(--primary); color: #fff; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; font-weight: bold; border: none; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); z-index: 1000; transition: 0.3s; align-items: center; justify-content: center;}
         .btn-top:hover { transform: translateY(-5px); }
 
-        /* MENU ẨN (SETTINGS DRAWER) */
         .drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100vh; background: var(--card); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
         .drawer-overlay.show { display: block; }
         .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
 
-        /* BỘ CHỈNH TỐC ĐỘ */
         .speed-control { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; font-weight: 900; color: var(--primary); background: var(--glass); padding: 10px; border-radius: 12px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         input[type="range"] { width: 60%; cursor: pointer; }
 
@@ -46,6 +38,10 @@
         .sc-img { display: block; max-width: 100%; border-radius: 12px; margin: 20px auto; border: 2px solid var(--primary); }
         .sc-red { color: #ff4d4d; font-weight: 800; background: rgba(255,77,77,0.1); padding: 2px 8px; border-radius: 8px;}
         .sc-blue { color: #00c6ff; font-weight: 800; background: rgba(0,198,255,0.1); padding: 2px 8px; border-radius: 8px;}
+
+        /* ĐÃ CẬP NHẬT CHỮ DONATE */
+        .donate-badge { position: fixed; bottom: 20px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed #ff00de; padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s;}
+        .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(255,0,222,0.5); }
     </style>
 </head>
 <body>
@@ -95,92 +91,45 @@
 
     <button class="btn-top" id="btnTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
 
+    <div class="donate-badge" onclick="copySTK()">💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color:var(--accent);">BIDV 8812766209</b></div>
+
 <script>
-    let fSize = 18; 
-    let synth = window.speechSynthesis;
-    let allVoices = [];
+    let fSize = 18; let synth = window.speechSynthesis; let allVoices = [];
 
-    // Hiển thị nút bay lên đỉnh khi kéo xuống
-    window.onscroll = function() {
-        document.getElementById('btnTop').style.display = document.documentElement.scrollTop > 300 ? "flex" : "none";
-    };
-
-    function toggleMenu() {
-        document.getElementById('settings-drawer').classList.toggle('open');
-        document.getElementById('drawer-overlay').classList.toggle('show');
-    }
-
-    // BỘ GIẢI MÃ ĐÃ ĐƯỢC NÂNG CẤP (TỰ ĐỘNG XUỐNG DÒNG)
-    function parseSC(txt) {
-        if (!txt) return "";
-        return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
-                  .replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>')
-                  .replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>')
-                  .replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>')
-                  .replace(/\[BR\]/gi, '<br>')
-                  .replace(/\n/g, '<br>'); // Dòng lệnh thần thánh tự động chuyển dấu enter thành thẻ <br>
-    }
+    window.onscroll = function() { document.getElementById('btnTop').style.display = document.documentElement.scrollTop > 300 ? "flex" : "none"; };
+    function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
+    function parseSC(txt) { if (!txt) return ""; return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>').replace(/\[BR\]/gi, '<br>').replace(/\n/g, '<br>'); }
     
     function adjSize(v) { fSize += v; document.getElementById('content').style.fontSize = fSize + 'px'; }
     function toggleMode() { const h = document.documentElement; h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark'); }
-    
-    function populateVoices() {
-        allVoices = synth.getVoices();
-        if(allVoices.length === 0) return;
-        allVoices.sort((a, b) => {
-            if (a.lang.includes('vi') && !b.lang.includes('vi')) return -1;
-            if (!a.lang.includes('vi') && b.lang.includes('vi')) return 1;
-            return 0;
-        });
+    function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
-        const sel = document.getElementById('voice-select');
-        let html = '';
-        allVoices.forEach((v, i) => {
-            let flag = v.lang.includes('vi') ? '🇻🇳 ' : (v.lang.includes('en') ? '🇬🇧 ' : '🌐 ');
-            html += `<option value="${i}">${flag}${v.name.substring(0, 20)}</option>`;
-        });
+    function populateVoices() {
+        allVoices = synth.getVoices(); if(allVoices.length === 0) return;
+        allVoices.sort((a, b) => { if (a.lang.includes('vi') && !b.lang.includes('vi')) return -1; if (!a.lang.includes('vi') && b.lang.includes('vi')) return 1; return 0; });
+        const sel = document.getElementById('voice-select'); let html = '';
+        allVoices.forEach((v, i) => { let flag = v.lang.includes('vi') ? '🇻🇳 ' : (v.lang.includes('en') ? '🇬🇧 ' : '🌐 '); html += `<option value="${i}">${flag}${v.name.substring(0, 20)}</option>`; });
         sel.innerHTML = html;
     }
-    
-    populateVoices(); 
-    if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
+    populateVoices(); if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
 
     function speak() {
         const btn = document.getElementById('btn-read-action');
-        
-        if (synth.speaking) { 
-            synth.cancel(); 
-            btn.innerHTML = "🔊 TIẾP TỤC ĐỌC";
-            return; 
-        }
-        
-        let txtToRead = document.getElementById('content').innerHTML.replace(/<[^>]*>?/gm, '');
-        if(!txtToRead.trim()) return;
-
+        if (synth.speaking) { synth.cancel(); btn.innerHTML = "🔊 TIẾP TỤC ĐỌC"; return; }
+        let txtToRead = document.getElementById('content').innerHTML.replace(/<[^>]*>?/gm, ''); if(!txtToRead.trim()) return;
         let utter = new SpeechSynthesisUtterance(txtToRead); 
         if(allVoices.length > 0) utter.voice = allVoices[document.getElementById('voice-select').value];
         utter.rate = document.getElementById('speed').value;
-        
-        utter.onend = function() { btn.innerHTML = "🔊 BẮT ĐẦU ĐỌC"; }
-        synth.speak(utter);
-        
-        btn.innerHTML = "⏸ DỪNG LẠI";
-        toggleMenu(); // Đóng menu để xem tài liệu
+        utter.onend = function() { btn.innerHTML = "🔊 BẮT ĐẦU ĐỌC"; };
+        synth.speak(utter); btn.innerHTML = "⏸ DỪNG LẠI"; toggleMenu();
     }
 
     window.onload = function() {
-        const id = new URLSearchParams(window.location.search).get('id');
-        const title = new URLSearchParams(window.location.search).get('title');
-
+        const id = new URLSearchParams(window.location.search).get('id'); const title = new URLSearchParams(window.location.search).get('title');
         if(!id) { document.getElementById('content').innerHTML = "Lỗi: ID tài liệu."; return; }
-
         const rawContent = localStorage.getItem(id);
-        if(rawContent) {
-            document.getElementById('title').innerText = title || "TÀI LIỆU RHM";
-            document.getElementById('content').innerHTML = parseSC(rawContent);
-        } else {
-            document.getElementById('content').innerHTML = "Lỗi kết nối. Về sảnh để tải lại.";
-        }
+        if(rawContent) { document.getElementById('title').innerText = title || "TÀI LIỆU RHM"; document.getElementById('content').innerHTML = parseSC(rawContent);
+        } else { document.getElementById('content').innerHTML = "Lỗi kết nối. Về sảnh để tải lại."; }
     };
 </script>
 </body>
