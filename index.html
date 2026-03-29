@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VŨ TRỤ CỦA PHÚC</title>
+  <title>Hệ Sinh Thái RHM 2027 - Phúc VIP</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
   <style>
     :root { --primary: #007bff; --accent: #ff00de; --bg: #f4f7f6; }
@@ -35,8 +35,8 @@
 </head>
 <body>
   <header>
-    <h1>VŨ TRỤ CỦA HỒNG PHÚC</h1>
-    <p style="color: #666; font-weight: 600; margin: 0;">Mục tiêu: KHU LƯU TRỮ ĐỘC QUYỀN CỦA PHÚC ĐẸP TRAI</p>
+    <h1>TRẠM CHỈ HUY RHM</h1>
+    <p style="color: #666; font-weight: 600; margin: 0;">Mục tiêu: Bách chiến bách thắng CCHN 2027 🎯</p>
   </header>
 
   <main>
@@ -45,8 +45,8 @@
       <input type="text" id="searchInput" class="search-input" onkeyup="searchApp()" placeholder="Nhập tên đề thi hoặc lý thuyết để tìm nhanh...">
     </div>
 
-    <div class="donate-box" onclick="navigator.clipboard.writeText('8812766209'); alert('Đã copy STK Phúc Đẹp Trai!');">
-      💖 MÌNH XIN: <b style="color: var(--accent); font-size: 18px;">BIDV 8812766209</b>
+    <div class="donate-box" onclick="navigator.clipboard.writeText('8812766209'); alert('Đã copy STK Đỗ Hồng Phúc!');">
+      💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color: var(--accent); font-size: 18px;">BIDV 8812766209</b>
     </div>
 
     <h2 style="border-left: 5px solid var(--primary); padding-left: 10px; margin-bottom: 20px;">🔥 CHIẾN DỊCH TRẮC NGHIỆM</h2>
@@ -104,11 +104,9 @@
         const id = cols[0].trim(); const title = cols[1].trim(); const desc = cols[2].trim(); const content = cols[3].trim();
         localStorage.setItem(id, content);
 
-        // Đọc lịch sử xem đã làm 100% chưa
         let isDone = localStorage.getItem('done_' + id) === 'true';
         let badgeHTML = isDone ? `<div class="done-badge">✅ Đã Master 100%</div>` : '';
 
-        // Nút Lật Thẻ chỉ hiện ở Trắc Nghiệm
         let buttonsHTML = `<a href="${page}.html?id=${id}&title=${encodeURIComponent(title)}" class="btn" style="background:${page==='Play'?'var(--primary)':'var(--accent)'}; color:#fff">MỞ NGAY 🚀</a>`;
         if(page === 'Play') {
             buttonsHTML += `<a href="Flashcard.html?id=${id}&title=${encodeURIComponent(title)}" class="btn" style="background:#f59e0b; color:#fff">LẬT THẺ 🃏</a>`;
