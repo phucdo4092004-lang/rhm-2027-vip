@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Sinh Thái RHM 2027 - Phúc VIP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #007bff; --accent: #ff00de; --bg: #f4f7f6; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding: 0; }
+    header { background: #fff; padding: 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    header h1 { color: var(--primary); margin: 0 0 10px 0; font-weight: 900; font-size: 32px;}
+    main { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
+    .card { background: #fff; border-radius: 24px; padding: 25px; border: 1px solid #e1e4e8; cursor: pointer; transition: 0.3s; position: relative;}
+    .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,123,255,0.1); }
+    .card h3 { margin-top: 0; font-size: 20px;}
+    .btn { width: 100%; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; text-transform: uppercase; transition: 0.2s;}
+    .btn:hover { filter: brightness(1.1); }
+    .donate-box { background: linear-gradient(135deg, #fff, #f0f7ff); border: 2px dashed var(--accent); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 30px; cursor: pointer; }
+    .loading { text-align: center; font-weight: 800; color: var(--primary); padding: 20px; font-size: 18px; animation: blink 1s infinite alternate;}
+    @keyframes blink { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TRẠM ÔN THI RHM 2027</h1>
+    <p style="color: #666; font-weight: 600; margin: 0;">Cơ sở dữ liệu tự động từ Google Sheets - Hạm đội Phúc VIP</p>
+  </header>
+
+  <main>
+    <div class="donate-box" onclick="navigator.clipboard.writeText('8812766209'); alert('Đã copy STK Phúc Đẹp Trai!');">
+      💖 Donate ủng hộ Phúc: <b style="color: var(--accent); font-size: 18px;">BIDV 8812766209</b>
+    </div>
+
+    <h2 style="border-left: 5px solid var(--primary); padding-left: 10px;">🎯 CHIẾN DỊCH TRẮC NGHIỆM</h2>
+    <div id="loader-quiz" class="loading">⏳ Đang kết nối máy chủ tải Đề Thi...</div>
+    <div class="grid" id="quiz-list"></div>
+
+    <h2 style="border-left: 5px solid var(--accent); padding-left: 10px;">📚 THƯ VIỆN LÝ THUYẾT</h2>
+    <div id="loader-read" class="loading">⏳ Đang kết nối máy chủ tải Tài Liệu...</div>
+    <div class="grid" id="read-list"></div>
+  </main>
+
+<script>
+  // ========================================================
+  // 🔗 SẾP DÁN 2 CÁI LINK CSV VÀO GIỮA 2 DẤU NGOẶC KÉP DƯỚI ĐÂY:
+  const LINK_SHEET_QUIZ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1d3Z-IwrWF2aFT6yTVAFHN8Hfuehx5EsKdZKC-xyp_zPN7LoHzBImwOf7ohc_qL3HXhcFnGRhVoJ/pub?gid=0&single=true&output=csv";
+  const LINK_SHEET_READ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBGimZ9-Wucx42mB2y_AiLB7DAMSKngpXiS2D9iuVckZczZDBbsk7PWwKVR6UKcPLCi1yP3hjaCeJF/pub?gid=0&single=true&output=csv";
+  // ========================================================
+
+  function parseCSV(str) {
+      const arr = []; let quote = false; let row = 0, col = 0;
+      for (let c = 0; c < str.length; c++) {
+          let cc = str[c], nc = str[c+1];
+          arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || '';
+          if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+          if (cc == '"') { quote = !quote; continue; }
+          if (cc == ',' && !quote) { ++col; continue; }
+          if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+          if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+          if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+          arr[row][col] += cc;
+      }
+      return arr;
+  }
+
+  async function fetchData(url, containerId, page, loaderId) {
+    const container = document.getElementById(containerId);
+    const loader = document.getElementById(loaderId);
+    
+    if (url.includes("DÁN_LINK")) {
+      loader.innerHTML = "❌ Sếp Phúc chưa dán link CSV vào code file `index.html` kìa!";
+      loader.style.color = "red"; return;
+    }
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Network error");
+      const data = await response.text();
+      const rows = parseCSV(data).slice(1);
+      
+      loader.style.display = 'none';
+      let count = 0;
+      
+      rows.forEach(cols => {
+        if (cols.length < 4 || !cols[0].trim()) return;
+        count++;
+        const id = cols[0].trim(); const title = cols[1].trim(); const desc = cols[2].trim(); const content = cols[3].trim();
+        
+        // Lưu nội dung vào kho tạm của trình duyệt để Play.html và Read.html đọc
+        localStorage.setItem(id, content);
+
+        container.innerHTML += `
+          <div class="card" onclick="location.href='${page}.html?id=${id}&title=${encodeURIComponent(title)}'">
+            <h3 style="color: ${page==='Play'?'var(--primary)':'var(--accent)'}">${title}</h3>
+            <p style="color: #666; font-size: 14px;">${desc}</p>
+            <button class="btn" style="background:${page==='Play'?'var(--primary)':'var(--accent)'}; color:#fff">MỞ NGAY 🚀</button>
+          </div>
+        `;
+      });
+      if(count === 0) container.innerHTML = "<p style='color:red;'>Sheet đang trống! Sếp gõ thử 1 dòng dữ liệu vào hàng số 2 nhé.</p>";
+
+    } catch (e) { 
+      loader.innerHTML = `❌ Lỗi kết nối! Kiểm tra lại link xem có chữ <b>output=csv</b> chưa nhé.`;
+      loader.style.color = "red";
+    }
+  }
+
+  window.onload = () => {
+    fetchData(LINK_SHEET_QUIZ, 'quiz-list', 'Play', 'loader-quiz');
+    fetchData(LINK_SHEET_READ, 'read-list', 'Read', 'loader-read');
+  };
+</script>
+</body>
+</html>
