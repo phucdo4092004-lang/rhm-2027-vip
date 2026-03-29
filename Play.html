@@ -37,7 +37,7 @@
 
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
         .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
-        .question-box.active { display: block; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; }
@@ -94,21 +94,15 @@
         <h3 style="margin:0; color:var(--primary); font-weight:900;">⚙️ TÙY CHỈNH</h3>
         <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
     </div>
-    
-    <div class="setting-group">
-        <div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div>
-    </div>
-
+    <div class="setting-group"><div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div></div>
     <div class="setting-group" style="flex-direction: row; gap: 10px;">
         <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
         <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
     </div>
-
     <div class="setting-group">
         <select id="voice-sel" class="btn-tool" style="outline:none; text-align:center;"></select>
         <button class="btn-tool btn-speak" onclick="speak()">🔊 ĐỌC ĐỀ BÀI</button>
     </div>
-
     <div class="setting-group">
         <select class="btn-tool" id="theme-selector" onchange="changeTheme(this.value)" style="outline:none; text-align:center;">
             <option value="space">🌌 Chủ đề: Vũ Trụ</option>
@@ -123,7 +117,6 @@
         </select>
         <button onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG/TỐI</button>
     </div>
-
     <div class="setting-group">
         <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--primary-grad); color:#000; border:none;">🗺️ XEM BẢN ĐỒ CÂU HỎI</button>
     </div>
@@ -143,9 +136,7 @@
 </div>
 
 <div class="progress-percent-badge" id="progress-percent-text">TIẾN ĐỘ: 0%</div>
-<div class="progress-bar-bg">
-    <div class="progress-bar" id="progress-bar"></div>
-</div>
+<div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
 
 <div class="donate-badge" onclick="copySTK()">💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color:#ff00de;">BIDV 8812766209</b></div>
 
@@ -162,7 +153,7 @@
 
 <script>
     let originalQ = []; let questions = []; let currentIdx = 0; let score = 0; let done = 0;
-    let streak = 0; let fontSize = 18; let audioCtx = null;
+    let streak = 0; let fontSize = 18; let jumpTimer = null; let audioCtx = null;
     let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
 
     function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
@@ -215,7 +206,9 @@
             line = line.trim(); if(!line) return;
             if(line.match(/^Câu\s*\d+:/i)) {
                 if(q) originalQ.push(q);
-                q = { title: parseSC(line.replace(/^Câu\s*\d+:/i, '').trim()), opts: [], ans: null };
+                // XÓA CHỮ "(1 đáp án)" HAY "Chọn 1 đáp án" BỊ DƯ THỪA TỪ ĐỀ BÀI
+                let cleanedTitle = line.replace(/^Câu\s*\d+:/i, '').replace(/\[?(Chọn )?1 đáp án\]?/gi, '').replace(/\(?(Chọn )?1 đáp án\)?/gi, '').trim();
+                q = { title: parseSC(cleanedTitle), opts: [], ans: null };
             } else if(line.startsWith('*')) {
                 if(q) q.opts.push({ text: parseSC(line.substring(1).trim()), isC: true });
             } else if(line.startsWith('•')) {
@@ -263,11 +256,11 @@
                     
                     updateStats(); updateNode(i); 
                     
-                    // CHUYỂN CÂU SIÊU TỐC TRONG 0.5 GIÂY CHO CẢ ĐÚNG LẪN SAI
+                    // AUTO NEXT ĐÚNG 2 GIÂY (2000ms) CHO TẤT CẢ CÁC TRƯỜNG HỢP
                     setTimeout(() => {
                         if(i >= questions.length - 1) showEndScreen();
                         else move(1);
-                    }, 500); 
+                    }, 2000);
                 };
                 oCont.appendChild(oDiv);
             });
@@ -289,62 +282,96 @@
         document.getElementById('nav-next').style.display = i < questions.length - 1 ? 'flex' : 'none';
     }
 
-    function move(d) { let n = currentIdx + d; if(n >= 0 && n < questions.length) show(n); }
+    function move(d) {
+        let n = currentIdx + d; if(n >= 0 && n < questions.length) show(n);
+    }
 
     function updateStats() {
-        const p = Math.round((score / (done || 1)) * 100); const prog = (done / questions.length) * 100;
-        document.getElementById('score-text').innerHTML = `Đã làm: ${done}/${questions.length} <br> Tỷ lệ đúng: ${p}%`;
+        const p = Math.round((score / (done || 1)) * 100);
+        const prog = (done / questions.length) * 100;
         
+        document.getElementById('score-text').innerHTML = `Đã làm: ${done}/${questions.length} <br> Tỷ lệ đúng: ${p}%`;
         document.getElementById('progress-bar').style.width = prog + '%';
         document.getElementById('progress-percent-text').innerText = `TIẾN ĐỘ: ${Math.floor(prog)}%`;
 
         let current5Percent = Math.floor(prog / 5);
-        if(current5Percent > lastLevel5Percent && prog > 0) { lastLevel5Percent = current5Percent; triggerLevelUpEffect(prog); }
+        if(current5Percent > lastLevel5Percent && prog > 0) {
+            lastLevel5Percent = current5Percent;
+            triggerLevelUpEffect(prog);
+        }
     }
 
     function triggerLevelUpEffect(prog) {
         document.getElementById('universe').style.filter = `hue-rotate(${lastLevel5Percent * 25}deg)`;
-        const t = themes[document.getElementById('theme-selector').value];
+        const themeKey = document.getElementById('theme-selector').value;
+        const t = themes[themeKey];
         for(let i=0; i<25; i++) {
-            const e = document.createElement('div'); e.className = 'milestone-burst'; e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
-            e.style.left = '50vw'; e.style.top = '50vh'; e.style.setProperty('--tx', `${(Math.random() - 0.5) * 600}px`); e.style.setProperty('--ty', `${(Math.random() - 0.5) * 600}px`);
-            document.body.appendChild(e); setTimeout(() => e.remove(), 1500);
+            const e = document.createElement('div');
+            e.className = 'milestone-burst';
+            e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
+            e.style.left = '50vw'; e.style.top = '50vh';
+            e.style.setProperty('--tx', `${(Math.random() - 0.5) * 600}px`);
+            e.style.setProperty('--ty', `${(Math.random() - 0.5) * 600}px`);
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), 1500);
         }
-        const toast = document.getElementById('streak-toast'); toast.innerText = `🌟 ĐẠT MỐC ${Math.floor(prog)}% 🌟`;
-        toast.style.background = 'linear-gradient(45deg, #10b981, #059669)'; toast.classList.add('show'); 
+        const toast = document.getElementById('streak-toast'); 
+        toast.innerText = `🌟 ĐẠT MỐC ${Math.floor(prog)}% 🌟`;
+        toast.style.background = 'linear-gradient(45deg, #10b981, #059669)';
+        toast.classList.add('show'); 
         setTimeout(() => { toast.classList.remove('show'); toast.style.background = 'linear-gradient(45deg, #ff0f7b, #f89b29)'; }, 2500);
     }
 
     function buildMap() {
         const g = document.getElementById('node-grid'); g.innerHTML = '';
-        questions.forEach((_, i) => { const n = document.createElement('div'); n.className = 'node'; n.id = 'node-'+i; n.innerText = i+1; n.onclick = () => { move(i - currentIdx); toggleMap(); }; g.appendChild(n); });
+        questions.forEach((_, i) => {
+            const n = document.createElement('div'); n.className = 'node'; n.id = 'node-'+i; n.innerText = i+1;
+            n.onclick = () => { move(i - currentIdx); toggleMap(); };
+            g.appendChild(n);
+        });
     }
 
     function updateNode(i) { document.getElementById('node-'+i).classList.add(questions[i].ans ? 'node-correct' : 'node-wrong'); }
-    function showStreak() { const t = document.getElementById('streak-toast'); t.innerText = `🔥 COMBO x${streak}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+
+    function showStreak() {
+        const t = document.getElementById('streak-toast'); t.innerText = `🔥 COMBO x${streak}`;
+        t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
+    }
 
     function showEndScreen() {
         const p = Math.round((score / questions.length) * 100);
         document.getElementById('final-score').innerText = p + '%';
         document.getElementById('final-rank').innerText = p === 100 ? "🏆 THỦ KHOA RHM" : (p >= 80 ? "🥇 CHUYÊN GIA" : "🥈 CẦN CỐ GẮNG");
         document.getElementById('end-screen').style.display = 'flex';
-        if(p === 100) { const id = new URLSearchParams(window.location.search).get('id'); localStorage.setItem('done_' + id, 'true'); }
+
+        if(p === 100) {
+            const id = new URLSearchParams(window.location.search).get('id');
+            localStorage.setItem('done_' + id, 'true');
+        }
     }
+    
     function closeEndScreen() { document.getElementById('end-screen').style.display = 'none'; }
 
     function changeTheme(v) {
         const t = themes[v]; document.documentElement.style.setProperty('--primary', t.p);
-        document.getElementById('universe').style.background = t.bg; document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
+        document.getElementById('universe').style.background = t.bg;
+        document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
+        
         const f = document.getElementById('floating-objects'); f.innerHTML = '';
         for(let i=0; i<12; i++) {
-            const e = document.createElement('div'); e.className = 'emoji-floater'; e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
-            e.style.left = Math.random()*90+'vw'; e.style.top = Math.random()*90+'vh'; e.style.animationDuration = (15 + Math.random()*15) + 's'; f.appendChild(e);
+            const e = document.createElement('div'); e.className = 'emoji-floater';
+            e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
+            e.style.left = Math.random()*90+'vw'; e.style.top = Math.random()*90+'vh';
+            e.style.animationDuration = (15 + Math.random()*15) + 's';
+            f.appendChild(e);
         }
     }
 
     function playSfx(isC) {
         if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination); o.frequency.value = isC ? 880 : 200; g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2); o.start(); o.stop(audioCtx.currentTime + 0.2);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.frequency.value = isC ? 880 : 200; g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        o.start(); o.stop(audioCtx.currentTime + 0.2);
     }
 </script>
 </body>
