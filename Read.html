@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư Viện VIP - Phúc RHM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #007bff; --accent: #ff00de; }
+        [data-theme="dark"] { --bg: #020617; --card: #0f172a; --text: #f8fafc; }
+        [data-theme="light"] { --bg: #f8f9fa; --card: #ffffff; --text: #1e293b; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.8; transition: 0.3s; }
+        
+        .header { position: sticky; top: 0; background: var(--card); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 100; flex-wrap: wrap; gap: 10px;}
+        .tool-btn { background: var(--primary); color: #fff; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 13px;}
+        
+        .container { max-width: 800px; margin: 30px auto; padding: 40px; background: var(--card); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        #content { font-size: 18px; text-align: justify; }
+        
+        /* SC STYLES */
+        .sc-img { display: block; max-width: 100%; border-radius: 15px; margin: 25px auto; border: 3px solid var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .sc-red { color: #ff4d4d; font-weight: 800; }
+        .sc-blue { color: #007bff; font-weight: 800; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" style="text-decoration:none; color:var(--primary); font-weight:900;">⬅ TRỞ VỀ SẢNH</a>
+        <div style="display:flex; gap:10px; align-items: center;">
+            <button class="tool-btn" onclick="adjSize(2)">A+</button>
+            <button class="tool-btn" onclick="adjSize(-2)">A-</button>
+            <select id="voice-select" class="tool-btn" style="background: rgba(128,128,128,0.2); color: var(--text); border: 1px solid var(--primary);"></select>
+            <button class="tool-btn" style="background:var(--accent)" onclick="speak()">🔊 ĐỌC BÀI</button>
+            <button class="tool-btn" style="background:#fff; color:#000" onclick="toggleMode()">🌓</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1 id="title" style="color:var(--primary); border-bottom: 2px dashed var(--accent); padding-bottom: 15px;">ĐANG TẢI...</h1>
+        <div id="content" style="text-align: center; color: gray;">Đang kết nối với CSDL Sheets...</div>
+    </div>
+
+<script>
+    let fSize = 18; let synth = window.speechSynthesis;
+
+    function parseSC(txt) {
+        return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
+                  .replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>')
+                  .replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>')
+                  .replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>')
+                  .replace(/\[BR\]/gi, '<br>');
+    }
+    
+    function adjSize(v) { fSize += v; document.getElementById('content').style.fontSize = fSize + 'px'; }
+    function toggleMode() { const h = document.documentElement; h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark'); }
+    
+    function populateVoices() {
+        let voices = synth.getVoices().filter(v => v.lang.includes('vi'));
+        document.getElementById('voice-select').innerHTML = voices.map((v, i) => `<option value="${i}">${v.name.substring(0,8)}</option>`).join('');
+    }
+    populateVoices(); if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
+
+    function speak() {
+        if (synth.speaking) { synth.cancel(); return; }
+        let txtToRead = document.getElementById('content').innerHTML.replace(/<[^>]*>?/gm, '');
+        let utter = new SpeechSynthesisUtterance(txtToRead); 
+        utter.voice = synth.getVoices().filter(v => v.lang.includes('vi'))[document.getElementById('voice-select').value];
+        synth.speak(utter);
+    }
+
+    window.onload = function() {
+        const id = new URLSearchParams(window.location.search).get('id');
+        const title = new URLSearchParams(window.location.search).get('title');
+
+        if(!id) { document.getElementById('content').innerHTML = "Lỗi: Không tìm thấy ID tài liệu."; return; }
+
+        const rawContent = localStorage.getItem(id);
+        if(rawContent) {
+            document.getElementById('title').innerText = title || "TÀI LIỆU RHM";
+            document.getElementById('content').innerHTML = parseSC(rawContent);
+        } else {
+            document.getElementById('content').innerHTML = "Lỗi kết nối. Hãy quay lại trang chủ để tải lại.";
+        }
+    };
+</script>
+</body>
+</html>
