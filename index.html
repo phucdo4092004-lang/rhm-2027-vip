@@ -8,46 +8,70 @@
   <style>
     :root { --primary: #007bff; --accent: #ff00de; --bg: #f4f7f6; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding: 0; }
-    header { background: #fff; padding: 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    header h1 { color: var(--primary); margin: 0 0 10px 0; font-weight: 900; font-size: 32px;}
-    main { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
-    .card { background: #fff; border-radius: 24px; padding: 25px; border: 1px solid #e1e4e8; cursor: pointer; transition: 0.3s; position: relative;}
-    .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,123,255,0.1); }
-    .card h3 { margin-top: 0; font-size: 20px;}
+    header { background: #fff; padding: 40px 20px 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    header h1 { color: var(--primary); margin: 0 0 10px 0; font-weight: 900; font-size: 32px; text-transform: uppercase;}
+    main { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+    
+    /* THANH TÌM KIẾM VIP */
+    .search-box { margin-bottom: 40px; position: relative; max-width: 600px; margin: -25px auto 40px auto; z-index: 10;}
+    .search-input { width: 100%; padding: 18px 25px 18px 50px; font-size: 16px; border-radius: 50px; border: 2px solid #e1e4e8; outline: none; transition: 0.3s; box-sizing: border-box; font-family: inherit; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,123,255,0.2); transform: translateY(-2px); }
+    .search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 20px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 50px; }
+    .card { background: #fff; border-radius: 20px; padding: 20px; border: 1px solid #e1e4e8; cursor: pointer; transition: 0.3s; position: relative; display: flex; flex-direction: column; justify-content: space-between;}
+    .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,123,255,0.1); }
+    .card h3 { margin-top: 0; font-size: 18px; line-height: 1.4;}
     .btn { width: 100%; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; text-transform: uppercase; transition: 0.2s;}
     .btn:hover { filter: brightness(1.1); }
-    .donate-box { background: linear-gradient(135deg, #fff, #f0f7ff); border: 2px dashed var(--accent); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 30px; cursor: pointer; }
-    .loading { text-align: center; font-weight: 800; color: var(--primary); padding: 20px; font-size: 18px; animation: blink 1s infinite alternate;}
+    
+    .donate-box { background: linear-gradient(135deg, #fff, #f0f7ff); border: 2px dashed var(--accent); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 40px; cursor: pointer; transition: 0.3s;}
+    .donate-box:hover { transform: scale(1.02); }
+    .loading { text-align: center; font-weight: 800; color: var(--primary); padding: 20px; font-size: 16px; animation: blink 1s infinite alternate;}
     @keyframes blink { 0% { opacity: 0.5; } 100% { opacity: 1; } }
   </style>
 </head>
 <body>
   <header>
-    <h1>TRẠM ÔN THI RHM 2027</h1>
-    <p style="color: #666; font-weight: 600; margin: 0;">Cơ sở dữ liệu tự động từ Google Sheets - Hạm đội Phúc VIP</p>
+    <h1>TRẠM CHỈ HUY RHM</h1>
+    <p style="color: #666; font-weight: 600; margin: 0;">Mục tiêu: Bách chiến bách thắng CCHN 2027 🎯</p>
   </header>
 
   <main>
-    <div class="donate-box" onclick="navigator.clipboard.writeText('8812766209'); alert('Đã copy STK Phúc Đẹp Trai!');">
-      💖 Donate ủng hộ Phúc: <b style="color: var(--accent); font-size: 18px;">BIDV 8812766209</b>
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" onkeyup="searchApp()" placeholder="Nhập tên đề thi hoặc lý thuyết để tìm nhanh...">
     </div>
 
-    <h2 style="border-left: 5px solid var(--primary); padding-left: 10px;">🎯 CHIẾN DỊCH TRẮC NGHIỆM</h2>
+    <div class="donate-box" onclick="navigator.clipboard.writeText('8812766209'); alert('Đã copy STK Phúc Đẹp Trai!');">
+      💖 Trà đá cho Admin Phúc: <b style="color: var(--accent); font-size: 18px;">BIDV 8812766209</b>
+    </div>
+
+    <h2 style="border-left: 5px solid var(--primary); padding-left: 10px; margin-bottom: 20px;">🔥 CHIẾN DỊCH TRẮC NGHIỆM</h2>
     <div id="loader-quiz" class="loading">⏳ Đang kết nối máy chủ tải Đề Thi...</div>
     <div class="grid" id="quiz-list"></div>
 
-    <h2 style="border-left: 5px solid var(--accent); padding-left: 10px;">📚 THƯ VIỆN LÝ THUYẾT</h2>
+    <h2 style="border-left: 5px solid var(--accent); padding-left: 10px; margin-bottom: 20px;">📚 THƯ VIỆN LÝ THUYẾT</h2>
     <div id="loader-read" class="loading">⏳ Đang kết nối máy chủ tải Tài Liệu...</div>
     <div class="grid" id="read-list"></div>
   </main>
 
 <script>
   // ========================================================
-  // 🔗 SẾP DÁN 2 CÁI LINK CSV VÀO GIỮA 2 DẤU NGOẶC KÉP DƯỚI ĐÂY:
-  const LINK_SHEET_QUIZ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1d3Z-IwrWF2aFT6yTVAFHN8Hfuehx5EsKdZKC-xyp_zPN7LoHzBImwOf7ohc_qL3HXhcFnGRhVoJ/pub?gid=0&single=true&output=csv";
-  const LINK_SHEET_READ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBGimZ9-Wucx42mB2y_AiLB7DAMSKngpXiS2D9iuVckZczZDBbsk7PWwKVR6UKcPLCi1yP3hjaCeJF/pub?gid=0&single=true&output=csv";
+  // 🔗 DÁN 2 LINK CSV TỪ GOOGLE SHEETS CỦA SẾP VÀO ĐÂY:
+  const LINK_SHEET_QUIZ = "DÁN_LINK_TAB_DETHI_CỦA_SẾP_VÀO_ĐÂY";
+  const LINK_SHEET_READ = "DÁN_LINK_TAB_TAILIEU_CỦA_SẾP_VÀO_ĐÂY";
   // ========================================================
+
+  // HÀM TÌM KIẾM TỨC THÌ
+  function searchApp() {
+    let filter = document.getElementById('searchInput').value.toUpperCase();
+    let cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      let text = card.querySelector('h3').innerText.toUpperCase() + " " + card.querySelector('p').innerText.toUpperCase();
+      card.style.display = text.indexOf(filter) > -1 ? "" : "none";
+    });
+  }
 
   function parseCSV(str) {
       const arr = []; let quote = false; let row = 0, col = 0;
@@ -70,13 +94,13 @@
     const loader = document.getElementById(loaderId);
     
     if (url.includes("DÁN_LINK")) {
-      loader.innerHTML = "❌ Sếp Phúc chưa dán link CSV vào code file `index.html` kìa!";
+      loader.innerHTML = "❌ Sếp chưa dán link CSV vào code file index.html kìa!";
       loader.style.color = "red"; return;
     }
 
     try {
       const response = await fetch(url);
-      if (!response.ok) throw new Error("Network error");
+      if (!response.ok) throw new Error("Lỗi mạng");
       const data = await response.text();
       const rows = parseCSV(data).slice(1);
       
@@ -88,21 +112,22 @@
         count++;
         const id = cols[0].trim(); const title = cols[1].trim(); const desc = cols[2].trim(); const content = cols[3].trim();
         
-        // Lưu nội dung vào kho tạm của trình duyệt để Play.html và Read.html đọc
         localStorage.setItem(id, content);
 
         container.innerHTML += `
           <div class="card" onclick="location.href='${page}.html?id=${id}&title=${encodeURIComponent(title)}'">
-            <h3 style="color: ${page==='Play'?'var(--primary)':'var(--accent)'}">${title}</h3>
-            <p style="color: #666; font-size: 14px;">${desc}</p>
+            <div>
+              <h3 style="color: ${page==='Play'?'var(--primary)':'var(--accent)'}">${title}</h3>
+              <p style="color: #666; font-size: 13px; line-height: 1.5;">${desc}</p>
+            </div>
             <button class="btn" style="background:${page==='Play'?'var(--primary)':'var(--accent)'}; color:#fff">MỞ NGAY 🚀</button>
           </div>
         `;
       });
-      if(count === 0) container.innerHTML = "<p style='color:red;'>Sheet đang trống! Sếp gõ thử 1 dòng dữ liệu vào hàng số 2 nhé.</p>";
+      if(count === 0) container.innerHTML = "<p style='color:red;'>Sheet đang trống! Sếp gõ thử dữ liệu vào hàng số 2 nhé.</p>";
 
     } catch (e) { 
-      loader.innerHTML = `❌ Lỗi kết nối! Kiểm tra lại link xem có chữ <b>output=csv</b> chưa nhé.`;
+      loader.innerHTML = `❌ Lỗi kết nối! Kiểm tra lại link xem có chữ <b>output=csv</b> ở cuối chưa nhé.`;
       loader.style.color = "red";
     }
   }
