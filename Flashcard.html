@@ -74,7 +74,7 @@
             line = line.trim(); if(!line) return;
             if(line.match(/^Câu\s*\d+:/i)) {
                 if(q) flashcards.push(q);
-                // KHÔNG XÓA CÂU X NỮA
+                // CHỈ XÓA CHỮ "CHỌN ĐÁP ÁN", GIỮ NGUYÊN "CÂU X:"
                 let cleanedTitle = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
                 q = { title: parseSC(cleanedTitle), opts: [], explanation: "" };
             } else if (q) {
