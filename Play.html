@@ -9,7 +9,6 @@
     <style>
         :root { --primary: #00f2fe; --primary-grad: linear-gradient(90deg, #00f2fe, #4facfe); }
         
-        /* BỘ BIẾN ĐỔI GIAO DIỆN TỐI */
         [data-theme="dark"] { 
             --bg-card: rgba(15, 23, 42, 0.85); 
             --text: #f8fafc; 
@@ -20,7 +19,6 @@
             --header-bg: rgba(0,0,0,0.6);
         }
         
-        /* BỘ BIẾN ĐỔI GIAO DIỆN SÁNG */
         [data-theme="light"] { 
             --bg-card: rgba(255, 255, 255, 0.95); 
             --text: #0f172a; 
@@ -216,71 +214,30 @@
     let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
     let isMuted = false; let isShuffle = false; let currentMenuPage = 1;
 
-    // HỆ THỐNG MÀU NỀN MỚI (CÓ CẢ SÁNG VÀ TỐI CHO TỪNG CHỦ ĐỀ)
     const themes = {
-        space: { 
-            bgDark: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', 
-            bgLight: 'radial-gradient(circle at center, #e0f2fe 0%, #bae6fd 100%)', 
-            p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] 
-        },
-        spring: { 
-            bgDark: 'linear-gradient(to bottom, #2e1437, #943b54)', 
-            bgLight: 'linear-gradient(to bottom, #fdf2f8, #fbcfe8)', 
-            p: '#ff7eb3', obj: ['🌸','🦋','🌷','🌱','🕊️'] 
-        },
-        summer: { 
-            bgDark: 'linear-gradient(to bottom, #001d3d, #00b4db)', 
-            bgLight: 'linear-gradient(to bottom, #fef08a, #7dd3fc)', 
-            p: '#f6d365', obj: ['🌻','☀️','🍉','🍦','🦀'] 
-        },
-        autumn: { 
-            bgDark: 'linear-gradient(to bottom, #3f2b96, #a8c0ff)', 
-            bgLight: 'linear-gradient(to bottom, #fed7aa, #ffedd5)', 
-            p: '#ff9966', obj: ['🍁','🍂','🐿️','🦊','🌾'] 
-        },
-        winter: { 
-            bgDark: 'linear-gradient(to bottom, #141e30, #243b55)', 
-            bgLight: 'linear-gradient(to bottom, #e0f2fe, #f1f5f9)', 
-            p: '#a1c4fd', obj: ['❄️','⛄','🐧','🧊','🏔️'] 
-        },
-        love: { 
-            bgDark: 'linear-gradient(to bottom, #43000b, #ff0f7b)', 
-            bgLight: 'linear-gradient(to bottom, #fce7f3, #f9a8d4)', 
-            p: '#ff0844', obj: ['💖','🌹','💌','🧸','💘'] 
-        },
-        animals: { 
-            bgDark: 'linear-gradient(to bottom, #134e5e, #71b280)', 
-            bgLight: 'linear-gradient(to bottom, #dcfce7, #bbf7d0)', 
-            p: '#2ebf91', obj: ['🦁','🐼','🐾','🐯','🐨'] 
-        },
-        nature: { 
-            bgDark: 'linear-gradient(to bottom, #0f2027, #2c5364)', 
-            bgLight: 'linear-gradient(to bottom, #ccfbf1, #a7f3d0)', 
-            p: '#11998e', obj: ['🌲','🌈','🍄','🍀','🦅'] 
-        },
-        tech: { 
-            bgDark: 'radial-gradient(circle at center, #000000, #434343)', 
-            bgLight: 'radial-gradient(circle at center, #f1f5f9, #cbd5e1)', 
-            p: '#00ff00', obj: ['💻','🤖','⚡','🔋','🔌'] 
-        }
+        space: { bgDark: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', bgLight: 'radial-gradient(circle at center, #e0f2fe 0%, #bae6fd 100%)', p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] },
+        spring: { bgDark: 'linear-gradient(to bottom, #2e1437, #943b54)', bgLight: 'linear-gradient(to bottom, #fdf2f8, #fbcfe8)', p: '#ff7eb3', obj: ['🌸','🦋','🌷','🌱','🕊️'] },
+        summer: { bgDark: 'linear-gradient(to bottom, #001d3d, #00b4db)', bgLight: 'linear-gradient(to bottom, #fef08a, #7dd3fc)', p: '#f6d365', obj: ['🌻','☀️','🍉','🍦','🦀'] },
+        autumn: { bgDark: 'linear-gradient(to bottom, #3f2b96, #a8c0ff)', bgLight: 'linear-gradient(to bottom, #fed7aa, #ffedd5)', p: '#ff9966', obj: ['🍁','🍂','🐿️','🦊','🌾'] },
+        winter: { bgDark: 'linear-gradient(to bottom, #141e30, #243b55)', bgLight: 'linear-gradient(to bottom, #e0f2fe, #f1f5f9)', p: '#a1c4fd', obj: ['❄️','⛄','🐧','🧊','🏔️'] },
+        love: { bgDark: 'linear-gradient(to bottom, #43000b, #ff0f7b)', bgLight: 'linear-gradient(to bottom, #fce7f3, #f9a8d4)', p: '#ff0844', obj: ['💖','🌹','💌','🧸','💘'] },
+        animals: { bgDark: 'linear-gradient(to bottom, #134e5e, #71b280)', bgLight: 'linear-gradient(to bottom, #dcfce7, #bbf7d0)', p: '#2ebf91', obj: ['🦁','🐼','🐾','🐯','🐨'] },
+        nature: { bgDark: 'linear-gradient(to bottom, #0f2027, #2c5364)', bgLight: 'linear-gradient(to bottom, #ccfbf1, #a7f3d0)', p: '#11998e', obj: ['🌲','🌈','🍄','🍀','🦅'] },
+        tech: { bgDark: 'radial-gradient(circle at center, #000000, #434343)', bgLight: 'radial-gradient(circle at center, #f1f5f9, #cbd5e1)', p: '#00ff00', obj: ['💻','🤖','⚡','🔋','🔌'] }
     };
 
     function toggleMode() { 
         const h = document.documentElement; 
         const isDark = h.getAttribute('data-theme') === 'dark';
         h.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        
         const btn = document.getElementById('btn-mode');
         if(btn) btn.innerHTML = isDark ? "🌘 GIAO DIỆN TỐI" : "🌓 GIAO DIỆN SÁNG";
-
-        // Thay đổi background universe ngay lập tức
         changeTheme(document.getElementById('theme-selector').value, true); 
     }
 
     function changeTheme(v, skipEmojis = false) {
         const t = themes[v]; 
         document.documentElement.style.setProperty('--primary', t.p);
-        
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         document.getElementById('universe').style.background = isLight ? t.bgLight : t.bgDark;
         document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
@@ -341,6 +298,7 @@
     function toggleMap() { document.getElementById('map-drawer').classList.toggle('open'); }
     function adjSize(v) { fontSize += v; document.querySelectorAll('.question-title').forEach(e => e.style.fontSize = fontSize + 'px'); }
 
+    // ===== BỘ BẮT LỖI GEMINI MỚI NHẤT =====
     async function askGemini(qIdx, prefix = '') {
         if(jumpTimer) clearInterval(jumpTimer); 
         
@@ -364,16 +322,23 @@
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKeyInput}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
+            
             const data = await response.json();
-            if(data.error) { box.innerHTML = `❌ Lỗi API: ${data.error.message}`; return; }
+            
+            // ÉP GOOGLE HIỆN LỖI CHÍNH XÁC NẾU CÓ
+            if(!response.ok) { 
+                box.innerHTML = `<div style="text-align:left;"><b style="color:#ef4444;">❌ BỊ TỪ CHỐI BỞI GOOGLE:</b><br><span style="color:gray; font-size: 13px;">Lỗi: ${data.error ? data.error.message : 'Không xác định'}</span><br><br><i>Sếp xem lại mã Key xem copy chuẩn chưa, có bị dính dấu cách không nhé!</i></div>`; 
+                return; 
+            }
             
             let text = data.candidates[0].content.parts[0].text;
             text = text.replace(/\*\*(.*?)\*\*/g, '<b style="color:var(--primary);">$1</b>').replace(/\n/g, '<br>');
             box.innerHTML = `<b style="color:#8b5cf6; font-size:15px; border-bottom: 1px dashed #8b5cf6; padding-bottom: 5px; display:inline-block; margin-bottom:10px;">🤖 GEMINI GIẢI THÍCH:</b><br>${text}`;
         } catch(e) {
-            box.innerHTML = `❌ Lỗi mạng hoặc API Key bị sai rồi sếp! (Mẹo: Có thể API Key hết hạn hoặc sếp copy bị thiếu chữ).`;
+            box.innerHTML = `❌ Lỗi mạng: Điện thoại sếp bị mất mạng hoặc trình duyệt đang chặn API của Google.`;
         }
     }
+    // ======================================
 
     function populateVoices() {
         viVoices = synth.getVoices().filter(v => v.lang.includes('vi'));
