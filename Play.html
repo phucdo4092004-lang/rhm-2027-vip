@@ -29,12 +29,21 @@
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
         .title-text { font-weight: 900; color: var(--primary); font-size: 14px; text-shadow: 0 0 10px var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
 
-        .drawer { position: fixed; top: 0; right: -320px; width: 290px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px 20px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
+        .drawer { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px 20px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
         .drawer-overlay.show { display: block; }
         .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 15px; border: 1px dashed #facc15; text-align: center; }
+        .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 15px; border: 1px dashed #facc15; text-align: center; margin-bottom: 15px;}
+
+        /* BỘ PHÂN TRANG MENU */
+        .menu-pager { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 50px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .btn-page { background: var(--primary); color: #000; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer; transition: 0.2s; display:flex; align-items:center; justify-content:center;}
+        .btn-page:hover { transform: scale(1.1); box-shadow: 0 0 10px var(--primary); }
+        .page-text { font-size: 12px; font-weight: 900; color: var(--primary); letter-spacing: 1px;}
+        .menu-page { display: none; animation: slideIn 0.3s ease; }
+        .menu-page.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
         .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
@@ -97,44 +106,51 @@
         <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
     </div>
     
-    <div class="setting-group"><div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div></div>
+    <div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div>
 
-    <div class="setting-group" style="border: 2px dashed var(--primary); padding: 15px; border-radius: 15px; background: rgba(0,242,254,0.05);">
-        <div style="font-size:12px; font-weight:900; color:var(--primary); margin-bottom: 12px; text-align:center;">🚀 ĐIỀU KHIỂN CHIẾN DỊCH</div>
-        <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--opt-bg); border-color:var(--primary); margin-bottom:8px;">🗺️ MỞ BẢN ĐỒ CÂU HỎI</button>
-        <button onclick="showReviewMode(); toggleMenu();" class="btn-tool" style="background:#10b981; color:#fff; border:none; margin-bottom:8px;">👀 BẢNG VÀNG LƯỚT DỌC</button>
-        <button onclick="initGame('wrong'); toggleMenu();" class="btn-tool" style="background:linear-gradient(45deg, #ef4444, #f89b29); color:#fff; border:none; margin-bottom:8px;">🔥 LÀM LẠI CÂU SAI</button>
-        <button onclick="initGame('unanswered'); toggleMenu();" class="btn-tool" style="background:#8b5cf6; color:#fff; border:none; margin-bottom:8px;">⏳ LÀM CÂU CHƯA LÀM</button>
-        <button onclick="initGame('all'); toggleMenu();" class="btn-tool" style="background:#fff; color:#000; border:none;">🔄 CHƠI LẠI TỪ ĐẦU</button>
+    <div class="menu-pager">
+        <button class="btn-page" onclick="switchMenuPage(-1)">❮</button>
+        <span class="page-text" id="menu-page-indicator">TRANG 1/2 (CHIẾN DỊCH)</span>
+        <button class="btn-page" onclick="switchMenuPage(1)">❯</button>
     </div>
 
-    <div class="setting-group" style="flex-direction: row; gap: 10px;">
-        <button id="btn-sound" class="btn-tool" onclick="toggleSound()">🔊 BẬT ÂM</button>
-        <button id="btn-shuffle" class="btn-tool" onclick="toggleShuffle()" style="color:#facc15; border-color:#facc15;">🔀 ĐẢO ĐỀ: TẮT</button>
+    <div id="menu-page-1" class="menu-page active">
+        <div class="setting-group" style="border: 2px dashed var(--primary); padding: 15px; border-radius: 15px; background: rgba(0,242,254,0.05);">
+            <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--opt-bg); border-color:var(--primary); margin-bottom:8px;">🗺️ MỞ BẢN ĐỒ CÂU HỎI</button>
+            <button onclick="showReviewMode(); toggleMenu();" class="btn-tool" style="background:#10b981; color:#fff; border:none; margin-bottom:8px;">👀 BẢNG VÀNG LƯỚT DỌC</button>
+            <button onclick="initGame('wrong'); toggleMenu();" class="btn-tool" style="background:linear-gradient(45deg, #ef4444, #f89b29); color:#fff; border:none; margin-bottom:8px;">🔥 LÀM LẠI CÂU SAI</button>
+            <button onclick="initGame('unanswered'); toggleMenu();" class="btn-tool" style="background:#8b5cf6; color:#fff; border:none; margin-bottom:8px;">⏳ LÀM CÂU CHƯA LÀM</button>
+            <button onclick="initGame('all'); toggleMenu();" class="btn-tool" style="background:#fff; color:#000; border:none;">🔄 CHƠI LẠI TỪ ĐẦU</button>
+        </div>
     </div>
 
-    <div class="setting-group" style="flex-direction: row; gap: 10px;">
-        <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
-        <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
-    </div>
-    
-    <div class="setting-group">
-        <select id="voice-sel" class="btn-tool" style="outline:none; text-align:center;"></select>
-        <button class="btn-tool btn-speak" onclick="speak()">🔊 ĐỌC ĐỀ BÀI</button>
-    </div>
-    <div class="setting-group">
-        <select class="btn-tool" id="theme-selector" onchange="changeTheme(this.value)" style="outline:none; text-align:center;">
-            <option value="space">🌌 Chủ đề: Vũ Trụ</option>
-            <option value="spring">🌸 Chủ đề: Mùa Xuân</option>
-            <option value="summer">☀️ Chủ đề: Mùa Hạ</option>
-            <option value="autumn">🍂 Chủ đề: Mùa Thu</option>
-            <option value="winter">❄️ Chủ đề: Mùa Đông</option>
-            <option value="love">💖 Chủ đề: Tình Yêu</option>
-            <option value="animals">🐾 Chủ đề: Động Vật</option>
-            <option value="nature">🌲 Chủ đề: Thiên Nhiên</option>
-            <option value="tech">💻 Chủ đề: Công Nghệ</option>
-        </select>
-        <button onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG/TỐI</button>
+    <div id="menu-page-2" class="menu-page">
+        <div class="setting-group" style="flex-direction: row; gap: 10px;">
+            <button id="btn-sound" class="btn-tool" onclick="toggleSound()">🔊 BẬT ÂM</button>
+            <button id="btn-shuffle" class="btn-tool" onclick="toggleShuffle()" style="color:#facc15; border-color:#facc15;">🔀 ĐẢO ĐỀ: TẮT</button>
+        </div>
+        <div class="setting-group" style="flex-direction: row; gap: 10px;">
+            <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
+            <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
+        </div>
+        <div class="setting-group">
+            <select id="voice-sel" class="btn-tool" style="outline:none; text-align:center;"></select>
+            <button class="btn-tool btn-speak" onclick="speak()">🔊 ĐỌC ĐỀ BÀI</button>
+        </div>
+        <div class="setting-group">
+            <select class="btn-tool" id="theme-selector" onchange="changeTheme(this.value)" style="outline:none; text-align:center;">
+                <option value="space">🌌 Chủ đề: Vũ Trụ</option>
+                <option value="spring">🌸 Chủ đề: Mùa Xuân</option>
+                <option value="summer">☀️ Chủ đề: Mùa Hạ</option>
+                <option value="autumn">🍂 Chủ đề: Mùa Thu</option>
+                <option value="winter">❄️ Chủ đề: Mùa Đông</option>
+                <option value="love">💖 Chủ đề: Tình Yêu</option>
+                <option value="animals">🐾 Chủ đề: Động Vật</option>
+                <option value="nature">🌲 Chủ đề: Thiên Nhiên</option>
+                <option value="tech">💻 Chủ đề: Công Nghệ</option>
+            </select>
+            <button onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG/TỐI</button>
+        </div>
     </div>
 </div>
 
@@ -171,13 +187,26 @@
     let originalQ = []; let questions = []; let currentIdx = 0; let score = 0; let done = 0;
     let streak = 0; let fontSize = 18; let jumpTimer = null; let audioCtx = null;
     let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
-    let isMuted = false; let isShuffle = false;
+    let isMuted = false; let isShuffle = false; let currentMenuPage = 1;
+
+    // HÀM CHUYỂN TRANG MENU
+    function switchMenuPage(dir) {
+        currentMenuPage += dir;
+        if(currentMenuPage > 2) currentMenuPage = 1;
+        if(currentMenuPage < 1) currentMenuPage = 2;
+
+        document.getElementById('menu-page-1').classList.remove('active');
+        document.getElementById('menu-page-2').classList.remove('active');
+        document.getElementById('menu-page-' + currentMenuPage).classList.add('active');
+
+        const indicator = document.getElementById('menu-page-indicator');
+        indicator.innerText = currentMenuPage === 1 ? 'TRANG 1/2 (CHIẾN DỊCH)' : 'TRANG 2/2 (CÔNG CỤ)';
+    }
 
     function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
     function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>').replace(/\[BR\]/gi, '<br>'); }
     function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
-    // HÀM BẬT TẮT ÂM THANH
     function toggleSound() {
         isMuted = !isMuted;
         document.getElementById('btn-sound').innerHTML = isMuted ? "🔕 TẮT ÂM" : "🔊 BẬT ÂM";
@@ -186,21 +215,17 @@
         if(!isMuted) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); playSfx(true); }
     }
 
-    // HÀM BẬT TẮT ĐẢO ĐỀ VÀ ĐẢO ĐÁP ÁN
     function toggleShuffle() {
         isShuffle = !isShuffle;
         const btn = document.getElementById('btn-shuffle');
         btn.innerHTML = isShuffle ? "🔀 ĐẢO ĐỀ: BẬT" : "🔀 ĐẢO ĐỀ: TẮT";
         btn.style.color = isShuffle ? "#10b981" : "#facc15";
         btn.style.borderColor = isShuffle ? "#10b981" : "#facc15";
-        
         if(confirm("Bật/Tắt chế độ ĐẢO ĐỀ cần load lại bài. Bạn có muốn chơi lại từ đầu ngay bây giờ?")) {
-            initGame('all');
-            toggleMenu();
+            initGame('all'); toggleMenu();
         }
     }
 
-    // Thuật toán xáo trộn mảng (Fisher-Yates)
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -292,7 +317,6 @@
             questions = JSON.parse(JSON.stringify(originalQ));
         }
 
-        // ÁP DỤNG THUẬT TOÁN ĐẢO ĐỀ & XÀO ĐÁP ÁN
         if(isShuffle) {
             shuffleArray(questions);
             questions.forEach(q => shuffleArray(q.opts));
@@ -455,7 +479,6 @@
         t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
     }
 
-    // HIỆU ỨNG BẮN PHÁO HOA KHI 100%
     function shootConfetti() {
         var duration = 3 * 1000;
         var animationEnd = Date.now() + duration;
@@ -479,7 +502,7 @@
         if(p === 100) {
             const id = new URLSearchParams(window.location.search).get('id');
             localStorage.setItem('done_' + id, 'true');
-            shootConfetti(); // Bắn pháo hoa ăn mừng
+            shootConfetti();
         }
     }
 
@@ -550,7 +573,6 @@
         }
     }
 
-    // ÂM THANH ĐƯỢC CHÈN BIẾN isMuted
     function playSfx(isC) {
         if(isMuted) return;
         if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
