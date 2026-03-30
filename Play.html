@@ -7,13 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --primary: #00f2fe; --primary-grad: linear-gradient(90deg, #00f2fe, #4facfe); --bg-theme: radial-gradient(circle at center, #1e1b4b 0%, #020617 100%); }
-        [data-theme="dark"] { --bg-card: rgba(15, 23, 42, 0.85); --text: #f8fafc; --opt-bg: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.15); --drawer: rgba(15, 23, 42, 0.95); --glass: rgba(255,255,255,0.1); }
-        [data-theme="light"] { --bg-card: rgba(255, 255, 255, 0.9); --text: #0f172a; --opt-bg: #f1f5f9; --border: rgba(0,0,0,0.1); --drawer: #f8f9fa; --glass: rgba(0,0,0,0.05); }
-
-        body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); margin: 0; overflow: hidden; height: 100vh; background: #000; transition: 0.3s; }
+        :root { --primary: #00f2fe; --primary-grad: linear-gradient(90deg, #00f2fe, #4facfe); }
         
-        #universe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background: var(--bg-theme); transition: filter 1.5s ease-in-out, background 1s; }
+        /* BỘ BIẾN ĐỔI GIAO DIỆN TỐI */
+        [data-theme="dark"] { 
+            --bg-card: rgba(15, 23, 42, 0.85); 
+            --text: #f8fafc; 
+            --opt-bg: rgba(255,255,255,0.05); 
+            --border: rgba(255,255,255,0.15); 
+            --drawer: rgba(15, 23, 42, 0.95); 
+            --glass: rgba(255,255,255,0.1); 
+            --header-bg: rgba(0,0,0,0.6);
+        }
+        
+        /* BỘ BIẾN ĐỔI GIAO DIỆN SÁNG */
+        [data-theme="light"] { 
+            --bg-card: rgba(255, 255, 255, 0.95); 
+            --text: #0f172a; 
+            --opt-bg: #f8fafc; 
+            --border: rgba(0,0,0,0.1); 
+            --drawer: #ffffff; 
+            --glass: rgba(0,0,0,0.05); 
+            --header-bg: rgba(255,255,255,0.85);
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); margin: 0; overflow: hidden; height: 100vh; background: #000; transition: color 0.3s; }
+        
+        #universe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; transition: background 0.5s ease-in-out, filter 1.5s ease-in-out; }
         #floating-objects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
         .emoji-floater { position: absolute; font-size: 40px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.7; }
         @keyframes floatRandom { 100% { transform: translate(100px, -100px) rotate(360deg); } }
@@ -21,23 +41,24 @@
         .milestone-burst { position: absolute; animation: burst 1.5s ease-out forwards; z-index: 9999; font-size: 50px; pointer-events: none;}
         @keyframes burst { 0% { transform: translate(0, 0) scale(0.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(360deg); opacity: 0; } }
 
-        .sticky-header { position: fixed; top: 0; width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        .sticky-header { position: fixed; top: 0; width: 100%; padding: 12px 15px; background: var(--header-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; transition: background 0.3s; }
         .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; }
         .btn-tool:hover { background: var(--primary-grad); color: #000; border-color: transparent; }
         .btn-exit { width: auto; padding: 8px 15px; border-radius: 50px; background: var(--primary-grad); color: #000; border: none; }
         .btn-menu { width: auto; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
-        .title-text { font-weight: 900; color: var(--primary); font-size: 14px; text-shadow: 0 0 10px var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
+        
+        .title-text { font-weight: 900; color: var(--primary); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
+        [data-theme="dark"] .title-text { text-shadow: 0 0 10px var(--primary); }
 
-        .drawer { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px 20px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
+        .drawer { position: fixed; top: 0; right: -320px; width: 310px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px 20px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
         .drawer-overlay.show { display: block; }
         .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
         .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 15px; border: 1px dashed #facc15; text-align: center; margin-bottom: 15px;}
 
-        /* BỘ PHÂN TRANG MENU */
-        .menu-pager { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 50px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .menu-pager { display: flex; justify-content: space-between; align-items: center; background: var(--glass); padding: 8px; border-radius: 50px; margin-bottom: 20px; border: 1px solid var(--border); }
         .btn-page { background: var(--primary); color: #000; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer; transition: 0.2s; display:flex; align-items:center; justify-content:center;}
         .btn-page:hover { transform: scale(1.1); box-shadow: 0 0 10px var(--primary); }
         .page-text { font-size: 12px; font-weight: 900; color: var(--primary); letter-spacing: 1px;}
@@ -46,12 +67,12 @@
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
-        .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
+        .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; transition: background 0.3s;}
         .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .progress-text-top { text-align: center; color: var(--primary); font-weight: 900; font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; background: rgba(0,242,254,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--primary);}
-        .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; }
+        .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; color: var(--text);}
         .option:hover { border-left-color: var(--primary); background: rgba(0, 242, 254, 0.1); transform: translateX(5px); }
         .correct { background: rgba(16, 185, 129, 0.15) !important; border-left: 4px solid #10b981 !important; border-color: #10b981 !important; color: #10b981 !important; }
         .wrong { background: rgba(239, 68, 68, 0.15) !important; border-left: 4px solid #ef4444 !important; border-color: #ef4444 !important; color: #ef4444 !important; }
@@ -65,12 +86,12 @@
         .nav-arrow:hover { background: var(--primary); color: #000; transform: translateY(-50%) scale(1.1); box-shadow: 0 0 15px var(--primary);}
         #nav-prev { left: 10px; } #nav-next { right: 10px; }
         
-        .progress-bar-bg { position: fixed; bottom: 0; left: 0; height: 8px; width: 100%; background: rgba(255,255,255,0.1); z-index: 1000; }
+        .progress-bar-bg { position: fixed; bottom: 0; left: 0; height: 8px; width: 100%; background: rgba(128,128,128,0.2); z-index: 1000; }
         .progress-bar { height: 100%; background: var(--primary-grad); width: 0%; transition: width 0.4s ease; box-shadow: 0 -2px 15px var(--primary); }
-        .progress-percent-badge { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); font-weight: 900; color: var(--primary); font-size: 13px; z-index: 1001; background: rgba(0,0,0,0.7); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--primary); backdrop-filter: blur(5px); letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
+        .progress-percent-badge { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); font-weight: 900; color: var(--primary); font-size: 13px; z-index: 1001; background: var(--header-bg); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--primary); backdrop-filter: blur(5px); letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
 
         .node-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-        .node { aspect-ratio: 1; border-radius: 10px; background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 1px solid var(--border); font-size: 12px;}
+        .node { aspect-ratio: 1; border-radius: 10px; background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 1px solid var(--border); font-size: 12px; color: var(--text);}
         .node-correct { background: #10b981; color: #fff; border-color: #10b981; }
         .node-wrong { background: #ef4444; color: #fff; border-color: #ef4444; }
         .node-active { border: 2px solid var(--primary); transform: scale(1.15); box-shadow: 0 0 15px var(--primary); }
@@ -82,7 +103,7 @@
         .end-box { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 24px; padding: 30px; text-align: center; width: 90%; max-width: 400px; }
         .btn-end { width: 100%; padding: 14px; margin: 6px 0; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 13px; transition: 0.2s;}
         
-        .donate-badge { position: fixed; bottom: 60px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed #ff00de; padding: 8px 15px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s;}
+        .donate-badge { position: fixed; bottom: 60px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed #ff00de; padding: 8px 15px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s; color: var(--text);}
         .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(245,158,11,0.5); }
     </style>
 </head>
@@ -125,6 +146,12 @@
     </div>
 
     <div id="menu-page-2" class="menu-page">
+        <div class="setting-group" style="border: 2px solid #8b5cf6; padding: 15px; border-radius: 15px; background: rgba(139, 92, 246, 0.1);">
+            <div style="font-size:12px; font-weight:900; color:#8b5cf6; margin-bottom: 8px;">🤖 TÍCH HỢP GEMINI AI</div>
+            <input type="password" id="gemini-api-key" placeholder="Dán Gemini API Key vào đây..." class="btn-tool" style="text-align:left; background: var(--opt-bg); cursor:text; margin-bottom: 5px;">
+            <div style="font-size: 10px; color: gray; text-align: center;">Lấy Key miễn phí tại: aistudio.google.com/app/apikey</div>
+        </div>
+
         <div class="setting-group" style="flex-direction: row; gap: 10px;">
             <button id="btn-sound" class="btn-tool" onclick="toggleSound()">🔊 BẬT ÂM</button>
             <button id="btn-shuffle" class="btn-tool" onclick="toggleShuffle()" style="color:#facc15; border-color:#facc15;">🔀 ĐẢO ĐỀ: TẮT</button>
@@ -149,7 +176,7 @@
                 <option value="nature">🌲 Chủ đề: Thiên Nhiên</option>
                 <option value="tech">💻 Chủ đề: Công Nghệ</option>
             </select>
-            <button onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG/TỐI</button>
+            <button id="btn-mode" onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG</button>
         </div>
     </div>
 </div>
@@ -189,18 +216,95 @@
     let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
     let isMuted = false; let isShuffle = false; let currentMenuPage = 1;
 
-    // HÀM CHUYỂN TRANG MENU
+    // HỆ THỐNG MÀU NỀN MỚI (CÓ CẢ SÁNG VÀ TỐI CHO TỪNG CHỦ ĐỀ)
+    const themes = {
+        space: { 
+            bgDark: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', 
+            bgLight: 'radial-gradient(circle at center, #e0f2fe 0%, #bae6fd 100%)', 
+            p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] 
+        },
+        spring: { 
+            bgDark: 'linear-gradient(to bottom, #2e1437, #943b54)', 
+            bgLight: 'linear-gradient(to bottom, #fdf2f8, #fbcfe8)', 
+            p: '#ff7eb3', obj: ['🌸','🦋','🌷','🌱','🕊️'] 
+        },
+        summer: { 
+            bgDark: 'linear-gradient(to bottom, #001d3d, #00b4db)', 
+            bgLight: 'linear-gradient(to bottom, #fef08a, #7dd3fc)', 
+            p: '#f6d365', obj: ['🌻','☀️','🍉','🍦','🦀'] 
+        },
+        autumn: { 
+            bgDark: 'linear-gradient(to bottom, #3f2b96, #a8c0ff)', 
+            bgLight: 'linear-gradient(to bottom, #fed7aa, #ffedd5)', 
+            p: '#ff9966', obj: ['🍁','🍂','🐿️','🦊','🌾'] 
+        },
+        winter: { 
+            bgDark: 'linear-gradient(to bottom, #141e30, #243b55)', 
+            bgLight: 'linear-gradient(to bottom, #e0f2fe, #f1f5f9)', 
+            p: '#a1c4fd', obj: ['❄️','⛄','🐧','🧊','🏔️'] 
+        },
+        love: { 
+            bgDark: 'linear-gradient(to bottom, #43000b, #ff0f7b)', 
+            bgLight: 'linear-gradient(to bottom, #fce7f3, #f9a8d4)', 
+            p: '#ff0844', obj: ['💖','🌹','💌','🧸','💘'] 
+        },
+        animals: { 
+            bgDark: 'linear-gradient(to bottom, #134e5e, #71b280)', 
+            bgLight: 'linear-gradient(to bottom, #dcfce7, #bbf7d0)', 
+            p: '#2ebf91', obj: ['🦁','🐼','🐾','🐯','🐨'] 
+        },
+        nature: { 
+            bgDark: 'linear-gradient(to bottom, #0f2027, #2c5364)', 
+            bgLight: 'linear-gradient(to bottom, #ccfbf1, #a7f3d0)', 
+            p: '#11998e', obj: ['🌲','🌈','🍄','🍀','🦅'] 
+        },
+        tech: { 
+            bgDark: 'radial-gradient(circle at center, #000000, #434343)', 
+            bgLight: 'radial-gradient(circle at center, #f1f5f9, #cbd5e1)', 
+            p: '#00ff00', obj: ['💻','🤖','⚡','🔋','🔌'] 
+        }
+    };
+
+    function toggleMode() { 
+        const h = document.documentElement; 
+        const isDark = h.getAttribute('data-theme') === 'dark';
+        h.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        
+        const btn = document.getElementById('btn-mode');
+        if(btn) btn.innerHTML = isDark ? "🌘 GIAO DIỆN TỐI" : "🌓 GIAO DIỆN SÁNG";
+
+        // Thay đổi background universe ngay lập tức
+        changeTheme(document.getElementById('theme-selector').value, true); 
+    }
+
+    function changeTheme(v, skipEmojis = false) {
+        const t = themes[v]; 
+        document.documentElement.style.setProperty('--primary', t.p);
+        
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        document.getElementById('universe').style.background = isLight ? t.bgLight : t.bgDark;
+        document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
+        
+        if(!skipEmojis) {
+            const f = document.getElementById('floating-objects'); f.innerHTML = '';
+            for(let i=0; i<12; i++) {
+                const e = document.createElement('div'); e.className = 'emoji-floater';
+                e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
+                e.style.left = Math.random()*90+'vw'; e.style.top = Math.random()*90+'vh';
+                e.style.animationDuration = (15 + Math.random()*15) + 's';
+                f.appendChild(e);
+            }
+        }
+    }
+
     function switchMenuPage(dir) {
         currentMenuPage += dir;
         if(currentMenuPage > 2) currentMenuPage = 1;
         if(currentMenuPage < 1) currentMenuPage = 2;
-
         document.getElementById('menu-page-1').classList.remove('active');
         document.getElementById('menu-page-2').classList.remove('active');
         document.getElementById('menu-page-' + currentMenuPage).classList.add('active');
-
-        const indicator = document.getElementById('menu-page-indicator');
-        indicator.innerText = currentMenuPage === 1 ? 'TRANG 1/2 (CHIẾN DỊCH)' : 'TRANG 2/2 (CÔNG CỤ)';
+        document.getElementById('menu-page-indicator').innerText = currentMenuPage === 1 ? 'TRANG 1/2 (CHIẾN DỊCH)' : 'TRANG 2/2 (CÔNG CỤ)';
     }
 
     function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
@@ -234,21 +338,42 @@
         return array;
     }
 
-    const themes = {
-        space: { bg: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] },
-        spring: { bg: 'linear-gradient(to bottom, #2e1437, #943b54)', p: '#ff7eb3', obj: ['🌸','🦋','🌷','🌱','🕊️'] },
-        summer: { bg: 'linear-gradient(to bottom, #001d3d, #00b4db)', p: '#f6d365', obj: ['🌻','☀️','🍉','🍦','🦀'] },
-        autumn: { bg: 'linear-gradient(to bottom, #3f2b96, #a8c0ff)', p: '#ff9966', obj: ['🍁','🍂','🐿️','🦊','🌾'] },
-        winter: { bg: 'linear-gradient(to bottom, #141e30, #243b55)', p: '#a1c4fd', obj: ['❄️','⛄','🐧','🧊','🏔️'] },
-        love: { bg: 'linear-gradient(to bottom, #43000b, #ff0f7b)', p: '#ff0844', obj: ['💖','🌹','💌','🧸','💘'] },
-        animals: { bg: 'linear-gradient(to bottom, #134e5e, #71b280)', p: '#2ebf91', obj: ['🦁','🐼','🐾','🐯','🐨'] },
-        nature: { bg: 'linear-gradient(to bottom, #0f2027, #2c5364)', p: '#11998e', obj: ['🌲','🌈','🍄','🍀','🦅'] },
-        tech: { bg: 'radial-gradient(circle at center, #000000, #434343)', p: '#00ff00', obj: ['💻','🤖','⚡','🔋','🔌'] }
-    };
-
-    function toggleMode() { const h = document.documentElement; h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark'); }
     function toggleMap() { document.getElementById('map-drawer').classList.toggle('open'); }
     function adjSize(v) { fontSize += v; document.querySelectorAll('.question-title').forEach(e => e.style.fontSize = fontSize + 'px'); }
+
+    async function askGemini(qIdx, prefix = '') {
+        if(jumpTimer) clearInterval(jumpTimer); 
+        
+        const apiKeyInput = document.getElementById('gemini-api-key').value.trim();
+        if(!apiKeyInput) { 
+            alert("⚠️ Sếp chưa nhập Gemini API Key!\nVui lòng vào ⚙️ MENU (Trang 2) dán Key vào nhé!"); 
+            return; 
+        }
+        localStorage.setItem('gemini_api_key_vip', apiKeyInput);
+
+        const q = questions[qIdx];
+        const box = document.getElementById(`ai-box-${prefix}${qIdx}`);
+        box.style.display = 'block';
+        box.innerHTML = `<span style="color:#8b5cf6; font-weight:bold;">⏳ Đang kết nối não bộ Gemini...</span> (Đợi xíu nhé sếp)`;
+
+        let prompt = `Bạn là một Giáo sư chuyên ngành Răng Hàm Mặt. Hãy giải thích chi tiết, chính xác và dễ hiểu câu hỏi trắc nghiệm sau đây:\n\nCÂU HỎI: ${q.title.replace(/<[^>]+>/g, '')}\n\nCÁC ĐÁP ÁN:\n`;
+        q.opts.forEach((opt) => { prompt += `- ${opt.text.replace(/<[^>]+>/g, '')} ${opt.isC ? '(ĐÂY LÀ ĐÁP ÁN ĐÚNG)' : ''}\n`; });
+        prompt += `\nYÊU CẦU: Giải thích cặn kẽ tại sao đáp án đúng lại đúng, và chỉ ra lỗi sai của các đáp án còn lại dựa trên kiến thức Y khoa. Phân tích thật dễ hiểu. Xuống dòng hợp lý.`;
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKeyInput}`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+            const data = await response.json();
+            if(data.error) { box.innerHTML = `❌ Lỗi API: ${data.error.message}`; return; }
+            
+            let text = data.candidates[0].content.parts[0].text;
+            text = text.replace(/\*\*(.*?)\*\*/g, '<b style="color:var(--primary);">$1</b>').replace(/\n/g, '<br>');
+            box.innerHTML = `<b style="color:#8b5cf6; font-size:15px; border-bottom: 1px dashed #8b5cf6; padding-bottom: 5px; display:inline-block; margin-bottom:10px;">🤖 GEMINI GIẢI THÍCH:</b><br>${text}`;
+        } catch(e) {
+            box.innerHTML = `❌ Lỗi mạng hoặc API Key bị sai rồi sếp! (Mẹo: Có thể API Key hết hạn hoặc sếp copy bị thiếu chữ).`;
+        }
+    }
 
     function populateVoices() {
         viVoices = synth.getVoices().filter(v => v.lang.includes('vi'));
@@ -267,6 +392,9 @@
     }
 
     window.onload = function() {
+        const savedKey = localStorage.getItem('gemini_api_key_vip');
+        if(savedKey) document.getElementById('gemini-api-key').value = savedKey;
+
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
         if(!id) { location.href='index.html'; return; }
@@ -296,7 +424,7 @@
         });
         if(q) originalQ.push(q);
         
-        if(originalQ.length === 0) { document.getElementById('quiz-container').innerHTML = "<div style='color:#fff'>Đề thi trống!</div>"; return; }
+        if(originalQ.length === 0) { document.getElementById('quiz-container').innerHTML = "<div style='color:var(--text)'>Đề thi trống!</div>"; return; }
 
         initGame('all'); changeTheme('space');
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
@@ -346,7 +474,11 @@
             const div = document.createElement('div'); div.className = 'question-box'; div.id = 'q-'+i;
             div.innerHTML = `<div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
                              <div class="opts"></div>
-                             <div id="loader-${i}" style="display:none; text-align:center;"></div>`;
+                             <div id="loader-${i}" style="display:none; text-align:center;"></div>
+                             <div id="ai-container-${i}" style="display:none; margin-top: 15px;">
+                                <button onclick="askGemini(${i})" class="btn-tool" style="background: linear-gradient(45deg, #8b5cf6, #3b82f6); color: #fff; border: none; width: 100%; justify-content: center;">🤖 HỎI GEMINI GIẢI THÍCH</button>
+                                <div id="ai-box-${i}" style="display:none; text-align:left; background: rgba(139,92,246,0.1); padding: 15px; border-radius: 12px; border: 1px solid #8b5cf6; margin-top: 10px; font-size: 14px; line-height: 1.6;"></div>
+                             </div>`;
             const oCont = div.querySelector('.opts');
             
             q.opts.forEach((opt, oIdx) => {
@@ -368,6 +500,8 @@
                     
                     updateStats(); updateNode(i); 
                     
+                    document.getElementById(`ai-container-${i}`).style.display = 'block';
+
                     const l = document.getElementById(`loader-${i}`);
                     l.style.display = 'block';
                     let msgHTML = '';
@@ -378,12 +512,12 @@
                         msgHTML += `<div style="margin-top:10px; font-size:13px; color:var(--primary); font-weight:900;">👉 Bấm mũi tên <b>❯</b> để tiếp tục</div>`;
                     } 
                     else if (!opt.isC) {
-                        msgHTML += `<div style="font-size:13px; font-weight:900; color:#ef4444; padding: 12px; background: rgba(239,68,68,0.15); border-radius: 12px; border: 1px dashed #ef4444; margin-top: 15px;">❌ Sai rồi! Nhìn lại đáp án đúng rồi bấm <b>❯</b> để đi tiếp nhé!</div>`;
+                        msgHTML += `<div style="font-size:13px; font-weight:900; color:#ef4444; padding: 12px; background: rgba(239,68,68,0.15); border-radius: 12px; border: 1px dashed #ef4444; margin-top: 15px;">❌ Sai rồi! Nhìn kỹ đáp án đúng nhé! (Bấm 🤖 Hỏi Gemini nếu không hiểu)</div>`;
                     } 
                     else {
                         autoNext = true;
-                        msgHTML += `<div style="font-size:11px; font-weight:900; color:var(--primary); letter-spacing:1px; margin-top:15px;">TỰ ĐỘNG CHUYỂN CÂU...</div>
-                                    <div style="width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:10px;margin-top:8px;overflow:hidden;">
+                        msgHTML += `<div style="font-size:11px; font-weight:900; color:var(--primary); letter-spacing:1px; margin-top:15px;">TỰ CHUYỂN CÂU... (Bấm Hỏi AI để dừng)</div>
+                                    <div style="width:100%;height:6px;background:rgba(128,128,128,0.2);border-radius:10px;margin-top:8px;overflow:hidden;">
                                         <div class="jump-bar-fill" id="fill-${i}" style="margin:0;"></div>
                                     </div>`;
                     }
@@ -394,7 +528,7 @@
                         let f = document.getElementById(`fill-${i}`);
                         let w = 100;
                         jumpTimer = setInterval(() => { 
-                            w -= 4; if(f) f.style.width = w + '%'; 
+                            w -= 3; if(f) f.style.width = w + '%'; 
                             if(w <= 0) { 
                                 clearInterval(jumpTimer); 
                                 if(i >= questions.length - 1) showEndScreen(); else move(1); 
@@ -409,7 +543,6 @@
     }
 
     function show(i) {
-        if(synth.speaking) synth.cancel();
         document.querySelectorAll('.question-box').forEach(b => b.classList.remove('active'));
         if(document.getElementById('q-'+i)) document.getElementById('q-'+i).classList.add('active');
         document.querySelectorAll('.node').forEach(n => n.classList.remove('node-active'));
@@ -536,7 +669,7 @@
             box.style.borderColor = statusColor;
 
             let html = `<div style="text-align:center; margin-bottom: 15px;">
-                            <span style="background:rgba(255,255,255,0.1); color:${statusColor}; padding: 6px 15px; border-radius: 20px; font-weight: 900; font-size: 12px; border: 1px solid ${statusColor};">CÂU ${i+1} - ${statusText}</span>
+                            <span style="background:rgba(128,128,128,0.1); color:${statusColor}; padding: 6px 15px; border-radius: 20px; font-weight: 900; font-size: 12px; border: 1px solid ${statusColor};">CÂU ${i+1} - ${statusText}</span>
                         </div>
                         <div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
                         <div class="opts">`;
@@ -553,24 +686,14 @@
                 html += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Bổ sung / Giải thích:</b><br>${q.explanation}</div>`;
             }
 
+            html += `<div style="margin-top: 15px;">
+                        <button onclick="askGemini(${i}, 'rev-')" class="btn-tool" style="background: linear-gradient(45deg, #8b5cf6, #3b82f6); color: #fff; border: none; width: 100%; justify-content: center;">🤖 HỎI GEMINI CHI TIẾT</button>
+                        <div id="ai-box-rev-${i}" style="display:none; text-align:left; background: rgba(139,92,246,0.1); padding: 15px; border-radius: 12px; border: 1px solid #8b5cf6; margin-top: 10px; font-size: 14px; line-height: 1.6;"></div>
+                     </div>`;
+
             box.innerHTML = html;
             cont.appendChild(box);
         });
-    }
-
-    function changeTheme(v) {
-        const t = themes[v]; document.documentElement.style.setProperty('--primary', t.p);
-        document.getElementById('universe').style.background = t.bg;
-        document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
-        
-        const f = document.getElementById('floating-objects'); f.innerHTML = '';
-        for(let i=0; i<12; i++) {
-            const e = document.createElement('div'); e.className = 'emoji-floater';
-            e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
-            e.style.left = Math.random()*90+'vw'; e.style.top = Math.random()*90+'vh';
-            e.style.animationDuration = (15 + Math.random()*15) + 's';
-            f.appendChild(e);
-        }
     }
 
     function playSfx(isC) {
