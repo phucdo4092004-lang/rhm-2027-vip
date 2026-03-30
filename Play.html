@@ -11,6 +11,7 @@
         [data-theme="light"] { --bg-card: rgba(255, 255, 255, 0.9); --text: #0f172a; --opt-bg: #f1f5f9; --border: rgba(0,0,0,0.1); --drawer: #f8f9fa; --glass: rgba(0,0,0,0.05); }
 
         body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); margin: 0; overflow: hidden; height: 100vh; background: #000; transition: 0.3s; }
+        
         #universe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background: var(--bg-theme); transition: filter 1.5s ease-in-out, background 1s; }
         #floating-objects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
         .emoji-floater { position: absolute; font-size: 40px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.7; }
@@ -27,19 +28,18 @@
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
         .title-text { font-weight: 900; color: var(--primary); font-size: 14px; text-shadow: 0 0 10px var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
 
-        .drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
+        .drawer { position: fixed; top: 0; right: -320px; width: 290px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px 20px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
         .drawer.open { right: 0; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
         .drawer-overlay.show { display: block; }
         .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 16px; border: 1px dashed #facc15; text-align: center; }
+        .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 15px; border: 1px dashed #facc15; text-align: center; }
 
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
         .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 80vh; overflow-y: auto; }
         .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .progress-text-top { text-align: center; color: var(--primary); font-weight: 900; font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; background: rgba(0,242,254,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--primary);}
         .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; }
         .option:hover { border-left-color: var(--primary); background: rgba(0, 242, 254, 0.1); transform: translateX(5px); }
         .correct { background: rgba(16, 185, 129, 0.15) !important; border-left: 4px solid #10b981 !important; border-color: #10b981 !important; color: #10b981 !important; }
@@ -90,26 +90,25 @@
 <div id="drawer-overlay" class="drawer-overlay" onclick="toggleMenu()"></div>
 
 <div id="settings-drawer" class="drawer">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
         <h3 style="margin:0; color:var(--primary); font-weight:900;">⚙️ TÙY CHỈNH</h3>
         <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
     </div>
     
-    <div class="setting-group">
-        <div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div>
-    </div>
+    <div class="setting-group"><div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div></div>
 
-    <div class="setting-group" style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 15px 0;">
-        <div style="font-size:11px; font-weight:bold; color:var(--text); margin-bottom: 8px;">🚀 BỘ ĐIỀU KHIỂN NHANH:</div>
-        <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--primary-grad); color:#000; border:none;">🗺️ MỞ BẢN ĐỒ CÂU HỎI</button>
-        <button onclick="showReviewMode(); toggleMenu();" class="btn-tool" style="background:#10b981; color:#fff; border:none;">👀 XEM BẢNG VÀNG ĐÁP ÁN</button>
-        <button onclick="initGame('wrong'); toggleMenu();" class="btn-tool" style="background:linear-gradient(45deg, #ef4444, #f89b29); color:#fff; border:none;">🔥 LÀM LẠI CÂU SAI</button>
+    <div class="setting-group" style="border: 2px dashed var(--primary); padding: 15px; border-radius: 15px; background: rgba(0,242,254,0.05);">
+        <div style="font-size:12px; font-weight:900; color:var(--primary); margin-bottom: 12px; text-align:center;">🚀 ĐIỀU KHIỂN CHIẾN DỊCH</div>
+        <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--opt-bg); border-color:var(--primary); margin-bottom:8px;">🗺️ MỞ BẢN ĐỒ CÂU HỎI</button>
+        <button onclick="showReviewMode(); toggleMenu();" class="btn-tool" style="background:#10b981; color:#fff; border:none; margin-bottom:8px;">👀 BẢNG VÀNG LƯỚT DỌC</button>
+        <button onclick="initGame('wrong'); toggleMenu();" class="btn-tool" style="background:linear-gradient(45deg, #ef4444, #f89b29); color:#fff; border:none; margin-bottom:8px;">🔥 LÀM LẠI CÂU SAI</button>
+        <button onclick="initGame('unanswered'); toggleMenu();" class="btn-tool" style="background:#8b5cf6; color:#fff; border:none; margin-bottom:8px;">⏳ LÀM CÂU CHƯA LÀM</button>
         <button onclick="initGame('all'); toggleMenu();" class="btn-tool" style="background:#fff; color:#000; border:none;">🔄 CHƠI LẠI TỪ ĐẦU</button>
     </div>
 
     <div class="setting-group" style="flex-direction: row; gap: 10px;">
-        <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
-        <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
+        <button class="btn-tool" onclick="adjSize(2)">A+ To</button>
+        <button class="btn-tool" onclick="adjSize(-2)">A- Nhỏ</button>
     </div>
     <div class="setting-group">
         <select id="voice-sel" class="btn-tool" style="outline:none; text-align:center;"></select>
@@ -201,6 +200,7 @@
         synth.speak(utter); toggleMenu(); 
     }
 
+    // ĐỌC FULL THÔNG TIN TỪ SHEETS
     window.onload = function() {
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
@@ -240,20 +240,23 @@
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
     };
 
+    // KHỞI TẠO GAME VÀ XỬ LÝ LỌC CÂU HỎI
     function initGame(mode) {
         document.getElementById('end-screen').style.display = 'none';
         
         if (mode === 'wrong') {
-            let wrongQ = questions.filter(x => x.ans === false);
-            if (wrongQ.length === 0) {
-                alert("🎉 Sếp chưa làm sai câu nào cả! Hãy tiếp tục phát huy!");
-                return;
-            }
-            questions = wrongQ;
+            let targetQ = questions.filter(x => x.ans === false);
+            if (targetQ.length === 0) { alert("🎉 Xuất sắc! Sếp chưa làm sai câu nào cả!"); return; }
+            questions = targetQ;
+        } else if (mode === 'unanswered') {
+            let targetQ = questions.filter(x => x.ans === null);
+            if (targetQ.length === 0) { alert("✅ Sếp đã hoàn thành 100% các câu hỏi rồi!"); return; }
+            questions = targetQ;
         } else {
             questions = JSON.parse(JSON.stringify(originalQ));
         }
-        
+
+        // Khôi phục lại giao diện phòng thi chuẩn (nếu đang ở chế độ xem bảng vàng)
         const cont = document.getElementById('quiz-container');
         cont.style.display = 'flex';
         cont.style.height = '100vh';
@@ -266,6 +269,7 @@
         document.getElementById('nav-prev').style.display = 'flex';
         document.getElementById('nav-next').style.display = 'flex';
 
+        // Reset đáp án
         questions.forEach(q => { q.ans = null; q.userPick = -1; });
         currentIdx = 0; score = 0; done = 0; streak = 0; lastLevel5Percent = 0;
         cont.innerHTML = '';
@@ -448,7 +452,6 @@
             box.style.margin = '0 auto 25px auto';
             box.style.animation = 'none'; 
 
-            // CẬP NHẬT TÌNH TRẠNG CHƯA LÀM
             let statusColor = q.ans === true ? '#10b981' : (q.ans === false ? '#ef4444' : '#94a3b8');
             let statusText = q.ans === true ? '✅ ĐÚNG' : (q.ans === false ? '❌ SAI' : '⚠️ CHƯA LÀM');
             box.style.borderColor = statusColor;
