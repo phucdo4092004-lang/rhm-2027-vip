@@ -64,7 +64,6 @@
     function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span style="color:#ff4d4d">$1</span>').replace(/\[BR\]/gi, '<br>'); }
     function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
-    // ĐỌC FULL THÔNG TIN
     window.onload = function() {
         const id = new URLSearchParams(window.location.search).get('id');
         const rawData = localStorage.getItem(id);
@@ -75,7 +74,8 @@
             line = line.trim(); if(!line) return;
             if(line.match(/^Câu\s*\d+:/i)) {
                 if(q) flashcards.push(q);
-                let cleanedTitle = line.replace(/^Câu\s*\d+:/i, '').replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
+                // KHÔNG XÓA CÂU X NỮA
+                let cleanedTitle = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
                 q = { title: parseSC(cleanedTitle), opts: [], explanation: "" };
             } else if (q) {
                 if(line.startsWith('*')) {
@@ -94,7 +94,6 @@
         });
         if(q) flashcards.push(q);
 
-        // GỘP ĐÁP ÁN ĐÚNG + LỜI GIẢI THÍCH VÀO MẶT SAU CỦA THẺ
         flashcards.forEach(fc => {
             let correctText = fc.opts.filter(o => o.isC).map(o => o.text).join('<br><br>');
             if(!correctText) correctText = "Chưa có đáp án đúng (*)";
@@ -123,7 +122,6 @@
         }, 150); 
     }
 
-    // ĐÃ HỦY BO TỰ ĐỘNG CHUYỂN CÂU. LẬT RA ĐỂ ĐÓ ĐẾN KHI NÀO SẾP TỰ BẤM NEXT THÌ THÔI
     function flipCard() { 
         document.getElementById('flashcard').classList.toggle('flipped'); 
     }
