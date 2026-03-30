@@ -95,11 +95,6 @@
         <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
     </div>
     <div class="setting-group"><div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div></div>
-    
-    <div class="setting-group">
-        <button onclick="showEndScreen(); toggleMenu();" class="btn-tool" style="background:#ef4444; color:#fff; border:none;">🛑 NỘP BÀI / KẾT THÚC SỚM</button>
-    </div>
-
     <div class="setting-group" style="flex-direction: row; gap: 10px;">
         <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
         <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
@@ -150,7 +145,7 @@
         <h2 style="color:var(--primary); font-weight:900; margin-top:0; text-transform: uppercase;">CHIẾN DỊCH HOÀN TẤT!</h2>
         <div style="font-size: 60px; font-weight: 900; text-shadow: 0 0 20px rgba(255,255,255,0.3);" id="final-score">100%</div>
         <div id="final-rank" style="color: #facc15; font-weight: 800; margin-bottom: 30px; font-size: 16px; letter-spacing: 1px;">THỦ KHOA RHM</div>
-        <button class="btn-end" style="background:linear-gradient(90deg, #10b981, #059669); color:#fff;" onclick="showReviewMode()">👀 Xem Bảng Vàng (Bảo Mật)</button>
+        <button class="btn-end" style="background:linear-gradient(90deg, #10b981, #059669); color:#fff;" onclick="showReviewMode()">👀 Xem Bảng Vàng (Giải Thích)</button>
         <button class="btn-end" style="background:var(--primary-grad); color:#000;" onclick="initGame('wrong')">🔥 Phục thù câu sai</button>
         <button class="btn-end" style="background:#fff; color:#000;" onclick="initGame('all')">🔄 Chơi lại từ đầu</button>
     </div>
@@ -197,6 +192,7 @@
         synth.speak(utter); toggleMenu(); 
     }
 
+    // ĐỌC DỮ LIỆU TỪ SHEETS
     window.onload = function() {
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
@@ -211,7 +207,7 @@
             line = line.trim(); if(!line) return;
             if(line.match(/^Câu\s*\d+:/i)) {
                 if(q) originalQ.push(q);
-                // GIỮ LẠI CÂU X: CHỈ XÓA "(1 ĐÁP ÁN)"
+                // GIỮ NGUYÊN CHỮ "Câu X:", CHỈ XÓA CHỮ "(Chọn 1 đáp án)"
                 let cleanedTitle = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
                 q = { title: parseSC(cleanedTitle), opts: [], explanation: "", ans: null, userPick: -1 };
             } else if (q) {
@@ -263,8 +259,7 @@
         const cont = document.getElementById('quiz-container');
         questions.forEach((q, i) => {
             const div = document.createElement('div'); div.className = 'question-box'; div.id = 'q-'+i;
-            div.innerHTML = `<div style="text-align:center; width:100%;"><div class="progress-text-top">CÂU ${i+1} / ${questions.length}</div></div>
-                             <div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
+            div.innerHTML = `<div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
                              <div class="opts"></div>
                              <div id="loader-${i}" style="display:none; text-align:center;"></div>`;
             const oCont = div.querySelector('.opts');
@@ -294,7 +289,7 @@
                     let autoNext = false;
 
                     if (q.explanation) {
-                        msgHTML += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Bổ sung / Giải thích:</b><br>${q.explanation}</div>`;
+                        msgHTML += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Giải thích / Bổ sung:</b><br>${q.explanation}</div>`;
                         msgHTML += `<div style="margin-top:10px; font-size:13px; color:var(--primary); font-weight:900;">👉 Bấm mũi tên <b>❯</b> để tiếp tục</div>`;
                     } 
                     else if (!opt.isC) {
@@ -315,7 +310,10 @@
                         let w = 100;
                         jumpTimer = setInterval(() => { 
                             w -= 4; if(f) f.style.width = w + '%'; 
-                            if(w <= 0) { clearInterval(jumpTimer); findNextUnansweredOrEnd(i); } 
+                            if(w <= 0) { 
+                                clearInterval(jumpTimer); 
+                                if(i >= questions.length - 1) showEndScreen(); else move(1); 
+                            } 
                         }, 80); 
                     }
                 };
@@ -323,24 +321,6 @@
             });
             cont.appendChild(div);
         });
-    }
-
-    // TÌM CÂU CHƯA LÀM ĐỂ NHẢY TỚI (NẾU ĐÃ LÀM HẾT THÌ KẾT THÚC)
-    function findNextUnansweredOrEnd(current) {
-        if(done >= questions.length) {
-            showEndScreen();
-            return;
-        }
-        let nextIdx = -1;
-        for(let j = current + 1; j < questions.length; j++) {
-            if(questions[j].ans === null) { nextIdx = j; break; }
-        }
-        if(nextIdx === -1) {
-            for(let j = 0; j < current; j++) {
-                if(questions[j].ans === null) { nextIdx = j; break; }
-            }
-        }
-        if(nextIdx !== -1) show(nextIdx);
     }
 
     function show(i) {
@@ -374,11 +354,6 @@
         if(current5Percent > lastLevel5Percent && prog > 0) {
             lastLevel5Percent = current5Percent;
             triggerLevelUpEffect(prog);
-        }
-
-        // Nếu người dùng tự dùng tay click chọn câu khác, kiểm tra đã xong chưa
-        if(done >= questions.length && document.getElementById('q-'+currentIdx).querySelector('.option.correct')) {
-            setTimeout(() => { showEndScreen(); }, 2000);
         }
     }
 
@@ -431,7 +406,6 @@
         }
     }
 
-    // BẢNG VÀNG BẢO MẬT (CHƯA LÀM THÌ KHÔNG LỘ ĐÁP ÁN)
     function showReviewMode() {
         document.getElementById('end-screen').style.display = 'none';
         
@@ -457,12 +431,8 @@
             box.style.margin = '0 auto 25px auto';
             box.style.animation = 'none'; 
 
-            // Xử lý màu nhãn dán
-            let statusColor = 'gray';
-            let statusText = '⚠️ CHƯA LÀM';
-            if(q.ans === true) { statusColor = '#10b981'; statusText = '✅ ĐÚNG'; }
-            else if(q.ans === false) { statusColor = '#ef4444'; statusText = '❌ SAI'; }
-
+            let statusColor = q.ans === true ? '#10b981' : (q.ans === false ? '#ef4444' : 'gray');
+            let statusText = q.ans === true ? '✅ ĐÚNG' : (q.ans === false ? '❌ SAI' : '⚠️ BỎ QUA');
             box.style.borderColor = statusColor;
 
             let html = `<div style="text-align:center; margin-bottom: 15px;">
@@ -473,20 +443,14 @@
 
             q.opts.forEach((opt, oIdx) => {
                 let optClass = 'option disabled';
-                // NẾU ĐÃ LÀM MỚI BÔI MÀU
-                if(q.userPick !== -1) {
-                    if (opt.isC) optClass += ' correct';
-                    else if (q.userPick === oIdx) optClass += ' wrong';
-                }
+                if (opt.isC) optClass += ' correct';
+                else if (q.userPick === oIdx) optClass += ' wrong';
                 html += `<div class="${optClass}" style="margin-bottom:8px;">${opt.text}</div>`;
             });
             html += `</div>`;
 
-            // NẾU ĐÃ LÀM VÀ CÓ GIẢI THÍCH THÌ HIỆN GIẢI THÍCH
-            if (q.explanation && q.userPick !== -1) {
+            if (q.explanation) {
                 html += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Bổ sung / Giải thích:</b><br>${q.explanation}</div>`;
-            } else if (q.userPick === -1) {
-                html += `<div style="text-align:center; font-style:italic; color:gray; margin-top:10px;">(Hãy hoàn thành câu hỏi để xem đáp án đúng và giải thích)</div>`;
             }
 
             box.innerHTML = html;
