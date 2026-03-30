@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hạm Đội RHM - Phúc VIP</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #00f2fe; --primary-grad: linear-gradient(90deg, #00f2fe, #4facfe); --bg-theme: radial-gradient(circle at center, #1e1b4b 0%, #020617 100%); }
         [data-theme="dark"] { --bg-card: rgba(15, 23, 42, 0.85); --text: #f8fafc; --opt-bg: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.15); --drawer: rgba(15, 23, 42, 0.95); --glass: rgba(255,255,255,0.1); }
@@ -40,6 +41,7 @@
         .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
+        .progress-text-top { text-align: center; color: var(--primary); font-weight: 900; font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; background: rgba(0,242,254,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--primary);}
         .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; }
         .option:hover { border-left-color: var(--primary); background: rgba(0, 242, 254, 0.1); transform: translateX(5px); }
         .correct { background: rgba(16, 185, 129, 0.15) !important; border-left: 4px solid #10b981 !important; border-color: #10b981 !important; color: #10b981 !important; }
@@ -107,9 +109,15 @@
     </div>
 
     <div class="setting-group" style="flex-direction: row; gap: 10px;">
-        <button class="btn-tool" onclick="adjSize(2)">A+ To</button>
-        <button class="btn-tool" onclick="adjSize(-2)">A- Nhỏ</button>
+        <button id="btn-sound" class="btn-tool" onclick="toggleSound()">🔊 BẬT ÂM</button>
+        <button id="btn-shuffle" class="btn-tool" onclick="toggleShuffle()" style="color:#facc15; border-color:#facc15;">🔀 ĐẢO ĐỀ: TẮT</button>
     </div>
+
+    <div class="setting-group" style="flex-direction: row; gap: 10px;">
+        <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
+        <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
+    </div>
+    
     <div class="setting-group">
         <select id="voice-sel" class="btn-tool" style="outline:none; text-align:center;"></select>
         <button class="btn-tool btn-speak" onclick="speak()">🔊 ĐỌC ĐỀ BÀI</button>
@@ -163,10 +171,43 @@
     let originalQ = []; let questions = []; let currentIdx = 0; let score = 0; let done = 0;
     let streak = 0; let fontSize = 18; let jumpTimer = null; let audioCtx = null;
     let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
+    let isMuted = false; let isShuffle = false;
 
     function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
     function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>').replace(/\[BR\]/gi, '<br>'); }
     function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
+
+    // HÀM BẬT TẮT ÂM THANH
+    function toggleSound() {
+        isMuted = !isMuted;
+        document.getElementById('btn-sound').innerHTML = isMuted ? "🔕 TẮT ÂM" : "🔊 BẬT ÂM";
+        document.getElementById('btn-sound').style.color = isMuted ? "#ef4444" : "var(--text)";
+        document.getElementById('btn-sound').style.borderColor = isMuted ? "#ef4444" : "var(--border)";
+        if(!isMuted) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); playSfx(true); }
+    }
+
+    // HÀM BẬT TẮT ĐẢO ĐỀ VÀ ĐẢO ĐÁP ÁN
+    function toggleShuffle() {
+        isShuffle = !isShuffle;
+        const btn = document.getElementById('btn-shuffle');
+        btn.innerHTML = isShuffle ? "🔀 ĐẢO ĐỀ: BẬT" : "🔀 ĐẢO ĐỀ: TẮT";
+        btn.style.color = isShuffle ? "#10b981" : "#facc15";
+        btn.style.borderColor = isShuffle ? "#10b981" : "#facc15";
+        
+        if(confirm("Bật/Tắt chế độ ĐẢO ĐỀ cần load lại bài. Bạn có muốn chơi lại từ đầu ngay bây giờ?")) {
+            initGame('all');
+            toggleMenu();
+        }
+    }
+
+    // Thuật toán xáo trộn mảng (Fisher-Yates)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
     const themes = {
         space: { bg: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] },
@@ -200,7 +241,6 @@
         synth.speak(utter); toggleMenu(); 
     }
 
-    // ĐỌC FULL THÔNG TIN TỪ SHEETS
     window.onload = function() {
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
@@ -224,11 +264,8 @@
                     q.opts.push({ text: parseSC(line.substring(1).trim()), isC: false });
                 } else {
                     let cleanedLine = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
-                    if(q.opts.length === 0) {
-                        q.title += "<br>" + parseSC(cleanedLine); 
-                    } else {
-                        q.explanation += (q.explanation ? "<br>" : "") + parseSC(cleanedLine); 
-                    }
+                    if(q.opts.length === 0) { q.title += "<br>" + parseSC(cleanedLine); } 
+                    else { q.explanation += (q.explanation ? "<br>" : "") + parseSC(cleanedLine); }
                 }
             }
         });
@@ -240,7 +277,6 @@
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
     };
 
-    // KHỞI TẠO GAME VÀ XỬ LÝ LỌC CÂU HỎI
     function initGame(mode) {
         document.getElementById('end-screen').style.display = 'none';
         
@@ -256,7 +292,12 @@
             questions = JSON.parse(JSON.stringify(originalQ));
         }
 
-        // Khôi phục lại giao diện phòng thi chuẩn (nếu đang ở chế độ xem bảng vàng)
+        // ÁP DỤNG THUẬT TOÁN ĐẢO ĐỀ & XÀO ĐÁP ÁN
+        if(isShuffle) {
+            shuffleArray(questions);
+            questions.forEach(q => shuffleArray(q.opts));
+        }
+
         const cont = document.getElementById('quiz-container');
         cont.style.display = 'flex';
         cont.style.height = '100vh';
@@ -269,7 +310,6 @@
         document.getElementById('nav-prev').style.display = 'flex';
         document.getElementById('nav-next').style.display = 'flex';
 
-        // Reset đáp án
         questions.forEach(q => { q.ans = null; q.userPick = -1; });
         currentIdx = 0; score = 0; done = 0; streak = 0; lastLevel5Percent = 0;
         cont.innerHTML = '';
@@ -415,6 +455,21 @@
         t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
     }
 
+    // HIỆU ỨNG BẮN PHÁO HOA KHI 100%
+    function shootConfetti() {
+        var duration = 3 * 1000;
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10001 };
+        function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+        var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) { return clearInterval(interval); }
+            var particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+        }, 250);
+    }
+
     function showEndScreen() {
         const p = Math.round((score / questions.length) * 100);
         document.getElementById('final-score').innerText = p + '%';
@@ -424,6 +479,7 @@
         if(p === 100) {
             const id = new URLSearchParams(window.location.search).get('id');
             localStorage.setItem('done_' + id, 'true');
+            shootConfetti(); // Bắn pháo hoa ăn mừng
         }
     }
 
@@ -494,7 +550,9 @@
         }
     }
 
+    // ÂM THANH ĐƯỢC CHÈN BIẾN isMuted
     function playSfx(isC) {
+        if(isMuted) return;
         if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
         o.connect(g); g.connect(audioCtx.destination);
         o.frequency.value = isC ? 880 : 200; g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
