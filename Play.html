@@ -11,7 +11,6 @@
         [data-theme="light"] { --bg-card: rgba(255, 255, 255, 0.9); --text: #0f172a; --opt-bg: #f1f5f9; --border: rgba(0,0,0,0.1); --drawer: #f8f9fa; --glass: rgba(0,0,0,0.05); }
 
         body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); margin: 0; overflow: hidden; height: 100vh; background: #000; transition: 0.3s; }
-        
         #universe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background: var(--bg-theme); transition: filter 1.5s ease-in-out, background 1s; }
         #floating-objects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
         .emoji-floater { position: absolute; font-size: 40px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.7; }
@@ -40,6 +39,7 @@
         .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
+        .progress-text-top { text-align: center; color: var(--primary); font-weight: 900; font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; background: rgba(0,242,254,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--primary);}
         .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; }
         .option:hover { border-left-color: var(--primary); background: rgba(0, 242, 254, 0.1); transform: translateX(5px); }
         .correct { background: rgba(16, 185, 129, 0.15) !important; border-left: 4px solid #10b981 !important; border-color: #10b981 !important; color: #10b981 !important; }
@@ -145,7 +145,7 @@
         <h2 style="color:var(--primary); font-weight:900; margin-top:0; text-transform: uppercase;">CHIẾN DỊCH HOÀN TẤT!</h2>
         <div style="font-size: 60px; font-weight: 900; text-shadow: 0 0 20px rgba(255,255,255,0.3);" id="final-score">100%</div>
         <div id="final-rank" style="color: #facc15; font-weight: 800; margin-bottom: 30px; font-size: 16px; letter-spacing: 1px;">THỦ KHOA RHM</div>
-        <button class="btn-end" style="background:linear-gradient(90deg, #10b981, #059669); color:#fff;" onclick="showReviewMode()">👀 Xem lại dạng cuộn dọc</button>
+        <button class="btn-end" style="background:linear-gradient(90deg, #10b981, #059669); color:#fff;" onclick="showReviewMode()">👀 Xem Bảng Vàng (Giải Thích)</button>
         <button class="btn-end" style="background:var(--primary-grad); color:#000;" onclick="initGame('wrong')">🔥 Phục thù câu sai</button>
         <button class="btn-end" style="background:#fff; color:#000;" onclick="initGame('all')">🔄 Chơi lại từ đầu</button>
     </div>
@@ -192,7 +192,7 @@
         synth.speak(utter); toggleMenu(); 
     }
 
-    // TẤM KHIÊN CHỐNG RÁC - DỌN SẠCH CÁC CHỮ DƯ THỪA TỪ SHEETS
+    // ĐỌC FULL THÔNG TIN TỪ SHEETS (CÂU HỎI + ĐÁP ÁN + GIẢI THÍCH)
     window.onload = function() {
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
@@ -207,20 +207,21 @@
             line = line.trim(); if(!line) return;
             if(line.match(/^Câu\s*\d+:/i)) {
                 if(q) originalQ.push(q);
-                // Xóa cả chữ "Câu X:" và chữ "Chọn 1 đáp án"
                 let cleanedTitle = line.replace(/^Câu\s*\d+:/i, '').replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
-                q = { title: parseSC(cleanedTitle), opts: [], ans: null, userPick: -1, isParsingOpts: false };
+                q = { title: parseSC(cleanedTitle), opts: [], explanation: "", ans: null, userPick: -1 };
             } else if (q) {
                 if(line.startsWith('*')) {
-                    q.isParsingOpts = true; // Bật khiên chống rác
                     q.opts.push({ text: parseSC(line.substring(1).trim()), isC: true });
                 } else if(line.startsWith('•')) {
-                    q.isParsingOpts = true; // Bật khiên chống rác
                     q.opts.push({ text: parseSC(line.substring(1).trim()), isC: false });
-                } else if(!q.isParsingOpts) {
-                    // Nếu chưa thấy đáp án nào thì vẫn là đang đọc câu hỏi
+                } else {
+                    // Nếu là dòng text bình thường (không có sao, không có chấm)
                     let cleanedLine = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
-                    q.title += "<br>" + parseSC(cleanedLine);
+                    if(q.opts.length === 0) {
+                        q.title += "<br>" + parseSC(cleanedLine); // Nối vào câu hỏi
+                    } else {
+                        q.explanation += (q.explanation ? "<br>" : "") + parseSC(cleanedLine); // Nối vào phần Giải thích
+                    }
                 }
             }
         });
@@ -235,7 +236,6 @@
     function initGame(mode) {
         document.getElementById('end-screen').style.display = 'none';
         
-        // Khôi phục lại giao diện phòng thi nếu đang từ Chế độ Xem lại (Review Mode) quay về
         const cont = document.getElementById('quiz-container');
         cont.style.display = 'flex';
         cont.style.height = '100vh';
@@ -259,9 +259,9 @@
         const cont = document.getElementById('quiz-container');
         questions.forEach((q, i) => {
             const div = document.createElement('div'); div.className = 'question-box'; div.id = 'q-'+i;
-            // Đã xóa hoàn toàn chữ Câu 1/50 dư thừa
             div.innerHTML = `<div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
-                             <div class="opts"></div>`;
+                             <div class="opts"></div>
+                             <div id="loader-${i}" style="display:none; text-align:center;"></div>`;
             const oCont = div.querySelector('.opts');
             
             q.opts.forEach((opt, oIdx) => {
@@ -269,7 +269,7 @@
                 oDiv.onclick = function() {
                     if(q.ans !== null) return; 
                     q.ans = opt.isC; 
-                    q.userPick = oIdx; // Lưu lại đáp án sếp vừa bấm
+                    q.userPick = oIdx;
                     done++;
                     Array.from(oCont.children).forEach(c => c.classList.add('disabled'));
                     
@@ -283,11 +283,42 @@
                     
                     updateStats(); updateNode(i); 
                     
-                    // AUTO NEXT SIÊU TỐC ĐÚNG 2 GIÂY (2000ms)
-                    setTimeout(() => {
-                        if(i >= questions.length - 1) showEndScreen();
-                        else move(1);
-                    }, 2000);
+                    const l = document.getElementById(`loader-${i}`);
+                    l.style.display = 'block';
+                    let msgHTML = '';
+                    let autoNext = false;
+
+                    // Nếu có giải thích -> Dừng lại hiển thị chờ sếp đọc
+                    if (q.explanation) {
+                        msgHTML += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Giải thích / Bổ sung:</b><br>${q.explanation}</div>`;
+                        msgHTML += `<div style="margin-top:10px; font-size:13px; color:var(--primary); font-weight:900;">👉 Bấm mũi tên <b>❯</b> để tiếp tục</div>`;
+                    } 
+                    // Nếu sai mà ko có giải thích -> Dừng lại bắt nhìn đáp án
+                    else if (!opt.isC) {
+                        msgHTML += `<div style="font-size:13px; font-weight:900; color:#ef4444; padding: 12px; background: rgba(239,68,68,0.15); border-radius: 12px; border: 1px dashed #ef4444; margin-top: 15px;">❌ Sai rồi! Nhìn lại đáp án đúng rồi bấm <b>❯</b> để đi tiếp nhé!</div>`;
+                    } 
+                    // Nếu đúng và ko có giải thích -> Tự động Next nhanh
+                    else {
+                        autoNext = true;
+                        msgHTML += `<div style="font-size:11px; font-weight:900; color:var(--primary); letter-spacing:1px; margin-top:15px;">TỰ ĐỘNG CHUYỂN CÂU...</div>
+                                    <div style="width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:10px;margin-top:8px;overflow:hidden;">
+                                        <div class="jump-bar-fill" id="fill-${i}" style="margin:0;"></div>
+                                    </div>`;
+                    }
+
+                    l.innerHTML = msgHTML;
+
+                    if (autoNext) {
+                        let f = document.getElementById(`fill-${i}`);
+                        let w = 100;
+                        jumpTimer = setInterval(() => { 
+                            w -= 4; if(f) f.style.width = w + '%'; 
+                            if(w <= 0) { 
+                                clearInterval(jumpTimer); 
+                                if(i >= questions.length - 1) showEndScreen(); else move(1); 
+                            } 
+                        }, 80); // Chạy thanh tiến độ 2s
+                    }
                 };
                 oCont.appendChild(oDiv);
             });
@@ -310,6 +341,7 @@
     }
 
     function move(d) {
+        if(jumpTimer) clearInterval(jumpTimer);
         let n = currentIdx + d; if(n >= 0 && n < questions.length) show(n);
     }
 
@@ -377,23 +409,21 @@
         }
     }
 
-    // TÍNH NĂNG MỚI: XEM LẠI BÀI DẠNG CUỘN DỌC
+    // BẢNG VÀNG XEM LẠI - CUỘN DỌC - HIỆN FULL GIẢI THÍCH
     function showReviewMode() {
         document.getElementById('end-screen').style.display = 'none';
         
-        // Ẩn các nút điều hướng và thanh tiến độ
         document.getElementById('nav-prev').style.display = 'none';
         document.getElementById('nav-next').style.display = 'none';
         document.querySelector('.progress-bar-bg').style.display = 'none';
         document.getElementById('progress-percent-text').style.display = 'none';
 
         const cont = document.getElementById('quiz-container');
-        // Đổi container thành cuộn dọc
         cont.style.display = 'block';
         cont.style.height = 'calc(100vh - 70px)';
         cont.style.marginTop = '70px';
         cont.style.overflowY = 'auto';
-        cont.style.padding = '20px 15px 100px 15px'; // padding bottom để không lấp mất nội dung
+        cont.style.padding = '20px 15px 100px 15px'; 
         
         cont.innerHTML = '<h2 style="text-align:center; color:var(--primary); font-weight:900; letter-spacing:1px; margin-bottom:30px;">📜 BẢNG VÀNG ÔN TẬP</h2>';
 
@@ -403,7 +433,7 @@
             box.style.position = 'relative';
             box.style.marginBottom = '25px';
             box.style.margin = '0 auto 25px auto';
-            box.style.animation = 'none'; // Tắt hiệu ứng nhảy
+            box.style.animation = 'none'; 
 
             let statusColor = q.ans === true ? '#10b981' : (q.ans === false ? '#ef4444' : 'gray');
             let statusText = q.ans === true ? '✅ ĐÚNG' : (q.ans === false ? '❌ SAI' : '⚠️ BỎ QUA');
@@ -417,14 +447,17 @@
 
             q.opts.forEach((opt, oIdx) => {
                 let optClass = 'option disabled';
-                // Bôi màu cho kết quả
                 if (opt.isC) optClass += ' correct';
                 else if (q.userPick === oIdx) optClass += ' wrong';
-
                 html += `<div class="${optClass}" style="margin-bottom:8px;">${opt.text}</div>`;
             });
-
             html += `</div>`;
+
+            // IN RA PHẦN GIẢI THÍCH NẾU CÓ
+            if (q.explanation) {
+                html += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Bổ sung / Giải thích:</b><br>${q.explanation}</div>`;
+            }
+
             box.innerHTML = html;
             cont.appendChild(box);
         });
