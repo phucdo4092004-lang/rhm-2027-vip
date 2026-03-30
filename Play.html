@@ -94,7 +94,19 @@
         <h3 style="margin:0; color:var(--primary); font-weight:900;">⚙️ TÙY CHỈNH</h3>
         <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
     </div>
-    <div class="setting-group"><div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div></div>
+    
+    <div class="setting-group">
+        <div class="score-badge" id="score-text">Đã làm: 0/0 <br>Tỷ lệ đúng: 0%</div>
+    </div>
+
+    <div class="setting-group" style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 15px 0;">
+        <div style="font-size:11px; font-weight:bold; color:var(--text); margin-bottom: 8px;">🚀 BỘ ĐIỀU KHIỂN NHANH:</div>
+        <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--primary-grad); color:#000; border:none;">🗺️ MỞ BẢN ĐỒ CÂU HỎI</button>
+        <button onclick="showReviewMode(); toggleMenu();" class="btn-tool" style="background:#10b981; color:#fff; border:none;">👀 XEM BẢNG VÀNG ĐÁP ÁN</button>
+        <button onclick="initGame('wrong'); toggleMenu();" class="btn-tool" style="background:linear-gradient(45deg, #ef4444, #f89b29); color:#fff; border:none;">🔥 LÀM LẠI CÂU SAI</button>
+        <button onclick="initGame('all'); toggleMenu();" class="btn-tool" style="background:#fff; color:#000; border:none;">🔄 CHƠI LẠI TỪ ĐẦU</button>
+    </div>
+
     <div class="setting-group" style="flex-direction: row; gap: 10px;">
         <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
         <button class="btn-tool" onclick="adjSize(-2)">A- Thu nhỏ</button>
@@ -116,9 +128,6 @@
             <option value="tech">💻 Chủ đề: Công Nghệ</option>
         </select>
         <button onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG/TỐI</button>
-    </div>
-    <div class="setting-group">
-        <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--primary-grad); color:#000; border:none;">🗺️ XEM BẢN ĐỒ CÂU HỎI</button>
     </div>
 </div>
 
@@ -192,7 +201,6 @@
         synth.speak(utter); toggleMenu(); 
     }
 
-    // ĐỌC DỮ LIỆU TỪ SHEETS
     window.onload = function() {
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
@@ -207,7 +215,6 @@
             line = line.trim(); if(!line) return;
             if(line.match(/^Câu\s*\d+:/i)) {
                 if(q) originalQ.push(q);
-                // GIỮ NGUYÊN CHỮ "Câu X:", CHỈ XÓA CHỮ "(Chọn 1 đáp án)"
                 let cleanedTitle = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
                 q = { title: parseSC(cleanedTitle), opts: [], explanation: "", ans: null, userPick: -1 };
             } else if (q) {
@@ -236,6 +243,17 @@
     function initGame(mode) {
         document.getElementById('end-screen').style.display = 'none';
         
+        if (mode === 'wrong') {
+            let wrongQ = questions.filter(x => x.ans === false);
+            if (wrongQ.length === 0) {
+                alert("🎉 Sếp chưa làm sai câu nào cả! Hãy tiếp tục phát huy!");
+                return;
+            }
+            questions = wrongQ;
+        } else {
+            questions = JSON.parse(JSON.stringify(originalQ));
+        }
+        
         const cont = document.getElementById('quiz-container');
         cont.style.display = 'flex';
         cont.style.height = '100vh';
@@ -248,7 +266,6 @@
         document.getElementById('nav-prev').style.display = 'flex';
         document.getElementById('nav-next').style.display = 'flex';
 
-        questions = mode === 'all' ? JSON.parse(JSON.stringify(originalQ)) : questions.filter(x => x.ans === false);
         questions.forEach(q => { q.ans = null; q.userPick = -1; });
         currentIdx = 0; score = 0; done = 0; streak = 0; lastLevel5Percent = 0;
         cont.innerHTML = '';
@@ -431,8 +448,9 @@
             box.style.margin = '0 auto 25px auto';
             box.style.animation = 'none'; 
 
-            let statusColor = q.ans === true ? '#10b981' : (q.ans === false ? '#ef4444' : 'gray');
-            let statusText = q.ans === true ? '✅ ĐÚNG' : (q.ans === false ? '❌ SAI' : '⚠️ BỎ QUA');
+            // CẬP NHẬT TÌNH TRẠNG CHƯA LÀM
+            let statusColor = q.ans === true ? '#10b981' : (q.ans === false ? '#ef4444' : '#94a3b8');
+            let statusText = q.ans === true ? '✅ ĐÚNG' : (q.ans === false ? '❌ SAI' : '⚠️ CHƯA LÀM');
             box.style.borderColor = statusColor;
 
             let html = `<div style="text-align:center; margin-bottom: 15px;">
