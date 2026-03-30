@@ -298,7 +298,7 @@
     function toggleMap() { document.getElementById('map-drawer').classList.toggle('open'); }
     function adjSize(v) { fontSize += v; document.querySelectorAll('.question-title').forEach(e => e.style.fontSize = fontSize + 'px'); }
 
-    // ===== BỘ BẮT LỖI GEMINI MỚI NHẤT =====
+    // HÀM HỎI GEMINI ĐÃ ĐƯỢC FIX LỖI (DÙNG gemini-pro CHUẨN)
     async function askGemini(qIdx, prefix = '') {
         if(jumpTimer) clearInterval(jumpTimer); 
         
@@ -319,15 +319,14 @@
         prompt += `\nYÊU CẦU: Giải thích cặn kẽ tại sao đáp án đúng lại đúng, và chỉ ra lỗi sai của các đáp án còn lại dựa trên kiến thức Y khoa. Phân tích thật dễ hiểu. Xuống dòng hợp lý.`;
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKeyInput}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKeyInput}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
             
             const data = await response.json();
             
-            // ÉP GOOGLE HIỆN LỖI CHÍNH XÁC NẾU CÓ
             if(!response.ok) { 
-                box.innerHTML = `<div style="text-align:left;"><b style="color:#ef4444;">❌ BỊ TỪ CHỐI BỞI GOOGLE:</b><br><span style="color:gray; font-size: 13px;">Lỗi: ${data.error ? data.error.message : 'Không xác định'}</span><br><br><i>Sếp xem lại mã Key xem copy chuẩn chưa, có bị dính dấu cách không nhé!</i></div>`; 
+                box.innerHTML = `<b style="color:#ef4444;">❌ BỊ TỪ CHỐI BỞI GOOGLE:</b><br><span style="color:gray; font-size: 13px;">Chi tiết lỗi: ${data.error ? data.error.message : 'Không rõ lỗi'}</span><br><i>Sếp kiểm tra lại mã Key nhé!</i>`; 
                 return; 
             }
             
@@ -338,7 +337,6 @@
             box.innerHTML = `❌ Lỗi mạng: Điện thoại sếp bị mất mạng hoặc trình duyệt đang chặn API của Google.`;
         }
     }
-    // ======================================
 
     function populateVoices() {
         viVoices = synth.getVoices().filter(v => v.lang.includes('vi'));
@@ -366,7 +364,7 @@
         document.getElementById('de-title').innerText = title || "BỘ ĐỀ RHM";
 
         const rawData = localStorage.getItem(id);
-        if(!rawData) { document.getElementById('quiz-container').innerHTML = "<div style='color:#fff'>Lỗi kết nối CSDL. Vui lòng quay lại sảnh chính.</div>"; return; }
+        if(!rawData) { document.getElementById('quiz-container').innerHTML = "<div style='color:var(--text)'>Lỗi kết nối CSDL. Vui lòng quay lại sảnh chính.</div>"; return; }
 
         let q = null;
         rawData.split(/\\n|\n/).forEach(line => {
