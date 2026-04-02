@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hạm Đội RHM - Phúc VIP</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { 
             --primary: #00f2fe; 
@@ -34,137 +35,56 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-theme); color: var(--text); min-height: 100vh; overflow-x: hidden; transition: all 0.5s ease; }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg-theme); 
-            color: var(--text); 
-            min-height: 100vh; 
-            overflow-x: hidden; 
-            transition: all 0.5s ease; 
-        }
-
-        /* NỀN ĐỘNG (MESH GRADIENT) */
-        .mesh-blob {
-            position: absolute;
-            filter: blur(80px);
-            opacity: 0.4;
-            z-index: -1;
-            border-radius: 50%;
-            animation: float 20s infinite alternate ease-in-out;
-        }
-        .blob-1 { top: -10%; left: -10%; width: 400px; height: 400px; background: #8b5cf6; animation-delay: 0s; }
+        /* NỀN ĐỘNG */
+        .mesh-blob { position: absolute; filter: blur(80px); opacity: 0.4; z-index: -1; border-radius: 50%; animation: float 20s infinite alternate ease-in-out; }
+        .blob-1 { top: -10%; left: -10%; width: 400px; height: 400px; background: #8b5cf6; }
         .blob-2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: #00f2fe; animation-delay: -5s; }
-        .blob-3 { top: 40%; left: 60%; width: 300px; height: 300px; background: #ff00de; animation-delay: -10s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.2); } }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.2); }
-        }
-
-        /* HEADER TỐI GIẢN */
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 20px 5%; 
-            position: relative;
-            z-index: 10;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; position: relative; z-index: 10; }
         .logo { font-weight: 900; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
         .logo-icon { width: 36px; height: 36px; background: var(--primary-grad); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 20px; box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);}
         .btn-theme { background: var(--glass); border: 1px solid var(--border); padding: 10px 20px; border-radius: 50px; color: var(--text); font-weight: 800; cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s; }
-        .btn-theme:hover { transform: scale(1.05); border-color: var(--primary); }
 
-        /* KHU VỰC TRUNG TÂM (HERO SECTION) */
-        .main-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            position: relative;
-            z-index: 10;
-        }
-
+        .main-container { max-width: 900px; margin: 40px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 30px; position: relative; z-index: 10; }
         .hero-text { text-align: center; }
-        .badge-exam { display: inline-block; background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 16px; border-radius: 50px; font-weight: 800; font-size: 12px; letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase; }
-        [data-theme="light"] .badge-exam { background: #f3e8ff; color: #7e22ce; border-color: #d8b4fe; }
-        
-        .title { font-size: 46px; font-weight: 900; line-height: 1.2; margin-bottom: 15px; letter-spacing: -1px; }
+        .badge-exam { display: inline-block; background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 16px; border-radius: 50px; font-weight: 800; font-size: 11px; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
+        .title { font-size: 42px; font-weight: 900; line-height: 1.2; margin-bottom: 10px; letter-spacing: -1px; }
         .title span { background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { font-size: 16px; color: var(--text-muted); font-weight: 500; max-width: 600px; margin: 0 auto; }
+        .subtitle { font-size: 15px; color: var(--text-muted); font-weight: 500; max-width: 600px; margin: 0 auto; }
 
-        /* THANH NHẬP LIỆU (SEARCH BAR) */
-        .loader-box {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            padding: 10px;
-            border-radius: 100px;
-            display: flex;
-            gap: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-        .loader-box:focus-within { border-color: var(--primary); box-shadow: 0 0 20px rgba(0,242,254,0.3); transform: translateY(-2px); }
-        .input-url { flex: 1; background: transparent; border: none; padding: 15px 25px; color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 500; outline: none; }
-        .input-url::placeholder { color: var(--text-muted); }
-        .btn-load { background: var(--primary-grad); color: #000; border: none; padding: 0 35px; border-radius: 50px; font-weight: 900; font-size: 14px; cursor: pointer; transition: 0.3s; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;}
+        /* INPUT BOX */
+        .loader-box { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 8px; border-radius: 100px; display: flex; gap: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .input-url { flex: 1; background: transparent; border: none; padding: 12px 25px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; }
+        .btn-load { background: var(--primary-grad); color: #000; border: none; padding: 0 30px; border-radius: 50px; font-weight: 900; font-size: 13px; cursor: pointer; transition: 0.3s; }
         .btn-load:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,242,254,0.4); }
-        .btn-load:active { transform: scale(0.95); }
 
-        /* KHU VỰC MODULES (BENTO GRID) */
-        .modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; pointer-events: none; }
-        .modules-grid.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .status-bar { text-align: center; font-size: 13px; font-weight: 700; color: #10b981; display: none; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; padding: 12px; border-radius: 15px; animation: fadeInUp 0.4s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .module-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-        .module-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--border); transition: 0.3s; }
+        /* BENTO GRID */
+        .modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; transition: 0.5s; margin-top: 10px;}
+        .module-card { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 35px 20px; text-align: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 15px; position: relative; overflow: hidden; }
+        .module-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--border); }
+        .module-card:hover { transform: translateY(-10px); border-color: var(--primary); background: rgba(255,255,255,0.05); }
+        .module-card:nth-child(1)::after { background: var(--primary-grad); }
+        .module-card:nth-child(2)::after { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .module-card:nth-child(3)::after { background: var(--accent-grad); }
         
-        .module-card:nth-child(1)::before { background: var(--primary-grad); }
-        .module-card:nth-child(2)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-        .module-card:nth-child(3)::before { background: var(--accent-grad); }
-
-        .module-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); border-color: var(--glass); background: var(--glass); }
-        
-        .module-icon { font-size: 40px; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 20px; background: var(--glass); border: 1px solid var(--border); transition: 0.3s; }
-        .module-card:hover .module-icon { transform: scale(1.1) rotate(5deg); }
-        
+        .module-icon { font-size: 36px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background: var(--glass); border-radius: 18px; border: 1px solid var(--border); margin-bottom: 10px;}
         .module-title { font-size: 18px; font-weight: 900; color: var(--text); }
-        .module-desc { font-size: 13px; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
+        .module-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; font-weight: 500;}
 
-        /* THÔNG TIN BỘ ĐỀ ĐÃ TẢI */
-        .sheet-info { text-align: center; font-size: 14px; font-weight: 700; color: #10b981; display: none; background: rgba(16, 185, 129, 0.1); border: 1px dashed #10b981; padding: 10px; border-radius: 12px; margin-top: -20px; animation: popIn 0.3s ease; }
-        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .donate-badge { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--card-bg); backdrop-filter: blur(10px); border: 1px dashed var(--accent); padding: 10px 25px; border-radius: 50px; font-size: 12px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: 0.3s; white-space: nowrap;}
+        .donate-badge:hover { transform: translateX(-50%) translateY(-5px); border-style: solid; }
 
-        .donate-badge { position: fixed; bottom: 20px; right: 20px; background: var(--card-bg); backdrop-filter: blur(10px); border: 2px dashed var(--accent); padding: 10px 20px; border-radius: 50px; font-size: 12px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s; color: var(--text);}
-        .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(255,0,222,0.4); }
-
-        /* RESPONSIVE */
         @media (max-width: 768px) {
             .modules-grid { grid-template-columns: 1fr; }
             .title { font-size: 32px; }
-            .loader-box { flex-direction: column; border-radius: 24px; padding: 15px; }
-            .btn-load { padding: 15px; border-radius: 12px; justify-content: center; }
-            .input-url { padding: 10px; text-align: center; }
+            .loader-box { border-radius: 20px; flex-direction: column; padding: 10px; }
+            .btn-load { padding: 12px; border-radius: 12px; }
         }
     </style>
 </head>
@@ -172,145 +92,113 @@
 
     <div class="mesh-blob blob-1"></div>
     <div class="mesh-blob blob-2"></div>
-    <div class="mesh-blob blob-3"></div>
 
     <header class="header">
-        <div class="logo">
-            <div class="logo-icon">🦷</div>
-            HẠM ĐỘI RHM
-        </div>
-        <button class="btn-theme" id="theme-toggle" onclick="toggleMode()">🌓 Giao diện Sáng</button>
+        <div class="logo"><div class="logo-icon">🦷</div> HẠM ĐỘI RHM</div>
+        <button class="btn-theme" onclick="toggleMode()">🌓 Giao diện</button>
     </header>
 
     <div class="main-container">
-        
         <div class="hero-text">
-            <div class="badge-exam">🎯 Mục Tiêu: CCHN 2027</div>
-            <h1 class="title">Chào sếp Phúc!<br><span>Sẵn sàng cày nát kho đề chưa?</span></h1>
-            <p class="subtitle">Hệ sinh thái học tập tối thượng. Tự động chuyển đổi Google Sheets thành Trắc nghiệm, Flashcard và Thư viện tài liệu chuẩn Y khoa.</p>
+            <div class="badge-exam">🎯 CHIẾN DỊCH CCHN 2027</div>
+            <h1 class="title">Chào sếp Phúc!<br><span>Đã sẵn sàng cày đề chưa?</span></h1>
+            <p class="subtitle">Hệ thống chuyển đổi Google Sheets thành kho đề trắc nghiệm, thẻ ghi nhớ và thư viện đọc thông minh.</p>
         </div>
 
         <div class="loader-box">
-            <input type="text" id="sheet-url" class="input-url" placeholder="Dán Link hoặc ID Google Sheets vào đây..." autocomplete="off">
-            <button class="btn-load" onclick="loadData()">
-                <span id="btn-text">TẢI DỮ LIỆU</span>
-            </button>
+            <input type="text" id="sheet-url" class="input-url" placeholder="Dán Link Google Sheets mới vào đây...">
+            <button class="btn-load" onclick="loadData()">TẢI DỮ LIỆU</button>
         </div>
 
-        <div class="sheet-info" id="status-msg">✅ Đã tải thành công! Mời sếp chọn chế độ học bên dưới.</div>
+        <div class="status-bar" id="status-msg"></div>
 
         <div class="modules-grid" id="modules-grid">
             <a href="#" id="link-play" class="module-card">
-                <div class="module-icon" style="color: #00f2fe; border-color: rgba(0,242,254,0.3);">🚀</div>
+                <div class="module-icon">🚀</div>
                 <div class="module-title">Phòng Thi Ảo</div>
-                <div class="module-desc">Làm trắc nghiệm tốc độ cao. Auto-next, đảo đề, thống kê tỷ lệ đúng sai, hỏi đáp AI.</div>
+                <div class="module-desc">Trắc nghiệm tốc độ cao, đảo đề, thống kê tỷ lệ đúng sai & hỏi đáp AI.</div>
             </a>
-
             <a href="#" id="link-flashcard" class="module-card">
-                <div class="module-icon" style="color: #f59e0b; border-color: rgba(245,158,11,0.3);">🃏</div>
+                <div class="module-icon">🃏</div>
                 <div class="module-title">Thẻ Ghi Nhớ</div>
-                <div class="module-desc">Học sâu nhớ lâu với Flashcard lật 2 mặt. Mặt trước câu hỏi, mặt sau đáp án và giải thích.</div>
+                <div class="module-desc">Học sâu nhớ lâu với Flashcard 2 mặt. Lật thẻ xem giải thích chi tiết.</div>
             </a>
-
             <a href="#" id="link-read" class="module-card">
-                <div class="module-icon" style="color: #ff00de; border-color: rgba(255,0,222,0.3);">📖</div>
+                <div class="module-icon">📖</div>
                 <div class="module-title">Thư Viện Đọc</div>
-                <div class="module-desc">Xem toàn bộ ngân hàng câu hỏi dạng tài liệu. Font chữ chuẩn, có trợ lý ảo đọc thành tiếng.</div>
+                <div class="module-desc">Duyệt ngân hàng đề dạng văn bản chuẩn Times New Roman, hỗ trợ đọc thành tiếng.</div>
             </a>
         </div>
-
     </div>
 
     <div class="donate-badge" onclick="copySTK()">💖 Donate Phúc <b style="color:var(--accent);">BIDV 8812766209</b></div>
 
     <script>
-        let currentSheetId = '';
-
-        // XỬ LÝ GIAO DIỆN SÁNG TỐI
-        function toggleMode() { 
-            const h = document.documentElement; 
+        function toggleMode() {
+            const h = document.documentElement;
             const isDark = h.getAttribute('data-theme') === 'dark';
             h.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            document.getElementById('theme-toggle').innerText = isDark ? '🌘 Giao diện Tối' : '🌓 Giao diện Sáng';
             localStorage.setItem('theme_pref', isDark ? 'light' : 'dark');
         }
 
-        // Khôi phục giao diện đã chọn
-        window.onload = () => {
-            const savedTheme = localStorage.getItem('theme_pref');
-            if(savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                document.getElementById('theme-toggle').innerText = savedTheme === 'light' ? '🌘 Giao diện Tối' : '🌓 Giao diện Sáng';
-            }
-        };
-
         function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
 
-        // BÓC TÁCH ID TỪ LINK GOOGLE SHEETS
         function extractSheetId(input) {
             const regex = /\/d\/([a-zA-Z0-9-_]+)/;
             const match = input.match(regex);
             return match ? match[1] : input.trim();
         }
 
-        // TẢI DỮ LIỆU TỪ GOOGLE SHEETS DẠNG CSV
+        // TỰ ĐỘNG KHÔI PHỤC BỘ ĐỀ GẦN NHẤT
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme_pref') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+
+            const lastId = localStorage.getItem('last_sheet_id');
+            if(lastId) {
+                updateLinks(lastId);
+                document.getElementById('status-msg').style.display = 'block';
+                document.getElementById('status-msg').innerHTML = `📌 Đang hiển thị bộ đề gần nhất. <span style="color:var(--accent); cursor:pointer;" onclick="document.getElementById('sheet-url').focus()">Tải đề mới?</span>`;
+            }
+        };
+
+        function updateLinks(id) {
+            document.getElementById('link-play').href = `Play.html?id=${id}&title=BỘ ĐỀ RHM`;
+            document.getElementById('link-flashcard').href = `Flashcard.html?id=${id}`;
+            document.getElementById('link-read').href = `Read.html?id=${id}&title=TÀI LIỆU RHM`;
+            document.getElementById('modules-grid').style.opacity = "1";
+            document.getElementById('modules-grid').style.pointerEvents = "auto";
+        }
+
         async function loadData() {
             const input = document.getElementById('sheet-url').value;
-            if(!input) { alert("⚠️ Sếp chưa dán link Sheets kìa!"); return; }
+            if(!input) return alert("Sếp chưa dán link kìa!");
 
             const sheetId = extractSheetId(input);
-            if(sheetId.length < 20) { alert("❌ Link hoặc ID Google Sheets không hợp lệ. Sếp check lại nhé!"); return; }
-
-            const btnText = document.getElementById('btn-text');
-            const statusMsg = document.getElementById('status-msg');
-            const grid = document.getElementById('modules-grid');
-            
-            btnText.innerText = "⏳ ĐANG LẤY DỮ LIỆU...";
-            grid.classList.remove('visible');
-            statusMsg.style.display = 'none';
-
-            // Google Sheets CSV Export URL
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+            const msg = document.getElementById('status-msg');
+            msg.style.display = 'block';
+            msg.innerText = "⏳ Đang kết nối Google Sheets...";
 
             try {
-                const response = await fetch(url);
-                if(!response.ok) throw new Error("Không thể truy cập Google Sheets.");
-                
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`);
+                if(!response.ok) throw new Error();
                 const text = await response.text();
                 
-                // Lọc bỏ cột rỗng do xuất CSV, gộp thành 1 luồng nội dung
                 let rows = text.split('\n');
                 let cleanContent = '';
                 rows.forEach(row => {
                     let cols = row.split(',');
-                    if(cols[0] && cols[0].trim() !== '') {
-                        cleanContent += cols[0].replace(/^"|"$/g, '').trim() + '\n';
-                    }
+                    if(cols[0] && cols[0].trim() !== '') cleanContent += cols[0].replace(/^"|"$/g, '').trim() + '\n';
                 });
 
-                if(cleanContent.length < 50) throw new Error("Sheet bị trống hoặc chưa Share công khai.");
-
-                // Lưu vào LocalStorage
                 localStorage.setItem(sheetId, cleanContent);
-                currentSheetId = sheetId;
-
-                // Gắn link cho các thẻ
-                document.getElementById('link-play').href = `Play.html?id=${sheetId}&title=BỘ ĐỀ ÔN TẬP RHM`;
-                document.getElementById('link-flashcard').href = `Flashcard.html?id=${sheetId}`;
-                document.getElementById('link-read').href = `Read.html?id=${sheetId}&title=TÀI LIỆU RHM`;
-
-                // Hiển thị giao diện thành công
-                btnText.innerText = "TẢI DỮ LIỆU";
-                statusMsg.innerHTML = `✅ Tuyệt vời! Đã nạp thành công bộ đề vào bộ nhớ máy.`;
-                statusMsg.style.display = 'block';
-                grid.classList.add('visible');
-
-                // Bắn xíu pháo hoa nhẹ cho khí thế
-                confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
-
-            } catch (error) {
-                btnText.innerText = "TẢI DỮ LIỆU";
-                alert("❌ Lỗi: " + error.message + "\n\n💡 Mẹo: Nhớ vào Google Sheets -> Chia sẻ -> Đổi thành 'Bất kỳ ai có đường liên kết' nhé sếp!");
+                localStorage.setItem('last_sheet_id', sheetId);
+                
+                updateLinks(sheetId);
+                msg.innerHTML = "✅ Tải dữ liệu thành công! Mời sếp chọn phòng học.";
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } catch (e) {
+                msg.innerHTML = "❌ Lỗi: Không tìm thấy Sheet. Sếp nhớ bật 'Bất kỳ ai có liên kết' nhé!";
             }
         }
     </script>
