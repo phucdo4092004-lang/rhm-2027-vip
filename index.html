@@ -3,13 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#020617">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="RHM 2027">
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/svg+xml" href="./icon.svg">
-<link rel="apple-touch-icon" href="./icon.svg">
     <meta name="theme-color" content="#020617">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -155,10 +148,9 @@
   <header class="header">
     <div class="logo"><div class="logo-icon">🦷</div> TRẠM CHỈ HUY</div>
     <div class="header-btns">
-     <div style="display: flex; gap: 10px; align-items: center;">
-  <button class="btn-theme" id="btn-install-pwa" onclick="installPWA()" style="border-color: var(--primary); color: var(--primary);">📲 Cài App</button>
-  <button class="btn-theme" id="theme-toggle" onclick="toggleMode()">🌓 Giao diện</button>
-</div>
+      <button class="btn-top-bar" id="btn-install-pwa" onclick="installPWA()" style="color: var(--primary); border-color: var(--primary);">📲 Cài App</button>
+      <button class="btn-top-bar" id="theme-toggle" onclick="toggleMode()">🌓 Sáng/Tối</button>
+    </div>
   </header>
 
   <main>
@@ -448,49 +440,6 @@
           deferredPrompt = null;
       } else {
           showToast('📲 Trên iPhone/Android: Bấm nút Chia sẻ [⬆️] hoặc Menu (⋮) ➔ Chọn "Thêm vào Màn hình chính"!');
-      }
-  }
-    // ĐĂNG KÝ SERVICE WORKER (CHẠY OFFLINE)
-  if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW lỗi:', err));
-      });
-  }
-
-  // XỬ LÝ CÀI ĐẶT APP TRÊN ANDROID, PC & IPHONE (iOS)
-  let deferredPrompt = null;
-  const installBtn = document.getElementById('btn-install-pwa');
-
-  // Ẩn nút nếu người dùng đang mở từ App đã cài ngoài màn hình chính
-  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-      if (installBtn) installBtn.style.display = 'none';
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-  });
-
-  function installPWA() {
-      // Nếu là Android / Chrome trên máy tính hỗ trợ cài tự động
-      if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choice) => {
-              if (choice.outcome === 'accepted') {
-                  showToast('🎉 Đang cài đặt RHM 2027 VIP ra màn hình chính!');
-                  installBtn.style.display = 'none';
-              }
-              deferredPrompt = null;
-          });
-          return;
-      }
-
-      // Kiểm tra nếu là iPhone / iPad (iOS)
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      if (isIOS) {
-          showToast('🍏 Trên iPhone: Bấm nút Chia sẻ [⬆️] ở dưới Safari ➔ Chọn "Thêm vào MH chính"!');
-      } else {
-          showToast('💡 Mở menu trình duyệt (⋮) ➔ Chọn "Cài đặt ứng dụng" hoặc "Thêm vào Màn hình chính"!');
       }
   }
 </script>
