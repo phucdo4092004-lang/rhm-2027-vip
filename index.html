@@ -146,7 +146,9 @@
   <div id="toast">✅ Đã sao chép!</div>
 
   <header class="header">
-    <div class="logo"><div class="logo-icon">🦷</div> TRẠM CHỈ HUY</div>
+   <div class="logo" onclick="triggerSecretAdmin()" style="cursor:pointer; user-select:none;" title="Trạm Chỉ Huy RHM">
+    <div class="logo-icon">🦷</div> TRẠM CHỈ HUY
+</div>
     <div class="header-btns">
       <button class="btn-top-bar" id="btn-install-pwa" onclick="installPWA()" style="color: var(--primary); border-color: var(--primary);">📲 Cài App</button>
       <button class="btn-top-bar" id="theme-toggle" onclick="toggleMode()">🌓 Sáng/Tối</button>
@@ -443,5 +445,37 @@
       }
   }
 </script>
+    <!-- CỔNG BẢO MẬT ADMIN VIP (TÀNG HÌNH) -->
+<style>
+    .admin-modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 10000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s ease; }
+    .admin-modal-overlay.active { display: flex; opacity: 1; }
+    .admin-vault { background: var(--card-bg); border: 2px solid var(--primary); border-radius: 28px; padding: 30px 25px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 25px 60px rgba(0, 242, 254, 0.25); transform: scale(0.9); transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .admin-modal-overlay.active .admin-vault { transform: scale(1); }
+    .vault-icon { width: 56px; height: 56px; border-radius: 18px; background: var(--primary-grad); color: #000; font-size: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; box-shadow: 0 8px 20px rgba(0, 242, 254, 0.35); }
+    .pin-input { width: 100%; background: var(--glass); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px; color: var(--text); font-family: inherit; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: 6px; outline: none; margin: 18px 0 14px 0; transition: 0.2s; }
+    .pin-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 242, 254, 0.25); }
+    .pin-input.error { border-color: #ef4444; color: #ef4444; animation: shakeVault 0.35s ease; }
+    @keyframes shakeVault { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    .vault-actions { display: flex; gap: 10px; }
+    .btn-vault { flex: 1; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 13px; cursor: pointer; border: none; font-family: inherit; transition: 0.2s; }
+    .btn-vault-cancel { background: var(--glass); color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-vault-unlock { background: var(--primary-grad); color: #000; }
+    .btn-vault-unlock:hover { transform: scale(1.03); }
+</style>
+
+<div class="admin-modal-overlay" id="admin-modal">
+    <div class="admin-vault">
+        <div class="vault-icon">🔐</div>
+        <h3 style="font-weight: 900; font-size: 18px; color: var(--primary); margin-bottom: 4px;">TRẠM SOẠN ĐỀ VIP</h3>
+        <p style="font-size: 12.5px; color: var(--text-muted); font-weight: 600;">Khu vực giới hạn chỉ dành cho Đỗ Hồng Phúc</p>
+        
+        <input type="password" id="admin-pin-input" class="pin-input" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter') verifyAdminPin()">
+        
+        <div class="vault-actions">
+            <button class="btn-vault btn-vault-cancel" onclick="closeAdminModal()">ĐÓNG</button>
+            <button class="btn-vault btn-vault-unlock" onclick="verifyAdminPin()">MỞ KHÓA ⚡</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
