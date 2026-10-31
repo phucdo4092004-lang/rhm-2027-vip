@@ -444,6 +444,78 @@
           showToast('📲 Trên iPhone/Android: Bấm nút Chia sẻ [⬆️] hoặc Menu (⋮) ➔ Chọn "Thêm vào Màn hình chính"!');
       }
   }
+    // --- HỆ THỐNG BẢO MẬT MỞ STUDIO.HTML ---
+  let secretClickCount = 0;
+  let secretClickTimer = null;
+
+  // Mã băm (Hash) của mật khẩu mặc định "04092004" (Không lưu mật khẩu gốc trong code)
+  const ADMIN_PIN_HASH = 7569999564299224;
+
+  function hashPin(str) {
+      let h = 5381;
+      for (let i = 0; i < str.length; i++) {
+          h = (h * 33) + str.charCodeAt(i);
+      }
+      return h;
+  }
+
+  // Cách 1: Bấm 5 lần liên tiếp vào Logo Răng trong vòng 2 giây
+  function triggerSecretAdmin() {
+      secretClickCount++;
+      if (secretClickTimer) clearTimeout(secretClickTimer);
+      
+      if (secretClickCount >= 5) {
+          secretClickCount = 0;
+          openAdminModal();
+      } else {
+          secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 1800);
+      }
+  }
+
+  // Cách 2: Tổ hợp phím tắt bí mật Ctrl + Shift + S trên máy tính
+  window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          openAdminModal();
+      } else if (e.key === 'Escape') {
+          closeAdminModal();
+      }
+  });
+
+  function openAdminModal() {
+      // Nếu trong phiên làm việc này đã mở khóa rồi thì vào thẳng luôn
+      if (sessionStorage.getItem('rhm_vip_admin') === 'authenticated') {
+          window.location.href = 'Studio.html';
+          return;
+      }
+      const modal = document.getElementById('admin-modal');
+      const input = document.getElementById('admin-pin-input');
+      modal.classList.add('active');
+      input.value = '';
+      setTimeout(() => input.focus(), 100);
+  }
+
+  function closeAdminModal() {
+      document.getElementById('admin-modal').classList.remove('active');
+  }
+
+  function verifyAdminPin() {
+      const input = document.getElementById('admin-pin-input');
+      const enteredPin = input.value.trim();
+
+      if (hashPin(enteredPin) === ADMIN_PIN_HASH) {
+          sessionStorage.setItem('rhm_vip_admin', 'authenticated');
+          showToast('🔓 Xác thực thành công! Đang mở Studio Soạn Đề...');
+          closeAdminModal();
+          setTimeout(() => { window.location.href = 'Studio.html'; }, 400);
+      } else {
+          input.classList.remove('error');
+          void input.offsetWidth; // Kích hoạt lại hiệu ứng rung
+          input.classList.add('error');
+          input.value = '';
+          showToast('❌ Sai mật khẩu quản trị!');
+      }
+  }
 </script>
     <!-- CỔNG BẢO MẬT ADMIN VIP (TÀNG HÌNH) -->
 <style>
