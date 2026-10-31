@@ -1,0 +1,19 @@
+{
+  "name": "Hệ Sinh Thái RHM 2027 - Phúc VIP",
+  "short_name": "RHM 2027 VIP",
+  "description": "Trạm Chỉ Huy Ôn Luyện Trắc Nghiệm, Flashcard 3D & Lý Thuyết Răng Hàm Mặt",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
