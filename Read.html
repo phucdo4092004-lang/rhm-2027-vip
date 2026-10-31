@@ -4,58 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thư Viện VIP - Phúc RHM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #007bff; --primary-grad: linear-gradient(90deg, #007bff, #00c6ff); --accent: #ff00de; }
-        [data-theme="dark"] { --bg: #020617; --card: rgba(15, 23, 42, 0.85); --text: #f8fafc; --glass: rgba(255,255,255,0.1); --border: rgba(255,255,255,0.15); }
-        [data-theme="light"] { --bg: #f8f9fa; --card: rgba(255, 255, 255, 0.95); --text: #1e293b; --glass: rgba(0,0,0,0.05); --border: rgba(0,0,0,0.1); }
+        :root { --primary: #0ea5e9; --primary-grad: linear-gradient(90deg, #0284c7, #0ea5e9); --accent: #ec4899; }
         
-        body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.8; transition: 0.3s; }
+        [data-theme="dark"] {
+            --bg: #020617;
+            --card: rgba(15, 23, 42, 0.9);
+            --header-bg: rgba(2, 6, 23, 0.8);
+            --text: #f1f5f9;
+            --glass: rgba(255,255,255,0.08);
+            --border: rgba(255,255,255,0.14);
+        }
         
-        .header { position: sticky; top: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100; border-bottom: 1px solid var(--border);}
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.88);
+            --text: #1e293b;
+            --glass: rgba(15, 23, 42, 0.05);
+            --border: rgba(15, 23, 42, 0.12);
+        }
         
-        .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 13px; transition: all 0.3s ease; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;}
-        .btn-tool:hover { background: var(--primary-grad); color: #fff; border-color: transparent;}
-        .btn-exit { width: auto; padding: 8px 15px; border-radius: 50px; background: var(--primary-grad); color: #fff; border: none; }
-        .btn-menu { width: auto; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
-        .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none;}
+        body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.8; transition: background 0.3s, color 0.3s; }
+        
+        /* THANH TIẾN ĐỘ ĐỌC BÀI */
+        #reading-progress { position: fixed; top: 0; left: 0; height: 4px; width: 0%; background: linear-gradient(90deg, #00f2fe, #ff00de); z-index: 2000; transition: width 0.1s; }
 
-        .btn-top { position: fixed; bottom: 80px; right: 20px; background: var(--primary); color: #fff; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; font-weight: bold; border: none; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); z-index: 1000; transition: 0.3s; align-items: center; justify-content: center;}
-        .btn-top:hover { transform: translateY(-5px); }
+        .header { position: sticky; top: 0; background: var(--header-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 100; border-bottom: 1px solid var(--border); }
+        
+        .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 13px; transition: all 0.25s ease; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; font-family: inherit; }
+        .btn-tool:hover { background: var(--primary-grad); color: #fff; border-color: transparent; }
+        .btn-exit { width: auto; padding: 8px 16px; border-radius: 50px; background: var(--primary-grad); color: #fff; border: none; }
+        .btn-menu { width: auto; padding: 8px 16px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
 
-        .drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100vh; background: var(--card); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
+        .btn-top { position: fixed; bottom: 25px; right: 20px; background: var(--primary); color: #fff; width: 46px; height: 46px; border-radius: 50%; font-size: 20px; font-weight: bold; border: none; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; transition: 0.3s; align-items: center; justify-content: center; }
+        .btn-top:hover { transform: translateY(-4px); }
+
+        .drawer { position: fixed; top: 0; right: -320px; width: 290px; height: 100vh; background: var(--card); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.4); }
         .drawer.open { right: 0; }
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px); }
         .drawer-overlay.show { display: block; }
-        .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .setting-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
 
-        .speed-control { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; font-weight: 900; color: var(--primary); background: var(--glass); padding: 10px; border-radius: 12px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
+        .speed-control { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; font-weight: 900; color: var(--primary); background: var(--glass); padding: 10px; border-radius: 12px; border: 1px solid var(--border); width: 100%; box-sizing: border-box; }
         input[type="range"] { width: 60%; cursor: pointer; }
 
-        .container { max-width: 850px; margin: 30px auto; padding: 25px; background: var(--card); backdrop-filter: blur(20px); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--border); }
+        .container { max-width: 860px; margin: 30px auto 80px auto; padding: 35px 30px; background: var(--card); backdrop-filter: blur(20px); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); border: 1px solid var(--border); }
         
-        /* ĐÃ CHỈNH SỬA PHẦN ĐỌC TÀI LIỆU CHUẨN FORM VĂN BẢN HỌC THUẬT */
         #content { 
-            font-family: 'Times New Roman', Times, serif; /* Đổi sang font văn bản chuẩn */
+            font-family: 'Lora', 'Times New Roman', serif;
             font-size: 18px; 
-            font-weight: 400; /* Nét thanh mỏng dễ đọc */
-            text-align: left; /* Căn trái toàn bộ */
-            line-height: 1.6; 
-            letter-spacing: 0.5px;
-            white-space: pre-wrap; /* CHÌA KHÓA: Giữ nguyên 100% dấu cách, thụt lề, xuống dòng từ Google Sheets */
+            font-weight: 400;
+            text-align: left;
+            line-height: 1.75; 
+            letter-spacing: 0.2px;
+            white-space: pre-wrap;
             color: var(--text);
             margin-top: 20px;
         }
         
         .sc-img { display: block; max-width: 100%; border-radius: 12px; margin: 20px auto; border: 2px solid var(--primary); }
-        .sc-red { color: #ff4d4d; font-weight: bold; background: rgba(255,77,77,0.1); padding: 2px 8px; border-radius: 8px;}
-        .sc-blue { color: #00c6ff; font-weight: bold; background: rgba(0,198,255,0.1); padding: 2px 8px; border-radius: 8px;}
+        .sc-red { color: #ef4444; font-weight: 700; background: rgba(239,68,68,0.12); padding: 2px 8px; border-radius: 6px; }
+        .sc-blue { color: #0ea5e9; font-weight: 700; background: rgba(14,165,233,0.12); padding: 2px 8px; border-radius: 6px; }
 
-        .donate-badge { position: fixed; bottom: 20px; left: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed var(--accent); padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s;}
-        .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(255,0,222,0.5); }
+        #toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--card); color: var(--text); border: 2px solid var(--primary); padding: 10px 22px; border-radius: 50px; font-weight: 800; font-size: 13px; z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (max-width: 640px) {
+            .container { margin: 15px 12px 70px 12px; padding: 22px 18px; }
+        }
     </style>
 </head>
 <body>
+    <div id="reading-progress"></div>
+    <div id="toast">✅ Đã sao chép!</div>
+
     <div class="header">
         <a href="index.html" class="btn-tool btn-exit">⬅ VỀ SẢNH</a>
         <button class="btn-tool btn-menu" onclick="toggleMenu()">⚙️ TÙY CHỈNH</button>
@@ -64,8 +89,8 @@
     <div id="drawer-overlay" class="drawer-overlay" onclick="toggleMenu()"></div>
 
     <div id="settings-drawer" class="drawer">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
-            <h3 style="margin:0; color:var(--primary); font-weight:900; font-family: 'Plus Jakarta Sans', sans-serif;">⚙️ CÔNG CỤ</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 22px;">
+            <h3 style="margin:0; color:var(--primary); font-weight:900;">⚙️ CÔNG CỤ ĐỌC</h3>
             <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
         </div>
 
@@ -75,12 +100,17 @@
         </div>
 
         <div class="setting-group">
-            <div style="font-size:12px; font-weight:bold; color:var(--text); font-family: 'Plus Jakarta Sans', sans-serif;">Chọn giọng đọc:</div>
+            <button class="btn-tool" id="btn-font" onclick="toggleFont()">🔤 Font: Có chân (Sách)</button>
+            <button class="btn-tool" onclick="toggleMode()">🌓 Đổi Sáng / Tối</button>
+        </div>
+
+        <div class="setting-group">
+            <div style="font-size:12px; font-weight:bold; color:var(--text);">Chọn giọng đọc:</div>
             <select id="voice-select" class="btn-tool" style="outline: none; text-align:left;"></select>
         </div>
 
         <div class="setting-group">
-            <div style="font-size:12px; font-weight:bold; color:var(--text); font-family: 'Plus Jakarta Sans', sans-serif;">Tốc độ đọc:</div>
+            <div style="font-size:12px; font-weight:bold; color:var(--text);">Tốc độ đọc:</div>
             <div class="speed-control">
                 🐢 <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1"> 🚀
             </div>
@@ -90,30 +120,42 @@
             <button class="btn-tool btn-speak" id="btn-read-action" onclick="speak()">🔊 BẮT ĐẦU ĐỌC</button>
         </div>
 
-        <div class="setting-group">
-            <button class="btn-tool" onclick="toggleMode()">🌓 SÁNG / TỐI</button>
+        <div onclick="copySTK()" style="margin-top:15px; padding:12px; border-radius:14px; border:1.5px dashed var(--accent); text-align:center; font-size:12px; font-weight:800; cursor:pointer;">
+            💖 Donate: Đỗ Hồng Phúc<br><span style="color:var(--accent);">BIDV 8812766209</span>
         </div>
     </div>
     
     <div class="container">
-        <h1 id="title" style="color:var(--primary); border-bottom: 2px dashed var(--accent); padding-bottom: 15px; font-weight: 900; font-size: 24px; text-align: center; font-family: 'Plus Jakarta Sans', sans-serif;">ĐANG TẢI...</h1>
-        
+        <h1 id="title" style="color:var(--primary); border-bottom: 2px dashed var(--accent); padding-bottom: 15px; font-weight: 900; font-size: 24px; text-align: center; margin-top: 0;">ĐANG TẢI...</h1>
         <div id="content">Đang kết nối CSDL...</div>
     </div>
 
     <button class="btn-top" id="btnTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
-    <div class="donate-badge" onclick="copySTK()">💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color:var(--accent);">BIDV 8812766209</b></div>
 
 <script>
     let fSize = 18; 
+    let isSerif = true;
     let synth = window.speechSynthesis;
     let allVoices = [];
 
-    window.onscroll = function() { document.getElementById('btnTop').style.display = document.documentElement.scrollTop > 300 ? "flex" : "none"; };
+    window.onscroll = function() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        document.getElementById('reading-progress').style.width = progress + '%';
+        document.getElementById('btnTop').style.display = scrollTop > 300 ? "flex" : "none";
+    };
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
     function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
-    function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
+    function copySTK() { navigator.clipboard.writeText('8812766209'); showToast("💖 Đã copy STK 8812766209 - Đỗ Hồng Phúc!"); }
     
-    // BỘ GIẢI MÃ: Giữ nguyên \n vì đã có white-space: pre-wrap gánh vác việc xuống dòng
     function parseSC(txt) {
         if (!txt) return "";
         return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
@@ -123,8 +165,20 @@
                   .replace(/\[BR\]/gi, '<br>');
     }
     
-    function adjSize(v) { fSize += v; document.getElementById('content').style.fontSize = fSize + 'px'; }
-    function toggleMode() { const h = document.documentElement; h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark'); }
+    function adjSize(v) { fSize = Math.max(14, Math.min(30, fSize + v)); document.getElementById('content').style.fontSize = fSize + 'px'; }
+    
+    function toggleFont() {
+        isSerif = !isSerif;
+        document.getElementById('content').style.fontFamily = isSerif ? "'Lora', 'Times New Roman', serif" : "'Plus Jakarta Sans', sans-serif";
+        document.getElementById('btn-font').innerText = isSerif ? "🔤 Font: Có chân (Sách)" : "🔤 Font: Không chân (Hiện đại)";
+    }
+
+    function toggleMode() {
+        const h = document.documentElement;
+        const nextTheme = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        h.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('theme_pref', nextTheme);
+    }
     
     function populateVoices() {
         allVoices = synth.getVoices();
@@ -139,7 +193,7 @@
         let html = '';
         allVoices.forEach((v, i) => {
             let flag = v.lang.includes('vi') ? '🇻🇳 ' : (v.lang.includes('en') ? '🇬🇧 ' : '🌐 ');
-            html += `<option value="${i}">${flag}${v.name.substring(0, 20)}</option>`;
+            html += `<option value="${i}">${flag}${v.name.substring(0, 22)}</option>`;
         });
         sel.innerHTML = html;
     }
@@ -149,21 +203,20 @@
 
     function speak() {
         const btn = document.getElementById('btn-read-action');
-        
         if (synth.speaking) { 
             synth.cancel(); 
             btn.innerHTML = "🔊 TIẾP TỤC ĐỌC";
             return; 
         }
         
-        let txtToRead = document.getElementById('content').innerHTML.replace(/<[^>]*>?/gm, '');
+        let txtToRead = document.getElementById('content').innerText;
         if(!txtToRead.trim()) return;
 
         let utter = new SpeechSynthesisUtterance(txtToRead); 
         if(allVoices.length > 0) utter.voice = allVoices[document.getElementById('voice-select').value];
         utter.rate = document.getElementById('speed').value;
         
-        utter.onend = function() { btn.innerHTML = "🔊 BẮT ĐẦU ĐỌC"; }
+        utter.onend = function() { btn.innerHTML = "🔊 BẮT ĐẦU ĐỌC"; };
         synth.speak(utter);
         
         btn.innerHTML = "⏸ DỪNG LẠI";
@@ -171,17 +224,20 @@
     }
 
     window.onload = function() {
+        const savedTheme = localStorage.getItem('theme_pref') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
 
-        if(!id) { document.getElementById('content').innerHTML = "Lỗi: ID tài liệu."; return; }
+        if(!id) { document.getElementById('content').innerHTML = "Lỗi: Không tìm thấy ID tài liệu."; return; }
 
         const rawContent = localStorage.getItem(id);
         if(rawContent) {
             document.getElementById('title').innerText = title || "TÀI LIỆU RHM";
             document.getElementById('content').innerHTML = parseSC(rawContent);
         } else {
-            document.getElementById('content').innerHTML = "Lỗi kết nối. Về sảnh để tải lại.";
+            document.getElementById('content').innerHTML = "Lỗi kết nối dữ liệu. Vui lòng quay về Sảnh chính để tải lại.";
         }
     };
 </script>
