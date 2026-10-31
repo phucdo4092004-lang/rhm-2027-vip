@@ -1,1 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Soạn Đề RHM 2027 - Phúc VIP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --primary-grad: linear-gradient(135deg, #00f2fe, #4facfe);
+            --accent: #ff00de;
+            --bg: #020617;
+            --card: rgba(15, 23, 42, 0.85);
+            --panel: rgba(30, 41, 59, 0.6);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.12);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 85%); color: var(--text); min-height: 100vh; padding-bottom: 40px; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 14px 3%; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 900; font-size: 18px; display: flex; align-items: center; gap: 10px; color: var(--primary); }
+        .logo span { background: var(--primary-grad); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 12px; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+
+        .btn { background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 9px 16px; border-radius: 10px; font-weight: 800; font-size: 12.5px; cursor: pointer; transition: 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+        .btn:hover { border-color: var(--primary); transform: translateY(-1px); }
+        .btn-primary { background: var(--primary-grad); color: #000; border: none; }
+        .btn-accent { background: linear-gradient(135deg, #8b5cf6, #ff00de); color: #fff; border: none; }
+        .btn-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: var(--success); }
+        .btn-success:hover { background: var(--success); color: #000; }
+
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1440px; margin: 20px auto; padding: 0 20px; }
+        .panel { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; backdrop-filter: blur(20px); display: flex; flex-direction: column; gap: 14px; height: calc(100vh - 100px); }
+        .panel-title { font-size: 15px; font-weight: 900; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
+
+        /* THÔNG TIN BỘ ĐỀ (4 CỘT GOOGLE SHEETS) */
+        .meta-grid { display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 10px; }
+        .input-box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: var(--text); font-family: inherit; font-size: 13px; font-weight: 600; outline: none; width: 100%; }
+        .input-box:focus { border-color: var(--primary); }
+
+        /* THANH CÔNG CỤ NHẬN DIỆN WORD & SHORTCODE */
+        .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--panel); padding: 10px; border-radius: 12px; border: 1px solid var(--border); }
+        .chk-label { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; user-select: none; margin-right: 6px; }
+        .chk-label input { accent-color: var(--primary); width: 15px; height: 15px; cursor: pointer; }
+        .sc-btn { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; }
+        .sc-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        textarea { flex: 1; width: 100%; background: rgba(2, 6, 23, 0.7); border: 1px solid var(--border); border-radius: 14px; padding: 15px; color: var(--text); font-family: 'Consolas', 'Courier New', monospace; font-size: 13.5px; line-height: 1.6; resize: none; outline: none; }
+        textarea:focus { border-color: var(--primary); }
+
+        /* KHUNG XEM TRƯỚC TƯƠNG TÁC & CODE ĐẦU RA */
+        .tabs { display: flex; gap: 8px; }
+        .tab { padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer; background: var(--panel); color: var(--muted); border: 1px solid var(--border); }
+        .tab.active { background: var(--primary); color: #000; border-color: transparent; }
+
+        .preview-area { flex: 1; overflow-y: auto; padding-right: 6px; display: flex; flex-direction: column; gap: 14px; }
+        .q-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; transition: 0.2s; }
+        .q-card.missing-ans { border-color: var(--danger); background: rgba(239, 68, 68, 0.06); }
+        .q-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 12px; font-weight: 900; }
+        .q-title { font-weight: 800; font-size: 14.5px; margin-bottom: 12px; line-height: 1.5; }
+        .q-opt { padding: 9px 12px; border-radius: 10px; background: rgba(2, 6, 23, 0.5); border: 1px solid var(--border); margin-bottom: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.15s; }
+        .q-opt:hover { border-color: var(--primary); }
+        .q-opt.is-correct { background: rgba(16, 185, 129, 0.18); border-color: var(--success); color: var(--success); font-weight: 800; }
+        .q-exp { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: rgba(0, 242, 254, 0.08); border: 1px dashed var(--primary); font-size: 12.5px; color: var(--text); }
+
+        .stats-bar { display: flex; gap: 12px; font-size: 12px; font-weight: 800; }
+        .stat-pill { padding: 4px 10px; border-radius: 50px; background: var(--panel); border: 1px solid var(--border); }
+
+        .export-bar { display: grid; grid-template-columns: 1fr 1.2fr auto auto; gap: 8px; pt: 6px; }
+
+        #toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; border: 2px solid var(--primary); padding: 11px 24px; border-radius: 50px; font-weight: 800; font-size: 13px; z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (max-width: 1024px) {
+            .workspace { grid-template-columns: 1fr; }
+            .panel { height: 650px; }
+            .export-bar { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast">✅ Đã sao chép!</div>
+
+<header class="header">
+    <div class="logo">🛠️ STUDIO SOẠN ĐỀ RHM <span>PRO CONVERTER</span></div>
+    <div class="header-actions">
+        <button class="btn" onclick="loadSample()">📄 Nạp Đề Mẫu</button>
+        <button class="btn" onclick="clearAll()" style="color:var(--danger);">🗑️ Xóa Trắng</button>
+        <a href="index.html" class="btn btn-primary">⬅ Về Sảnh Chính</a>
+    </div>
+</header>
+
+<div class="workspace">
+    <!-- CỘT TRÁI: NHẬP ĐỀ TỪ WORD / PDF -->
+    <div class="panel">
+        <div class="panel-title">
+            <span>📥 1. DÁN ĐỀ THI TỪ WORD / PDF VÀO ĐÂY</span>
+            <span style="font-size:11.5px; color:var(--muted); font-weight:600;">Tự động bắt Gạch chân, Chữ đỏ & Highlight từ Word</span>
+        </div>
+
+        <div class="meta-grid">
+            <input type="text" id="meta-id" class="input-box" placeholder="ID Cột A (VD: de_nha_chu_01)" value="de_rhm_01">
+            <input type="text" id="meta-title" class="input-box" placeholder="Tên Đề Cột B (VD: Đề Nha Chu #1)" value="Đề Trắc Nghiệm RHM #1">
+            <input type="text" id="meta-desc" class="input-box" placeholder="Mô tả Cột C (VD: 50 câu lâm sàng)" value="Ôn tập CCHN Răng Hàm Mặt 2027">
+        </div>
+
+        <div class="toolbar">
+            <span style="font-size:11.5px; font-weight:900; color:var(--primary);">Bắt đáp án Word:</span>
+            <label class="chk-label"><input type="checkbox" id="chk-underline" checked> Gạch chân</label>
+            <label class="chk-label"><input type="checkbox" id="chk-color" checked> Chữ Đỏ / Highlight</label>
+            <label class="chk-label"><input type="checkbox" id="chk-bold"> In đậm</label>
+            <div style="flex:1;"></div>
+            <button class="sc-btn" onclick="insertSC('[B]', '[/B]')"><b>B</b></button>
+            <button class="sc-btn" onclick="insertSC('[RED]', '[/RED]')" style="color:#ef4444;">ĐỎ</button>
+            <button class="sc-btn" onclick="insertSC('[BLUE]', '[/BLUE]')" style="color:#3b82f6;">XANH</button>
+            <button class="sc-btn" onclick="insertSC('[IMG]', '[/IMG]')">🖼️ ẢNH</button>
+        </div>
+
+        <textarea id="raw-input" oninput="processAll()" placeholder="Hãy Copy (Ctrl+C) đề trắc nghiệm từ file Word và Dán (Ctrl+V) vào đây...
+
+Hỗ trợ mọi định dạng lộn xộn:
+1. Tự động tách các đáp án A. B. C. D. nằm ngang trên cùng 1 dòng.
+2. Tự động nhận diện đáp án Gạch chân / Tô đỏ / Highlight vàng từ Word.
+3. Hoặc đánh dấu * trước đáp án đúng (VD: *A. hoặc A.*) hay nhập Bảng đáp án rời ở ô bên dưới."></textarea>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+            <span style="font-size:12px; font-weight:800; white-space:nowrap; color:var(--warning);">🔑 Bảng đáp án rời:</span>
+            <input type="text" id="ans-key-input" class="input-box" oninput="processAll()" placeholder="Nếu đề chưa đánh dấu đáp án, gõ vào đây (VD: 1A 2C 3B 4D hoặc 1.A, 2.C)...">
+        </div>
+    </div>
+
+    <!-- CỘT PHẢI: XEM TRƯỚC TƯƠNG TÁC & XUẤT GOOGLE SHEETS -->
+    <div class="panel">
+        <div class="panel-title">
+            <div class="tabs">
+                <div class="tab active" id="tab-btn-preview" onclick="switchTab('preview')">👁️ XEM TRƯỚC & CLICK CHỌN ĐÁP ÁN</div>
+                <div class="tab" id="tab-btn-code" onclick="switchTab('code')">📝 MÃ CHUẨN (* VÀ •)</div>
+            </div>
+            <div class="stats-bar">
+                <span class="stat-pill" id="stat-total" style="color:var(--primary);">0 Câu</span>
+                <span class="stat-pill" id="stat-missing" style="color:var(--success);">✅ Đủ đáp án</span>
+            </div>
+        </div>
+
+        <!-- VÙNG PREVIEW TƯƠNG TÁC -->
+        <div id="view-preview" class="preview-area"></div>
+
+        <!-- VÙNG CODE ĐẦU RA -->
+        <textarea id="output-code" style="display:none;" readonly></textarea>
+
+        <!-- THANH XUẤT DỮ LIỆU -->
+        <div class="export-bar">
+            <button class="btn btn-success" onclick="copyColD()">📋 Copy Cột D (Nội dung)</button>
+            <button class="btn btn-primary" onclick="copyFullRowTSV()">🚀 Copy Hàng 4 Cột (Dán cột A Sheets)</button>
+            <button class="btn btn-accent" onclick="testLive('Play')">⚡ Thi Thử</button>
+            <button class="btn" onclick="testLive('Flashcard')" style="border-color:var(--warning); color:var(--warning);">🃏 Lật Thẻ</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let parsedQuestions = [];
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg; t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    function switchTab(mode) {
+        document.getElementById('tab-btn-preview').classList.toggle('active', mode === 'preview');
+        document.getElementById('tab-btn-code').classList.toggle('active', mode === 'code');
+        document.getElementById('view-preview').style.display = mode === 'preview' ? 'flex' : 'none';
+        document.getElementById('output-code').style.display = mode === 'code' ? 'block' : 'none';
+    }
+
+    function insertSC(openTag, closeTag) {
+        const ta = document.getElementById('raw-input');
+        const start = ta.selectionStart; const end = ta.selectionEnd;
+        const text = ta.value;
+        ta.value = text.substring(0, start) + openTag + text.substring(start, end) + closeTag + text.substring(end);
+        ta.focus();
+        processAll();
+    }
+
+    // 1. BẮT SỰ KIỆN PASTE TỪ MICROSOFT WORD (NHẬN DIỆN GẠCH CHÂN, TÔ ĐỎ, HIGHLIGHT)
+    document.getElementById('raw-input').addEventListener('paste', function(e) {
+        const htmlData = (e.clipboardData || window.clipboardData).getData('text/html');
+        if (!htmlData) return; // Nếu chỉ là plain text thì để trình duyệt dán bình thường
+
+        const useUnderline = document.getElementById('chk-underline').checked;
+        const useColor = document.getElementById('chk-color').checked;
+        const useBold = document.getElementById('chk-bold').checked;
+
+        if (!useUnderline && !useColor && !useBold) return;
+
+        e.preventDefault();
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlData;
+
+        // Quét các phần tử có định dạng đặc biệt từ Word
+        const allElements = tempDiv.querySelectorAll('*');
+        allElements.forEach(el => {
+            const style = (el.getAttribute('style') || '').toLowerCase();
+            const tag = el.tagName.toLowerCase();
+            let isMarked = false;
+
+            if (useUnderline && (tag === 'u' || style.includes('text-decoration:underline') || style.includes('text-decoration: underline'))) {
+                isMarked = true;
+            }
+            if (useColor && (
+                tag === 'mark' ||
+                style.includes('mso-highlight') ||
+                style.includes('background:yellow') || style.includes('background: yellow') || style.includes('#ffff00') ||
+                style.includes('color:red') || style.includes('color: red') || style.includes('#ff0000') || style.includes('#c00000') || style.includes('rgb(255, 0, 0)')
+            )) {
+                isMarked = true;
+            }
+            if (useBold && (tag === 'b' || tag === 'strong' || style.includes('font-weight:bold') || style.includes('font-weight: bold') || style.includes('font-weight:700'))) {
+                // Tránh đánh dấu nhầm chữ "Câu 1" in đậm
+                if (!el.innerText.trim().match(/^(Câu|Bài|Question)\s*\d+/i)) {
+                    isMarked = true;
+                }
+            }
+
+            if (isMarked && el.innerText.trim().length > 0) {
+                // Nếu phần tử được đánh dấu là chữ cái đầu đáp án (VD: <u>A</u>. hoặc nguyên dòng đáp án)
+                if (!el.innerText.includes('[[CORRECT]]')) {
+                    el.innerHTML = '[[CORRECT]]' + el.innerHTML;
+                }
+            }
+        });
+
+        // Chuyển các thẻ block thành xuống dòng
+        tempDiv.querySelectorAll('p, div, li, br, tr').forEach(block => {
+            if (block.tagName.toLowerCase() === 'br') block.replaceWith('\n');
+            else block. prepend('\n');
+        });
+
+        let extractedText = tempDiv.innerText || tempDiv.textContent;
+        // Làm sạch cờ [[CORRECT]] lặp lại
+        extractedText = extractedText.replace(/(\[\[CORRECT\]\])+/g, '*');
+
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        this.value = this.value.substring(0, start) + extractedText.trim() + this.value.substring(end);
+        showToast("✨ Đã nhận diện định dạng đáp án từ Word!");
+        processAll();
+    });
+
+    // 2. PHÂN TÍCH BẢNG ĐÁP ÁN RỜI (VD: 1A 2B 3C 4D)
+    function parseAnswerKey() {
+        const rawKey = document.getElementById('ans-key-input').value.toUpperCase();
+        const map = {};
+        const regex = /(\d+)\s*[:.\-]?\s*([A-E])/g;
+        let match;
+        while ((match = regex.exec(rawKey)) !== null) {
+            const qNum = parseInt(match[1], 10);
+            const letterIdx = match[2].charCodeAt(0) - 65; // A->0, B->1, C->2, D->3
+            map[qNum] = letterIdx;
+        }
+        return map;
+    }
+
+    // 3. THUẬT TOÁN CHUẨN HÓA ĐỀ THI TRẮC NGHIỆM
+    function processAll() {
+        let raw = document.getElementById('raw-input').value;
+        const keyMap = parseAnswerKey();
+
+        // Bước 1: Tự động bẻ các đáp án A. B. C. D. nằm trên cùng 1 dòng xuống dòng riêng
+        raw = raw.replace(/([^\n])\s+(\*?[A-D][\.\)]\s+)/g, '$1\n$2');
+        raw = raw.replace(/([^\n])\s+(\*?[A-D][\.\)]\s+)/g, '$1\n$2');
+
+        const lines = raw.split(/\r?\n/);
+        parsedQuestions = [];
+        let currentQ = null;
+        let qCounter = 0;
+
+        lines.forEach(line => {
+            line = line.trim();
+            if (!line) return;
+
+            // Nhận diện dòng bắt đầu Câu hỏi: "Câu 1:", "Câu 1.", "Bài 1:", "1.", "1)"
+            const qMatch = line.match(/^(?:Câu|Bài|Question)?\s*(\d+)\s*[:.)\-]\s*(.+)$/i);
+            // Tránh nhầm đáp án kiểu "1. Đáp án" nếu không có chữ Câu, nhưng nếu chưa có câu nào hoặc câu trước đã có đáp án thì chắc chắn là câu hỏi mới
+            const isNewQuestion = line.match(/^(?:Câu|Bài|Question)\s*\d+/i) || (qMatch && (!currentQ || currentQ.opts.length >= 2));
+
+            if (isNewQuestion && qMatch) {
+                if (currentQ) parsedQuestions.push(currentQ);
+                qCounter++;
+                const qText = qMatch[2].replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').trim();
+                currentQ = { num: qCounter, title: `Câu ${qCounter}: ${qText}`, opts: [], explanation: "" };
+                return;
+            }
+
+            if (!currentQ) {
+                // Nếu dòng đầu tiên không ghi "Câu 1:" thì tự tạo Câu 1
+                qCounter++;
+                currentQ = { num: qCounter, title: `Câu ${qCounter}: ${line}`, opts: [], explanation: "" };
+                return;
+            }
+
+            // Nhận diện dòng Giải thích
+            const expMatch = line.match(/^(?:💡\s*)?(?:Giải thích|Lời giải|Hướng dẫn|HD|=>)\s*[:\-]?\s*(.+)$/i);
+            if (expMatch) {
+                currentQ.explanation += (currentQ.explanation ? "<br>" : "") + expMatch[1].trim();
+                return;
+            }
+
+            // Nhận diện dòng Đáp án: A. B. C. D. hoặc * hoặc •
+            const optMatch = line.match(/^(\*|•|\[x\])?\s*([A-E])?[\.\)]\s*(.+)$/i) || line.match(/^(\*|•)\s*(.+)$/i);
+            if (optMatch) {
+                let isCorrect = false;
+                let optText = "";
+
+                if (optMatch.length === 4) {
+                    const prefix = optMatch[1] || "";
+                    optText = optMatch[3].trim();
+                    if (prefix === '*' || prefix.toLowerCase() === '[x]' || optText.includes('*')) {
+                        isCorrect = true;
+                        optText = optText.replace(/^\*+|\*+$/g, '').trim();
+                    }
+                } else {
+                    isCorrect = optMatch[1] === '*';
+                    optText = optMatch[2].trim();
+                }
+
+                currentQ.opts.push({ text: optText, isC: isCorrect });
+            } else {
+                // Nếu chưa có đáp án nào -> nối vào tiêu đề câu hỏi; nếu đã có đáp án -> nối vào phần giải thích
+                if (currentQ.opts.length === 0) {
+                    currentQ.title += " " + line;
+                } else {
+                    currentQ.explanation += (currentQ.explanation ? "<br>" : "") + line;
+                }
+            }
+        });
+
+        if (currentQ) parsedQuestions.push(currentQ);
+
+        // Áp dụng Bảng đáp án rời nếu có
+        parsedQuestions.forEach((q, idx) => {
+            const qIndex1 = idx + 1;
+            if (keyMap[qIndex1] !== undefined && q.opts[keyMap[qIndex1]]) {
+                q.opts.forEach((o, oIdx) => { o.isC = (oIdx === keyMap[qIndex1]); });
+            }
+        });
+
+        renderPreviewAndCode();
+    }
+
+    // 4. HIỂN THỊ BẢN XEM TRƯỚC & XUẤT MÃ CHUẨN
+    function renderPreviewAndCode() {
+        const previewCont = document.getElementById('view-preview');
+        let codeLines = [];
+        let missingCount = 0;
+
+        previewCont.innerHTML = '';
+
+        parsedQuestions.forEach((q, qIdx) => {
+            const hasCorrect = q.opts.some(o => o.isC);
+            if (!hasCorrect) missingCount++;
+
+            // Tạo mã chuẩn cho Play.html & Flashcard.html
+            codeLines.push(q.title);
+            q.opts.forEach(o => {
+                codeLines.push(`${o.isC ? '*' : '•'} ${o.text}`);
+            });
+            if (q.explanation) {
+                codeLines.push(q.explanation);
+            }
+            codeLines.push(''); // Dòng trống ngăn cách
+
+            // Tạo thẻ Preview tương tác
+            const card = document.createElement('div');
+            card.className = `q-card ${hasCorrect ? '' : 'missing-ans'}`;
+            
+            let optsHTML = '';
+            q.opts.forEach((o, oIdx) => {
+                optsHTML += `<div class="q-opt ${o.isC ? 'is-correct' : ''}" onclick="toggleCorrectOpt(${qIdx}, ${oIdx})" title="Bấm để đặt/bỏ làm đáp án đúng">
+                                <span>${o.isC ? '✅ *' : '⚪ •'}</span>
+                                <span style="flex:1;">${o.text}</span>
+                             </div>`;
+            });
+
+            card.innerHTML = `
+                <div class="q-head">
+                    <span style="color:var(--primary);">CÂU #${qIdx + 1} (${q.opts.length} lựa chọn)</span>
+                    <span style="color:${hasCorrect ? 'var(--success)' : 'var(--danger)'};">
+                        ${hasCorrect ? '✔ Đã có đáp án đúng' : '⚠️ Chưa có đáp án đúng (Hãy click chọn 1 câu dưới đây)'}
+                    </span>
+                </div>
+                <div class="q-title">${q.title}</div>
+                <div>${optsHTML}</div>
+                ${q.explanation ? `<div class="q-exp"><b>💡 Giải thích:</b> ${q.explanation}</div>` : ''}
+            `;
+            previewCont.appendChild(card);
+        });
+
+        document.getElementById('output-code').value = codeLines.join('\n').trim();
+        document.getElementById('stat-total').innerText = `${parsedQuestions.length} Câu`;
+        
+        const missEl = document.getElementById('stat-missing');
+        if (missingCount > 0) {
+            missEl.innerText = `⚠️ Thiếu đáp án: ${missingCount} câu`;
+            missEl.style.color = 'var(--danger)';
+        } else {
+            missEl.innerText = `✅ Đủ 100% đáp án`;
+            missEl.style.color = 'var(--success)';
+        }
+    }
+
+    // Cho phép bấm trực tiếp vào đáp án ở màn hình Preview để chọn đáp án đúng
+    function toggleCorrectOpt(qIdx, oIdx) {
+        const q = parsedQuestions[qIdx];
+        q.opts.forEach((o, i) => {
+            if (i === oIdx) o.isC = !o.isC;
+        });
+        renderPreviewAndCode();
+    }
+
+    // 5. CÁC HÀM XUẤT DỮ LIỆU SANG GOOGLE SHEETS & CHẠY THỬ
+    function copyColD() {
+        const code = document.getElementById('output-code').value;
+        if (!code) { showToast("⚠️ Chưa có nội dung để copy!"); return; }
+        navigator.clipboard.writeText(code);
+        showToast("📋 Đã copy Nội dung Cột D! (Nháy đúp vào ô D2 trên Google Sheets rồi nhấn Ctrl+V)");
+    }
+
+    // Copy nguyên dòng 4 cột (A, B, C, D) chuẩn TSV không bị vỡ dòng trong Google Sheets
+    function copyFullRowTSV() {
+        const code = document.getElementById('output-code').value;
+        if (!code) { showToast("⚠️ Chưa có nội dung để copy!"); return; }
+        
+        const id = document.getElementById('meta-id').value.trim() || 'de_moi';
+        const title = document.getElementById('meta-title').value.trim() || 'Đề RHM Mới';
+        const desc = document.getElementById('meta-desc').value.trim() || 'Đề ôn tập lâm sàng';
+
+        // Bọc nội dung cột D trong dấu ngoặc kép "..." và nhân đôi "" bên trong để Google Sheets giữ nguyên trong 1 ô
+        const escapedContent = '"' + code.replace(/"/g, '""') + '"';
+        const tsvRow = `${id}\t${title}\t${desc}\t${escapedContent}`;
+
+        navigator.clipboard.writeText(tsvRow);
+        showToast("🚀 Đã copy nguyên hàng 4 cột! Chỉ cần bấm chọn ô A2 trên Google Sheets và nhấn Ctrl+V!");
+    }
+
+    function testLive(targetPage) {
+        const code = document.getElementById('output-code').value;
+        if (!code) { showToast("⚠️ Chưa có câu hỏi nào để chạy thử!"); return; }
+        const id = document.getElementById('meta-id').value.trim() || 'test_studio';
+        const title = document.getElementById('meta-title').value.trim() || 'Đề Chạy Thử Studio';
+        localStorage.setItem(id, code);
+        window.open(`${targetPage}.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}`, '_blank');
+    }
+
+    function clearAll() {
+        document.getElementById('raw-input').value = '';
+        document.getElementById('ans-key-input').value = '';
+        processAll();
+    }
+
+    function loadSample() {
+        document.getElementById('raw-input').value = `Câu 1. Nguyên nhân phổ biến nhất gây viêm tủy không hồi phục ở người trưởng thành là gì?
+A. Chấn thương khớp cắn mãn tính   *B. Sâu răng tiến triển sâu vào buồng tủy   C. Mòn cổ răng hình chêm   D. Tẩy trắng răng nồng độ cao
+Giải thích: Vi khuẩn từ ổ sâu răng xâm nhập qua ống ngà vào tủy là nguyên nhân hàng đầu.
+
+2. Dây thần kinh nào sau đây chi phối cảm giác cho các răng hàm lớn hàm dưới?
+A. Thần kinh ổ mắt dưới
+B. Thần kinh xương ổ răng trên sau
+*C. Thần kinh xương ổ răng dưới
+D. Thần kinh cằm
+Lời giải: Nhánh thần kinh xương ổ răng dưới (thuộc dây V3) đi trong ống răng dưới chi phối cảm giác răng hàm dưới.`;
+        processAll();
+        showToast("📄 Đã nạp đề mẫu! Hãy thử bấm vào các đáp án bên phải.");
+    }
+
+    window.onload = loadSample;
+</script>
+</body>
+</html>
