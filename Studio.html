@@ -167,6 +167,25 @@ Hỗ trợ mọi định dạng lộn xộn:
 </div>
 
 <script>
+    // CHỐT CHẶN BẢO MẬT TRỰC TIẾP TRÊN STUDIO.HTML
+    (function checkAdminAuth() {
+        const ADMIN_PIN_HASH = 7569999564299224; // Hash của "04092004"
+        function hashPin(str) {
+            let h = 5381;
+            for (let i = 0; i < str.length; i++) h = (h * 33) + str.charCodeAt(i);
+            return h;
+        }
+
+        if (sessionStorage.getItem('rhm_vip_admin') !== 'authenticated') {
+            const pin = prompt("🔐 KHU VỰC QUẢN TRỊ VIP\nVui lòng nhập mật khẩu của Đỗ Hồng Phúc để tiếp tục:");
+            if (pin && hashPin(pin.trim()) === ADMIN_PIN_HASH) {
+                sessionStorage.setItem('rhm_vip_admin', 'authenticated');
+            } else {
+                alert("⛔ Truy cập bị từ chối! Đang quay về Sảnh Chỉ Huy...");
+                window.location.replace('index.html');
+            }
+        }
+    })();
     let parsedQuestions = [];
 
     function showToast(msg) {
