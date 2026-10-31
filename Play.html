@@ -10,99 +10,103 @@
         :root { --primary: #00f2fe; --primary-grad: linear-gradient(90deg, #00f2fe, #4facfe); }
         
         [data-theme="dark"] { 
-            --bg-card: rgba(15, 23, 42, 0.85); 
+            --bg-card: rgba(15, 23, 42, 0.88); 
             --text: #f8fafc; 
-            --opt-bg: rgba(255,255,255,0.05); 
+            --opt-bg: rgba(255,255,255,0.06); 
             --border: rgba(255,255,255,0.15); 
-            --drawer: rgba(15, 23, 42, 0.95); 
+            --drawer: rgba(15, 23, 42, 0.96); 
             --glass: rgba(255,255,255,0.1); 
-            --header-bg: rgba(0,0,0,0.6);
+            --header-bg: rgba(0,0,0,0.65);
         }
         
         [data-theme="light"] { 
             --bg-card: rgba(255, 255, 255, 0.95); 
             --text: #0f172a; 
-            --opt-bg: #f8fafc; 
-            --border: rgba(0,0,0,0.1); 
+            --opt-bg: #f1f5f9; 
+            --border: rgba(15,23,42,0.12); 
             --drawer: #ffffff; 
-            --glass: rgba(0,0,0,0.05); 
-            --header-bg: rgba(255,255,255,0.85);
+            --glass: rgba(15,23,42,0.06); 
+            --header-bg: rgba(255,255,255,0.88);
         }
 
         body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); margin: 0; overflow: hidden; height: 100vh; background: #000; transition: color 0.3s; }
         
         #universe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; transition: background 0.5s ease-in-out, filter 1.5s ease-in-out; }
         #floating-objects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; overflow: hidden; }
-        .emoji-floater { position: absolute; font-size: 40px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.7; }
+        .emoji-floater { position: absolute; font-size: 38px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); animation: floatRandom 20s infinite linear alternate; opacity: 0.65; }
         @keyframes floatRandom { 100% { transform: translate(100px, -100px) rotate(360deg); } }
 
-        .milestone-burst { position: absolute; animation: burst 1.5s ease-out forwards; z-index: 9999; font-size: 50px; pointer-events: none;}
+        .milestone-burst { position: absolute; animation: burst 1.5s ease-out forwards; z-index: 9999; font-size: 46px; pointer-events: none; }
         @keyframes burst { 0% { transform: translate(0, 0) scale(0.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(360deg); opacity: 0; } }
 
         .sticky-header { position: fixed; top: 0; width: 100%; padding: 12px 15px; background: var(--header-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; transition: background 0.3s; }
-        .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; }
-        .btn-tool:hover { background: var(--primary-grad); color: #000; border-color: transparent; }
-        .btn-exit { width: auto; padding: 8px 15px; border-radius: 50px; background: var(--primary-grad); color: #000; border: none; }
-        .btn-menu { width: auto; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px; text-decoration: none; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; font-family: inherit; }
+        .btn-tool:hover { background: var(--primary); color: #fff; border-color: transparent; }
+        .btn-exit { width: auto; padding: 8px 16px; border-radius: 50px; background: var(--primary); color: #000; border: none; }
+        [data-theme="light"] .btn-exit { color: #fff; }
+        .btn-menu { width: auto; padding: 8px 16px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
         .btn-speak { background: linear-gradient(45deg, #ff00de, #ff8a00); color: #fff; border: none; }
         
-        .title-text { font-weight: 900; color: var(--primary); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; }
-        [data-theme="dark"] .title-text { text-shadow: 0 0 10px var(--primary); }
+        .title-text { font-weight: 900; color: var(--primary); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42vw; }
 
-        .drawer { position: fixed; top: 0; right: -320px; width: 310px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px 20px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
+        .drawer { position: fixed; top: 0; right: -320px; width: 310px; height: 100vh; background: var(--drawer); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 25px 20px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
         .drawer.open { right: 0; }
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px);}
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px); }
         .drawer-overlay.show { display: block; }
-        .setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .score-badge { background: var(--opt-bg); color: #facc15; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 15px; border: 1px dashed #facc15; text-align: center; margin-bottom: 15px;}
+        .setting-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
+        .score-badge { background: var(--opt-bg); color: #eab308; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 14px; border: 1px dashed #eab308; text-align: center; margin-bottom: 15px; }
 
-        .menu-pager { display: flex; justify-content: space-between; align-items: center; background: var(--glass); padding: 8px; border-radius: 50px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .btn-page { background: var(--primary); color: #000; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer; transition: 0.2s; display:flex; align-items:center; justify-content:center;}
-        .btn-page:hover { transform: scale(1.1); box-shadow: 0 0 10px var(--primary); }
-        .page-text { font-size: 12px; font-weight: 900; color: var(--primary); letter-spacing: 1px;}
-        .menu-page { display: none; animation: slideIn 0.3s ease; }
+        .menu-pager { display: flex; justify-content: space-between; align-items: center; background: var(--glass); padding: 8px; border-radius: 50px; margin-bottom: 18px; border: 1px solid var(--border); }
+        .btn-page { background: var(--primary); color: #000; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer; transition: 0.2s; display:flex; align-items:center; justify-content:center; }
+        [data-theme="light"] .btn-page { color: #fff; }
+        .page-text { font-size: 12px; font-weight: 900; color: var(--primary); letter-spacing: 0.5px; }
+        .menu-page { display: none; animation: slideIn 0.25s ease; }
         .menu-page.active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
 
         #quiz-container { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 15px; box-sizing: border-box; }
-        .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; transition: background 0.3s;}
-        .question-box.active { display: block; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .question-box { background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 620px; padding: 30px 25px; border-radius: 24px; border: 1px solid var(--border); display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.25); max-height: 80vh; overflow-y: auto; transition: background 0.3s; }
+        .question-box.active { display: block; animation: pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .progress-text-top { text-align: center; color: var(--primary); font-weight: 900; font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; background: rgba(0,242,254,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--primary);}
-        .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; color: var(--text);}
-        .option:hover { border-left-color: var(--primary); background: rgba(0, 242, 254, 0.1); transform: translateX(5px); }
-        .correct { background: rgba(16, 185, 129, 0.15) !important; border-left: 4px solid #10b981 !important; border-color: #10b981 !important; color: #10b981 !important; }
-        .wrong { background: rgba(239, 68, 68, 0.15) !important; border-left: 4px solid #ef4444 !important; border-color: #ef4444 !important; color: #ef4444 !important; }
-        .disabled { pointer-events: none; opacity: 0.6; }
+        .q-badge-top { display: inline-block; background: var(--glass); color: var(--primary); border: 1px solid var(--primary); padding: 4px 14px; border-radius: 50px; font-size: 12px; font-weight: 900; margin-bottom: 14px; }
+        .option { background: var(--opt-bg); padding: 14px 18px; margin-bottom: 11px; border-radius: 16px; cursor: pointer; border: 1px solid var(--border); border-left: 4px solid var(--border); transition: 0.2s; font-weight: 700; font-size: 15px; color: var(--text); }
+        .option:hover { border-left-color: var(--primary); transform: translateX(4px); }
+        .correct { background: rgba(16, 185, 129, 0.16) !important; border-left: 4px solid #10b981 !important; border-color: #10b981 !important; color: #10b981 !important; }
+        .wrong { background: rgba(239, 68, 68, 0.16) !important; border-left: 4px solid #ef4444 !important; border-color: #ef4444 !important; color: #ef4444 !important; }
+        .disabled { pointer-events: none; opacity: 0.65; }
 
-        .sc-img { display: block; max-width: 100%; border-radius: 12px; margin: 15px auto; border: 2px solid var(--primary); }
-        .sc-red { color: #ff4d4d; font-weight: 800; }
-        .sc-blue { color: #4da6ff; font-weight: 800; }
+        /* ĐÃ BỔ SUNG CLASS BỊ THIẾU CHO THANH ĐẾM NGƯỢC TỰ CHUYỂN CÂU */
+        .jump-bar-fill { height: 100%; width: 100%; background: var(--primary); border-radius: 10px; transition: width 0.08s linear; }
 
-        .nav-arrow { position: fixed; top: 50%; background: var(--glass); backdrop-filter: blur(10px); border: 2px solid var(--primary); color: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; z-index: 100; transform: translateY(-50%); transition: 0.2s;}
-        .nav-arrow:hover { background: var(--primary); color: #000; transform: translateY(-50%) scale(1.1); box-shadow: 0 0 15px var(--primary);}
+        .sc-img { display: block; max-width: 100%; max-height: 220px; border-radius: 12px; margin: 14px auto; border: 2px solid var(--primary); }
+        .sc-red { color: #ef4444; font-weight: 800; }
+        .sc-blue { color: #3b82f6; font-weight: 800; }
+
+        .nav-arrow { position: fixed; top: 50%; background: var(--header-bg); backdrop-filter: blur(10px); border: 2px solid var(--primary); color: var(--primary); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; z-index: 100; transform: translateY(-50%); transition: 0.2s; user-select: none; }
+        .nav-arrow:hover { background: var(--primary); color: #000; transform: translateY(-50%) scale(1.1); }
         #nav-prev { left: 10px; } #nav-next { right: 10px; }
         
-        .progress-bar-bg { position: fixed; bottom: 0; left: 0; height: 8px; width: 100%; background: rgba(128,128,128,0.2); z-index: 1000; }
-        .progress-bar { height: 100%; background: var(--primary-grad); width: 0%; transition: width 0.4s ease; box-shadow: 0 -2px 15px var(--primary); }
-        .progress-percent-badge { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); font-weight: 900; color: var(--primary); font-size: 13px; z-index: 1001; background: var(--header-bg); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--primary); backdrop-filter: blur(5px); letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
+        .progress-bar-bg { position: fixed; bottom: 0; left: 0; height: 7px; width: 100%; background: rgba(128,128,128,0.2); z-index: 1000; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.4s ease; }
+        .progress-percent-badge { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); font-weight: 900; color: var(--primary); font-size: 12px; z-index: 1001; background: var(--header-bg); padding: 5px 16px; border-radius: 20px; border: 1px solid var(--primary); backdrop-filter: blur(8px); letter-spacing: 0.5px; }
 
         .node-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-        .node { aspect-ratio: 1; border-radius: 10px; background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 1px solid var(--border); font-size: 12px; color: var(--text);}
+        .node { aspect-ratio: 1; border-radius: 10px; background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 1px solid var(--border); font-size: 12px; color: var(--text); }
         .node-correct { background: #10b981; color: #fff; border-color: #10b981; }
         .node-wrong { background: #ef4444; color: #fff; border-color: #ef4444; }
-        .node-active { border: 2px solid var(--primary); transform: scale(1.15); box-shadow: 0 0 15px var(--primary); }
+        .node-active { border: 2px solid var(--primary); transform: scale(1.1); }
 
-        #streak-toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) scale(0); background: linear-gradient(45deg, #ff0f7b, #f89b29); color: #fff; padding: 10px 25px; border-radius: 50px; font-weight: 900; z-index: 2000; transition: 0.3s; pointer-events: none;}
+        #streak-toast { position: fixed; top: 75px; left: 50%; transform: translateX(-50%) scale(0); background: linear-gradient(45deg, #ff0f7b, #f89b29); color: #fff; padding: 9px 22px; border-radius: 50px; font-weight: 900; font-size: 13px; z-index: 2000; transition: 0.3s; pointer-events: none; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
         #streak-toast.show { transform: translateX(-50%) scale(1); }
 
-        #end-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        #end-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.88); backdrop-filter: blur(15px); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; }
         .end-box { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 24px; padding: 30px; text-align: center; width: 90%; max-width: 400px; }
-        .btn-end { width: 100%; padding: 14px; margin: 6px 0; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 13px; transition: 0.2s;}
+        .btn-end { width: 100%; padding: 14px; margin: 6px 0; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 13px; transition: 0.2s; font-family: inherit; }
         
-        .donate-badge { position: fixed; bottom: 60px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 2px dashed #ff00de; padding: 8px 15px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px rgba(255,0,222,0.2); transition: 0.3s; color: var(--text);}
-        .donate-badge:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(245,158,11,0.5); }
+        .donate-badge { position: fixed; bottom: 52px; right: 16px; background: var(--header-bg); backdrop-filter: blur(10px); border: 1.5px dashed #ff00de; padding: 7px 14px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; z-index: 900; transition: 0.3s; color: var(--text); }
+        .donate-badge:hover { transform: translateY(-3px) scale(1.03); }
+        @media (max-width: 640px) { .donate-badge { display: none; } }
     </style>
 </head>
 <body>
@@ -120,7 +124,7 @@
 <div id="drawer-overlay" class="drawer-overlay" onclick="toggleMenu()"></div>
 
 <div id="settings-drawer" class="drawer">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px;">
         <h3 style="margin:0; color:var(--primary); font-weight:900;">⚙️ TÙY CHỈNH</h3>
         <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
     </div>
@@ -134,19 +138,22 @@
     </div>
 
     <div id="menu-page-1" class="menu-page active">
-        <div class="setting-group" style="border: 2px dashed var(--primary); padding: 15px; border-radius: 15px; background: rgba(0,242,254,0.05);">
-            <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--opt-bg); border-color:var(--primary); margin-bottom:8px;">🗺️ MỞ BẢN ĐỒ CÂU HỎI</button>
-            <button onclick="showReviewMode(); toggleMenu();" class="btn-tool" style="background:#10b981; color:#fff; border:none; margin-bottom:8px;">👀 BẢNG VÀNG LƯỚT DỌC</button>
-            <button onclick="initGame('wrong'); toggleMenu();" class="btn-tool" style="background:linear-gradient(45deg, #ef4444, #f89b29); color:#fff; border:none; margin-bottom:8px;">🔥 LÀM LẠI CÂU SAI</button>
-            <button onclick="initGame('unanswered'); toggleMenu();" class="btn-tool" style="background:#8b5cf6; color:#fff; border:none; margin-bottom:8px;">⏳ LÀM CÂU CHƯA LÀM</button>
-            <button onclick="initGame('all'); toggleMenu();" class="btn-tool" style="background:#fff; color:#000; border:none;">🔄 CHƠI LẠI TỪ ĐẦU</button>
+        <div class="setting-group" style="border: 1.5px dashed var(--primary); padding: 14px; border-radius: 15px;">
+            <button onclick="toggleMap(); toggleMenu();" class="btn-tool" style="background:var(--opt-bg); border-color:var(--primary);">🗺️ MỞ BẢN ĐỒ CÂU HỎI</button>
+            <button onclick="showReviewMode(); toggleMenu();" class="btn-tool" style="background:#10b981; color:#fff; border:none;">👀 BẢNG VÀNG LƯỚT DỌC</button>
+            <button onclick="initGame('wrong'); toggleMenu();" class="btn-tool" style="background:linear-gradient(45deg, #ef4444, #f89b29); color:#fff; border:none;">🔥 LÀM LẠI CÂU SAI</button>
+            <button onclick="initGame('unanswered'); toggleMenu();" class="btn-tool" style="background:#8b5cf6; color:#fff; border:none;">⏳ LÀM CÂU CHƯA LÀM</button>
+            <button onclick="initGame('all'); toggleMenu();" class="btn-tool" style="background:var(--text); color:var(--bg-card); border:none;">🔄 CHƠI LẠI TỪ ĐẦU</button>
+        </div>
+        <div onclick="copySTK()" style="margin-top:12px; padding:10px; border-radius:12px; border:1px dashed #ff00de; text-align:center; font-size:12px; font-weight:800; cursor:pointer;">
+            💖 Donate: Đỗ Hồng Phúc<br><span style="color:#ff00de;">BIDV 8812766209</span>
         </div>
     </div>
 
     <div id="menu-page-2" class="menu-page">
         <div class="setting-group" style="flex-direction: row; gap: 10px;">
             <button id="btn-sound" class="btn-tool" onclick="toggleSound()">🔊 BẬT ÂM</button>
-            <button id="btn-shuffle" class="btn-tool" onclick="toggleShuffle()" style="color:#facc15; border-color:#facc15;">🔀 ĐẢO ĐỀ: TẮT</button>
+            <button id="btn-shuffle" class="btn-tool" onclick="toggleShuffle()" style="color:#eab308; border-color:#eab308;">🔀 ĐẢO ĐỀ: TẮT</button>
         </div>
         <div class="setting-group" style="flex-direction: row; gap: 10px;">
             <button class="btn-tool" onclick="adjSize(2)">A+ Phóng to</button>
@@ -168,20 +175,20 @@
                 <option value="nature">🌲 Chủ đề: Thiên Nhiên</option>
                 <option value="tech">💻 Chủ đề: Công Nghệ</option>
             </select>
-            <button id="btn-mode" onclick="toggleMode()" class="btn-tool">🌓 GIAO DIỆN SÁNG</button>
+            <button id="btn-mode" onclick="toggleMode()" class="btn-tool">🌓 ĐỔI SÁNG / TỐI</button>
         </div>
     </div>
 </div>
 
-<div id="nav-prev" class="nav-arrow" onclick="move(-1)">&lt;</div>
-<div id="nav-next" class="nav-arrow" onclick="move(1)">&gt;</div>
+<div id="nav-prev" class="nav-arrow" onclick="move(-1)">❮</div>
+<div id="nav-next" class="nav-arrow" onclick="move(1)">❯</div>
 
 <div id="quiz-container"></div>
 
 <div id="map-drawer" class="drawer">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
         <h3 style="color:var(--primary); margin:0;">BẢN ĐỒ CHIẾN DỊCH</h3>
-        <button onclick="toggleMap()" style="background:rgba(255,0,0,0.1); border:1px solid #ef4444; color:#ef4444; width:30px; height:30px; border-radius:50%; font-size:18px; cursor:pointer;">&times;</button>
+        <button onclick="toggleMap()" style="background:rgba(239,68,68,0.1); border:1px solid #ef4444; color:#ef4444; width:30px; height:30px; border-radius:50%; font-size:18px; cursor:pointer;">&times;</button>
     </div>
     <div class="node-grid" id="node-grid"></div>
 </div>
@@ -189,16 +196,16 @@
 <div class="progress-percent-badge" id="progress-percent-text">TIẾN ĐỘ: 0%</div>
 <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
 
-<div class="donate-badge" onclick="copySTK()">💖 Donate cho phúc đi Đỗ Hồng Phúc <b style="color:#ff00de;">BIDV 8812766209</b></div>
+<div class="donate-badge" onclick="copySTK()">💖 Donate: Đỗ Hồng Phúc <b style="color:#ff00de;">BIDV 8812766209</b></div>
 
 <div id="end-screen">
     <div class="end-box">
         <h2 style="color:var(--primary); font-weight:900; margin-top:0; text-transform: uppercase;">CHIẾN DỊCH HOÀN TẤT!</h2>
-        <div style="font-size: 60px; font-weight: 900; text-shadow: 0 0 20px rgba(255,255,255,0.3);" id="final-score">100%</div>
-        <div id="final-rank" style="color: #facc15; font-weight: 800; margin-bottom: 30px; font-size: 16px; letter-spacing: 1px;">THỦ KHOA RHM</div>
+        <div style="font-size: 56px; font-weight: 900;" id="final-score">100%</div>
+        <div id="final-rank" style="color: #eab308; font-weight: 800; margin-bottom: 25px; font-size: 16px;">THỦ KHOA RHM</div>
         <button class="btn-end" style="background:linear-gradient(90deg, #10b981, #059669); color:#fff;" onclick="showReviewMode()">👀 Xem Bảng Vàng (Giải Thích)</button>
-        <button class="btn-end" style="background:var(--primary-grad); color:#000;" onclick="initGame('wrong')">🔥 Phục thù câu sai</button>
-        <button class="btn-end" style="background:#fff; color:#000;" onclick="initGame('all')">🔄 Chơi lại từ đầu</button>
+        <button class="btn-end" style="background:var(--primary); color:#000;" onclick="initGame('wrong')">🔥 Phục thù câu sai</button>
+        <button class="btn-end" style="background:#e2e8f0; color:#0f172a;" onclick="initGame('all')">🔄 Chơi lại từ đầu</button>
     </div>
 </div>
 
@@ -208,31 +215,38 @@
     let synth = window.speechSynthesis; let viVoices = []; let lastLevel5Percent = 0; 
     let isMuted = false; let isShuffle = false; let currentMenuPage = 1;
 
+    // Bảng màu hỗ trợ cả pDark (Chế độ Tối) và pLight (Chế độ Sáng - Tương phản cao)
     const themes = {
-        space: { bgDark: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', bgLight: 'radial-gradient(circle at center, #e0f2fe 0%, #bae6fd 100%)', p: '#00f2fe', obj: ['🛸','🚀','🌌','🛰️','☄️'] },
-        spring: { bgDark: 'linear-gradient(to bottom, #2e1437, #943b54)', bgLight: 'linear-gradient(to bottom, #fdf2f8, #fbcfe8)', p: '#ff7eb3', obj: ['🌸','🦋','🌷','🌱','🕊️'] },
-        summer: { bgDark: 'linear-gradient(to bottom, #001d3d, #00b4db)', bgLight: 'linear-gradient(to bottom, #fef08a, #7dd3fc)', p: '#f6d365', obj: ['🌻','☀️','🍉','🍦','🦀'] },
-        autumn: { bgDark: 'linear-gradient(to bottom, #3f2b96, #a8c0ff)', bgLight: 'linear-gradient(to bottom, #fed7aa, #ffedd5)', p: '#ff9966', obj: ['🍁','🍂','🐿️','🦊','🌾'] },
-        winter: { bgDark: 'linear-gradient(to bottom, #141e30, #243b55)', bgLight: 'linear-gradient(to bottom, #e0f2fe, #f1f5f9)', p: '#a1c4fd', obj: ['❄️','⛄','🐧','🧊','🏔️'] },
-        love: { bgDark: 'linear-gradient(to bottom, #43000b, #ff0f7b)', bgLight: 'linear-gradient(to bottom, #fce7f3, #f9a8d4)', p: '#ff0844', obj: ['💖','🌹','💌','🧸','💘'] },
-        animals: { bgDark: 'linear-gradient(to bottom, #134e5e, #71b280)', bgLight: 'linear-gradient(to bottom, #dcfce7, #bbf7d0)', p: '#2ebf91', obj: ['🦁','🐼','🐾','🐯','🐨'] },
-        nature: { bgDark: 'linear-gradient(to bottom, #0f2027, #2c5364)', bgLight: 'linear-gradient(to bottom, #ccfbf1, #a7f3d0)', p: '#11998e', obj: ['🌲','🌈','🍄','🍀','🦅'] },
-        tech: { bgDark: 'radial-gradient(circle at center, #000000, #434343)', bgLight: 'radial-gradient(circle at center, #f1f5f9, #cbd5e1)', p: '#00ff00', obj: ['💻','🤖','⚡','🔋','🔌'] }
+        space: { bgDark: 'radial-gradient(circle at center, #1e1b4b 0%, #020617 100%)', bgLight: 'radial-gradient(circle at center, #e0f2fe 0%, #bae6fd 100%)', pDark: '#00f2fe', pLight: '#0284c7', obj: ['🛸','🚀','🌌','🛰️','☄️'] },
+        spring: { bgDark: 'linear-gradient(to bottom, #2e1437, #943b54)', bgLight: 'linear-gradient(to bottom, #fdf2f8, #fbcfe8)', pDark: '#ff7eb3', pLight: '#db2777', obj: ['🌸','🦋','🌷','🌱','🕊️'] },
+        summer: { bgDark: 'linear-gradient(to bottom, #001d3d, #00b4db)', bgLight: 'linear-gradient(to bottom, #fef9c3, #bae6fd)', pDark: '#f6d365', pLight: '#d97706', obj: ['🌻','☀️','🍉','🍦','🦀'] },
+        autumn: { bgDark: 'linear-gradient(to bottom, #3f2b96, #a8c0ff)', bgLight: 'linear-gradient(to bottom, #ffedd5, #fed7aa)', pDark: '#ff9966', pLight: '#ea580c', obj: ['🍁','🍂','🐿️','🦊','🌾'] },
+        winter: { bgDark: 'linear-gradient(to bottom, #141e30, #243b55)', bgLight: 'linear-gradient(to bottom, #e0f2fe, #f1f5f9)', pDark: '#a1c4fd', pLight: '#2563eb', obj: ['❄️','⛄','🐧','🧊','🏔️'] },
+        love: { bgDark: 'linear-gradient(to bottom, #43000b, #ff0f7b)', bgLight: 'linear-gradient(to bottom, #fce7f3, #f9a8d4)', pDark: '#ff0844', pLight: '#e11d48', obj: ['💖','🌹','💌','🧸','💘'] },
+        animals: { bgDark: 'linear-gradient(to bottom, #134e5e, #71b280)', bgLight: 'linear-gradient(to bottom, #dcfce7, #bbf7d0)', pDark: '#2ebf91', pLight: '#059669', obj: ['🦁','🐼','🐾','🐯','🐨'] },
+        nature: { bgDark: 'linear-gradient(to bottom, #0f2027, #2c5364)', bgLight: 'linear-gradient(to bottom, #ccfbf1, #a7f3d0)', pDark: '#11998e', pLight: '#0d9488', obj: ['🌲','🌈','🍄','🍀','🦅'] },
+        tech: { bgDark: 'radial-gradient(circle at center, #000000, #434343)', bgLight: 'radial-gradient(circle at center, #f1f5f9, #cbd5e1)', pDark: '#00ff00', pLight: '#16a34a', obj: ['💻','🤖','⚡','🔋','🔌'] }
     };
+
+    function showToastMsg(msg) {
+        const t = document.getElementById('streak-toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2200);
+    }
 
     function toggleMode() { 
         const h = document.documentElement; 
-        const isDark = h.getAttribute('data-theme') === 'dark';
-        h.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        const btn = document.getElementById('btn-mode');
-        if(btn) btn.innerHTML = isDark ? "🌘 GIAO DIỆN TỐI" : "🌓 GIAO DIỆN SÁNG";
+        const nextTheme = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        h.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('theme_pref', nextTheme);
         changeTheme(document.getElementById('theme-selector').value, true); 
     }
 
     function changeTheme(v, skipEmojis = false) {
-        const t = themes[v]; 
-        document.documentElement.style.setProperty('--primary', t.p);
+        const t = themes[v] || themes.space; 
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        document.documentElement.style.setProperty('--primary', isLight ? t.pLight : t.pDark);
         document.getElementById('universe').style.background = isLight ? t.bgLight : t.bgDark;
         document.getElementById('universe').style.filter = `hue-rotate(0deg)`;
         
@@ -260,7 +274,7 @@
 
     function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
     function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>').replace(/\[BR\]/gi, '<br>'); }
-    function copySTK() { navigator.clipboard.writeText('8812766209'); alert("Đã copy STK Đỗ Hồng Phúc!"); }
+    function copySTK() { navigator.clipboard.writeText('8812766209'); showToastMsg("💖 Đã copy STK 8812766209 - Đỗ Hồng Phúc!"); }
 
     function toggleSound() {
         isMuted = !isMuted;
@@ -274,11 +288,10 @@
         isShuffle = !isShuffle;
         const btn = document.getElementById('btn-shuffle');
         btn.innerHTML = isShuffle ? "🔀 ĐẢO ĐỀ: BẬT" : "🔀 ĐẢO ĐỀ: TẮT";
-        btn.style.color = isShuffle ? "#10b981" : "#facc15";
-        btn.style.borderColor = isShuffle ? "#10b981" : "#facc15";
-        if(confirm("Bật/Tắt chế độ ĐẢO ĐỀ cần load lại bài. Bạn có muốn chơi lại từ đầu ngay bây giờ?")) {
-            initGame('all'); toggleMenu();
-        }
+        btn.style.color = isShuffle ? "#10b981" : "#eab308";
+        btn.style.borderColor = isShuffle ? "#10b981" : "#eab308";
+        initGame('all'); toggleMenu();
+        showToastMsg(isShuffle ? "🔀 Đã bật chế độ Đảo Đề!" : "🔀 Đã tắt chế độ Đảo Đề!");
     }
 
     function shuffleArray(array) {
@@ -292,32 +305,25 @@
     function toggleMap() { document.getElementById('map-drawer').classList.toggle('open'); }
     function adjSize(v) { fontSize += v; document.querySelectorAll('.question-title').forEach(e => e.style.fontSize = fontSize + 'px'); }
 
-    // HÀM HỎI GEMINI TRỰC TIẾP QUYỀN LỰC (COPY & REDIRECT)
     function askGemini(qIdx) {
         if(jumpTimer) clearInterval(jumpTimer); 
-        
         const q = questions[qIdx];
         let prompt = `Chào Gemini, tôi là sinh viên Y khoa chuyên ngành Răng Hàm Mặt. Hãy giải thích giúp tôi câu hỏi trắc nghiệm này chi tiết và dễ hiểu nhất nhé:\n\n`;
         prompt += `CÂU HỎI: ${q.title.replace(/<[^>]+>/g, '')}\n\nĐÁP ÁN:\n`;
-        
         q.opts.forEach((opt) => { 
             prompt += `- ${opt.text.replace(/<[^>]+>/g, '')} ${opt.isC ? '(ĐÂY LÀ ĐÁP ÁN ĐÚNG)' : ''}\n`; 
         });
-        
         prompt += `\nYêu cầu: Phân tích tại sao đáp án đúng lại đúng, và chỉ ra điểm sai của các đáp án còn lại dựa trên kiến thức Y khoa.`;
 
-        // Lệnh copy vào khay nhớ tạm
         navigator.clipboard.writeText(prompt).then(() => {
-            alert("✅ ĐÃ COPY CÂU HỎI VÀ ĐÁP ÁN!\n\nTrình duyệt sẽ mở ứng dụng Gemini ngay bây giờ.\n👉 Sếp chỉ cần DÁN (Ctrl+V) vào ô chat là xong!");
-            window.open('https://gemini.google.com/', '_blank');
-        }).catch(err => {
-            alert("❌ Trình duyệt không hỗ trợ copy tự động. Sếp bôi đen và tự copy nhé!");
+            showToastMsg("🤖 Đã copy câu hỏi! Đang mở Gemini (Nhấn Ctrl+V)...");
+            setTimeout(() => window.open('https://gemini.google.com/', '_blank'), 400);
         });
     }
 
     function populateVoices() {
         viVoices = synth.getVoices().filter(v => v.lang.includes('vi'));
-        document.getElementById('voice-sel').innerHTML = viVoices.length ? viVoices.map((v, i) => `<option value="${i}">${v.name.substring(0,15)}</option>`).join('') : '<option value="">No VN Voice</option>';
+        document.getElementById('voice-sel').innerHTML = viVoices.length ? viVoices.map((v, i) => `<option value="${i}">${v.name.substring(0,18)}</option>`).join('') : '<option value="">Mặc định</option>';
     }
     populateVoices(); if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
 
@@ -331,7 +337,28 @@
         synth.speak(utter); toggleMenu(); 
     }
 
+    // Phím tắt bàn phím: 1-4 hoặc A-D để chọn đáp án, Mũi tên để chuyển câu
+    window.addEventListener('keydown', (e) => {
+        if (document.getElementById('quiz-container').style.display === 'block') return; // Đang ở chế độ Bảng vàng lướt dọc
+        const key = e.key.toUpperCase();
+        const keyMap = { '1': 0, '2': 1, '3': 2, '4': 3, 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+        if (key in keyMap) {
+            const activeBox = document.getElementById('q-' + currentIdx);
+            if (activeBox) {
+                const opts = activeBox.querySelectorAll('.option');
+                if (opts[keyMap[key]]) opts[keyMap[key]].click();
+            }
+        } else if (e.code === 'ArrowRight') {
+            move(1);
+        } else if (e.code === 'ArrowLeft') {
+            move(-1);
+        }
+    });
+
     window.onload = function() {
+        const savedTheme = localStorage.getItem('theme_pref') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
         if(!id) { location.href='index.html'; return; }
@@ -372,11 +399,11 @@
         
         if (mode === 'wrong') {
             let targetQ = questions.filter(x => x.ans === false);
-            if (targetQ.length === 0) { alert("🎉 Xuất sắc! Sếp chưa làm sai câu nào cả!"); return; }
+            if (targetQ.length === 0) { showToastMsg("🎉 Xuất sắc! Bạn chưa làm sai câu nào!"); return; }
             questions = targetQ;
         } else if (mode === 'unanswered') {
             let targetQ = questions.filter(x => x.ans === null);
-            if (targetQ.length === 0) { alert("✅ Sếp đã hoàn thành 100% các câu hỏi rồi!"); return; }
+            if (targetQ.length === 0) { showToastMsg("✅ Đã hoàn thành 100% các câu hỏi!"); return; }
             questions = targetQ;
         } else {
             questions = JSON.parse(JSON.stringify(originalQ));
@@ -396,8 +423,6 @@
         
         document.querySelector('.progress-bar-bg').style.display = 'block';
         document.getElementById('progress-percent-text').style.display = 'block';
-        document.getElementById('nav-prev').style.display = 'flex';
-        document.getElementById('nav-next').style.display = 'flex';
 
         questions.forEach(q => { q.ans = null; q.userPick = -1; });
         currentIdx = 0; score = 0; done = 0; streak = 0; lastLevel5Percent = 0;
@@ -409,11 +434,12 @@
         const cont = document.getElementById('quiz-container');
         questions.forEach((q, i) => {
             const div = document.createElement('div'); div.className = 'question-box'; div.id = 'q-'+i;
-            div.innerHTML = `<div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
+            div.innerHTML = `<div style="text-align:center;"><span class="q-badge-top">CÂU ${i + 1} / ${questions.length}</span></div>
+                             <div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center; line-height:1.5;">${q.title}</div>
                              <div class="opts"></div>
                              <div id="loader-${i}" style="display:none; text-align:center;"></div>
-                             <div id="ai-container-${i}" style="display:none; margin-top: 15px;">
-                                <button onclick="askGemini(${i})" class="btn-tool" style="background: linear-gradient(45deg, #8b5cf6, #3b82f6); color: #fff; border: none; width: 100%; justify-content: center;">🤖 CHUYỂN QUA GEMINI GIẢI THÍCH</button>
+                             <div id="ai-container-${i}" style="display:none; margin-top: 14px;">
+                                <button onclick="askGemini(${i})" class="btn-tool" style="background: linear-gradient(45deg, #8b5cf6, #3b82f6); color: #fff; border: none;">🤖 CHUYỂN QUA GEMINI GIẢI THÍCH</button>
                              </div>`;
             const oCont = div.querySelector('.opts');
             
@@ -435,7 +461,6 @@
                     }
                     
                     updateStats(); updateNode(i); 
-                    
                     document.getElementById(`ai-container-${i}`).style.display = 'block';
 
                     const l = document.getElementById(`loader-${i}`);
@@ -444,17 +469,15 @@
                     let autoNext = false;
 
                     if (q.explanation) {
-                        msgHTML += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Giải thích / Bổ sung:</b><br>${q.explanation}</div>`;
+                        msgHTML += `<div style="text-align:left; background: var(--glass); padding: 14px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 14px; font-size: 14px; line-height:1.6;"><b>💡 Giải thích / Bổ sung:</b><br>${q.explanation}</div>`;
                         msgHTML += `<div style="margin-top:10px; font-size:13px; color:var(--primary); font-weight:900;">👉 Bấm mũi tên <b>❯</b> để tiếp tục</div>`;
-                    } 
-                    else if (!opt.isC) {
-                        msgHTML += `<div style="font-size:13px; font-weight:900; color:#ef4444; padding: 12px; background: rgba(239,68,68,0.15); border-radius: 12px; border: 1px dashed #ef4444; margin-top: 15px;">❌ Sai rồi! Nhìn kỹ đáp án đúng nhé! (Bấm 🤖 Hỏi Gemini nếu không hiểu)</div>`;
-                    } 
-                    else {
+                    } else if (!opt.isC) {
+                        msgHTML += `<div style="font-size:13px; font-weight:800; color:#ef4444; padding: 12px; background: rgba(239,68,68,0.12); border-radius: 12px; border: 1px dashed #ef4444; margin-top: 14px;">❌ Sai rồi! Xem kỹ đáp án xanh nhé!</div>`;
+                    } else {
                         autoNext = true;
-                        msgHTML += `<div style="font-size:11px; font-weight:900; color:var(--primary); letter-spacing:1px; margin-top:15px;">TỰ CHUYỂN CÂU... (Bấm nút Dừng để hỏi AI)</div>
+                        msgHTML += `<div style="font-size:11px; font-weight:900; color:var(--primary); letter-spacing:0.5px; margin-top:14px;">TỰ CHUYỂN CÂU... (Bấm Hỏi Gemini để dừng)</div>
                                     <div style="width:100%;height:6px;background:rgba(128,128,128,0.2);border-radius:10px;margin-top:8px;overflow:hidden;">
-                                        <div class="jump-bar-fill" id="fill-${i}" style="margin:0;"></div>
+                                        <div class="jump-bar-fill" id="fill-${i}"></div>
                                     </div>`;
                     }
 
@@ -464,12 +487,14 @@
                         let f = document.getElementById(`fill-${i}`);
                         let w = 100;
                         jumpTimer = setInterval(() => { 
-                            w -= 3; if(f) f.style.width = w + '%'; 
+                            w -= 4; if(f) f.style.width = w + '%'; 
                             if(w <= 0) { 
                                 clearInterval(jumpTimer); 
                                 if(i >= questions.length - 1) showEndScreen(); else move(1); 
                             } 
-                        }, 80); 
+                        }, 70); 
+                    } else if (done === questions.length && i === questions.length - 1) {
+                        setTimeout(showEndScreen, 1800);
                     }
                 };
                 oCont.appendChild(oDiv);
@@ -484,7 +509,6 @@
         document.querySelectorAll('.node').forEach(n => n.classList.remove('node-active'));
         if(document.getElementById('node-'+i)) {
             document.getElementById('node-'+i).classList.add('node-active');
-            document.getElementById('node-'+i).scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         currentIdx = i;
         document.getElementById('nav-prev').style.display = i > 0 ? 'flex' : 'none';
@@ -502,7 +526,7 @@
         
         document.getElementById('score-text').innerHTML = `Đã làm: ${done}/${questions.length} <br> Tỷ lệ đúng: ${p}%`;
         document.getElementById('progress-bar').style.width = prog + '%';
-        document.getElementById('progress-percent-text').innerText = `TIẾN ĐỘ: ${Math.floor(prog)}%`;
+        document.getElementById('progress-percent-text').innerText = `TIẾN ĐỘ: ${Math.floor(prog)}% (${score}/${done} Đúng)`;
 
         let current5Percent = Math.floor(prog / 5);
         if(current5Percent > lastLevel5Percent && prog > 0) {
@@ -514,22 +538,18 @@
     function triggerLevelUpEffect(prog) {
         document.getElementById('universe').style.filter = `hue-rotate(${lastLevel5Percent * 25}deg)`;
         const themeKey = document.getElementById('theme-selector').value;
-        const t = themes[themeKey];
-        for(let i=0; i<25; i++) {
+        const t = themes[themeKey] || themes.space;
+        for(let i=0; i<20; i++) {
             const e = document.createElement('div');
             e.className = 'milestone-burst';
             e.innerText = t.obj[Math.floor(Math.random()*t.obj.length)];
             e.style.left = '50vw'; e.style.top = '50vh';
-            e.style.setProperty('--tx', `${(Math.random() - 0.5) * 600}px`);
-            e.style.setProperty('--ty', `${(Math.random() - 0.5) * 600}px`);
+            e.style.setProperty('--tx', `${(Math.random() - 0.5) * 550}px`);
+            e.style.setProperty('--ty', `${(Math.random() - 0.5) * 550}px`);
             document.body.appendChild(e);
             setTimeout(() => e.remove(), 1500);
         }
-        const toast = document.getElementById('streak-toast'); 
-        toast.innerText = `🌟 ĐẠT MỐC ${Math.floor(prog)}% 🌟`;
-        toast.style.background = 'linear-gradient(45deg, #10b981, #059669)';
-        toast.classList.add('show'); 
-        setTimeout(() => { toast.classList.remove('show'); toast.style.background = 'linear-gradient(45deg, #ff0f7b, #f89b29)'; }, 2500);
+        showToastMsg(`🌟 ĐẠT MỐC ${Math.floor(prog)}% 🌟`);
     }
 
     function buildMap() {
@@ -544,8 +564,7 @@
     function updateNode(i) { document.getElementById('node-'+i).classList.add(questions[i].ans ? 'node-correct' : 'node-wrong'); }
 
     function showStreak() {
-        const t = document.getElementById('streak-toast'); t.innerText = `🔥 COMBO x${streak}`;
-        t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
+        showToastMsg(`🔥 COMBO x${streak}`);
     }
 
     function shootConfetti() {
@@ -565,7 +584,7 @@
     function showEndScreen() {
         const p = Math.round((score / questions.length) * 100);
         document.getElementById('final-score').innerText = p + '%';
-        document.getElementById('final-rank').innerText = p === 100 ? "🏆 THỦ KHOA RHM" : (p >= 80 ? "🥇 CHUYÊN GIA" : "🥈 CẦN CỐ GẮNG");
+        document.getElementById('final-rank').innerText = p === 100 ? "🏆 THỦ KHOA RHM" : (p >= 80 ? "🥇 CHUYÊN GIA LÂM SÀNG" : "🥈 CẦN ÔN TẬP THÊM");
         document.getElementById('end-screen').style.display = 'flex';
 
         if(p === 100) {
@@ -577,7 +596,6 @@
 
     function showReviewMode() {
         document.getElementById('end-screen').style.display = 'none';
-        
         document.getElementById('nav-prev').style.display = 'none';
         document.getElementById('nav-next').style.display = 'none';
         document.querySelector('.progress-bar-bg').style.display = 'none';
@@ -585,29 +603,29 @@
 
         const cont = document.getElementById('quiz-container');
         cont.style.display = 'block';
-        cont.style.height = 'calc(100vh - 70px)';
-        cont.style.marginTop = '70px';
+        cont.style.height = 'calc(100vh - 65px)';
+        cont.style.marginTop = '65px';
         cont.style.overflowY = 'auto';
         cont.style.padding = '20px 15px 100px 15px'; 
         
-        cont.innerHTML = '<h2 style="text-align:center; color:var(--primary); font-weight:900; letter-spacing:1px; margin-bottom:30px;">📜 BẢNG VÀNG ÔN TẬP</h2>';
+        cont.innerHTML = '<h2 style="text-align:center; color:var(--primary); font-weight:900; margin-bottom:25px;">📜 BẢNG VÀNG ÔN TẬP</h2>';
 
         questions.forEach((q, i) => {
             let box = document.createElement('div');
             box.className = 'question-box active'; 
             box.style.position = 'relative';
-            box.style.marginBottom = '25px';
-            box.style.margin = '0 auto 25px auto';
+            box.style.margin = '0 auto 24px auto';
+            box.style.maxHeight = 'none';
             box.style.animation = 'none'; 
 
             let statusColor = q.ans === true ? '#10b981' : (q.ans === false ? '#ef4444' : '#94a3b8');
             let statusText = q.ans === true ? '✅ ĐÚNG' : (q.ans === false ? '❌ SAI' : '⚠️ CHƯA LÀM');
             box.style.borderColor = statusColor;
 
-            let html = `<div style="text-align:center; margin-bottom: 15px;">
-                            <span style="background:rgba(128,128,128,0.1); color:${statusColor}; padding: 6px 15px; border-radius: 20px; font-weight: 900; font-size: 12px; border: 1px solid ${statusColor};">CÂU ${i+1} - ${statusText}</span>
+            let html = `<div style="text-align:center; margin-bottom: 14px;">
+                            <span style="background:var(--glass); color:${statusColor}; padding: 5px 14px; border-radius: 20px; font-weight: 900; font-size: 12px; border: 1px solid ${statusColor};">CÂU ${i+1} - ${statusText}</span>
                         </div>
-                        <div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:20px; text-align:center;">${q.title}</div>
+                        <div class="question-title" style="font-size:${fontSize}px; font-weight:800; margin-bottom:18px; text-align:center;">${q.title}</div>
                         <div class="opts">`;
 
             q.opts.forEach((opt, oIdx) => {
@@ -619,11 +637,11 @@
             html += `</div>`;
 
             if (q.explanation) {
-                html += `<div style="text-align:left; background: rgba(0,242,254,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 15px; font-size: 14px;"><b>💡 Bổ sung / Giải thích:</b><br>${q.explanation}</div>`;
+                html += `<div style="text-align:left; background: var(--glass); padding: 14px; border-radius: 12px; border: 1px solid var(--primary); margin-top: 14px; font-size: 14px;"><b>💡 Bổ sung / Giải thích:</b><br>${q.explanation}</div>`;
             }
 
-            html += `<div style="margin-top: 15px;">
-                        <button onclick="askGemini(${i})" class="btn-tool" style="background: linear-gradient(45deg, #8b5cf6, #3b82f6); color: #fff; border: none; width: 100%; justify-content: center;">🤖 CHUYỂN QUA GEMINI GIẢI THÍCH</button>
+            html += `<div style="margin-top: 14px;">
+                        <button onclick="askGemini(${i})" class="btn-tool" style="background: linear-gradient(45deg, #8b5cf6, #3b82f6); color: #fff; border: none;">🤖 CHUYỂN QUA GEMINI GIẢI THÍCH</button>
                      </div>`;
 
             box.innerHTML = html;
@@ -632,11 +650,11 @@
     }
 
     function playSfx(isC) {
-        if(isMuted) return;
-        if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+        if(isMuted || !audioCtx) return;
+        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
         o.connect(g); g.connect(audioCtx.destination);
-        o.frequency.value = isC ? 880 : 200; g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-        o.start(); o.stop(audioCtx.currentTime + 0.2);
+        o.frequency.value = isC ? 880 : 220; g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
+        o.start(); o.stop(audioCtx.currentTime + 0.18);
     }
 </script>
 </body>
