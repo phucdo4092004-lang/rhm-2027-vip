@@ -22,7 +22,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Biên Tập RHM Pro - Nén Ảnh X-Quang Thông Minh</title>
+    <title>Studio Biên Tập RHM Pro - Google Sheets Image Sync</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -44,7 +44,6 @@
         .btn-accent { background: var(--accent-grad); color: #fff; border: none; }
         .btn-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: var(--success); }
         .btn-success:hover { background: var(--success); color: #000; }
-        .btn-publish { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35); }
 
         .workspace { display: grid; grid-template-columns: 1fr 1.15fr; gap: 18px; max-width: 1560px; margin: 16px auto; padding: 0 18px; }
         .panel { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 18px; backdrop-filter: blur(20px); display: flex; flex-direction: column; gap: 12px; height: calc(100vh - 82px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
@@ -83,7 +82,6 @@
         .q-title-edit { width: 100%; background: rgba(2, 6, 23, 0.6); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; color: var(--text); font-family: inherit; font-weight: 800; font-size: 13.5px; margin-bottom: 8px; outline: none; }
         .q-title-edit:focus { border-color: var(--primary); }
 
-        /* KHUNG HIỂN THỊ ẢNH X-QUANG TRONG PREVIEW */
         .img-preview-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
         .img-chip-card { position: relative; background: rgba(2, 6, 23, 0.8); border: 1.5px solid var(--primary); border-radius: 10px; padding: 6px; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
         .img-thumb { max-height: 110px; max-width: 200px; border-radius: 6px; object-fit: contain; cursor: zoom-in; }
@@ -98,15 +96,14 @@
         .icon-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; }
         .icon-btn:hover { color: var(--danger); }
 
-        .export-bar { display: grid; grid-template-columns: 1.3fr 1fr 1.1fr auto auto; gap: 8px; padding-top: 4px; border-top: 1px solid var(--border); }
+        .export-bar { display: grid; grid-template-columns: 1.4fr 1.1fr auto auto; gap: 8px; padding-top: 6px; border-top: 1px solid var(--border); }
 
-        /* HỘP THOẠI CHỌN FILE ẢNH & TỰ ĐỘNG NÉN CANVAS */
         .img-modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(14px); z-index: 10000; display: none; align-items: center; justify-content: center; }
         .img-modal-overlay.open { display: flex; }
-        .img-modal-box { background: var(--card); border: 2px solid var(--primary); border-radius: 24px; padding: 24px; width: 92%; max-width: 460px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); text-align: center; }
-        .drop-zone { border: 2px dashed var(--primary); background: rgba(0, 242, 254, 0.05); border-radius: 16px; padding: 26px 16px; cursor: pointer; transition: 0.2s; margin: 14px 0; }
+        .img-modal-box { background: var(--card); border: 2px solid var(--primary); border-radius: 24px; padding: 24px; width: 92%; max-width: 480px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); text-align: center; }
+        .drop-zone { border: 2px dashed var(--primary); background: rgba(0, 242, 254, 0.05); border-radius: 16px; padding: 24px 16px; cursor: pointer; transition: 0.2s; margin: 12px 0; }
         .drop-zone:hover, .drop-zone.dragover { background: rgba(0, 242, 254, 0.14); transform: scale(1.01); }
-        .compress-settings { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--panel); padding: 8px 12px; border-radius: 10px; font-size: 11.5px; font-weight: 700; color: var(--muted); margin-bottom: 12px; }
+        .compress-settings { display: flex; flex-direction: column; gap: 8px; background: var(--panel); padding: 10px 12px; border-radius: 12px; font-size: 11.5px; font-weight: 700; color: var(--muted); margin-bottom: 12px; text-align: left; }
 
         #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; border: 2px solid var(--primary); padding: 11px 24px; border-radius: 50px; font-weight: 800; font-size: 13px; z-index: 10001; opacity: 0; transition: 0.3s; pointer-events: none; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -117,60 +114,63 @@
 
 <div id="toast">✅ Đã thực hiện!</div>
 
-<!-- HỘP THOẠI CHỌN ẢNH TỪ MÁY & NÉN SIÊU NHẸ CANVAS -->
+<!-- HỘP THOẠI CHỌN ẢNH TỪ MÁY & NÉN SIÊU NHẸ / UPLOAD CLOUD -->
 <div class="img-modal-overlay" id="img-modal">
     <div class="img-modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <h3 style="color:var(--primary); font-weight:900; font-size:16px;">🩻 CHÈN ẢNH X-QUANG / LÂM SÀNG</h3>
             <button onclick="closeImageModal()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
         </div>
-        <p style="font-size:12px; color:var(--muted); margin-top:4px;">Tự động nén siêu nhẹ & thu gọn mã thành <b>[IMG_1]</b> (7 ký tự)</p>
+        <p style="font-size:12px; color:var(--muted); margin-top:4px;">Trên Studio hiện gọn <b>[IMG_1]</b> • Khi Copy sang Sheet tự động bung ảnh thật!</p>
 
         <div class="drop-zone" id="img-drop-zone" onclick="document.getElementById('file-img-picker').click()">
-            <div style="font-size:34px; margin-bottom:8px;">📁</div>
-            <div style="font-weight:900; font-size:14px; color:var(--primary);">BẤM ĐỂ CHỌN ẢNH TỪ MÁY TÍNH / ĐIỆN THOẠI</div>
-            <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">Hoặc kéo thả ảnh vào đây • Hoặc nhấn <b>Ctrl + V</b> để dán ảnh chụp màn hình</div>
+            <div style="font-size:32px; margin-bottom:6px;">📁</div>
+            <div style="font-weight:900; font-size:14px; color:var(--primary);">BẤM CHỌN ẢNH TỪ MÁY TÍNH / ĐIỆN THOẠI</div>
+            <div style="font-size:11.5px; color:var(--muted); margin-top:5px;">Hoặc kéo thả ảnh • Hoặc nhấn <b>Ctrl + V</b> dán ảnh chụp màn hình</div>
             <input type="file" id="file-img-picker" accept="image/*" style="display:none;" onchange="handleImageFiles(this.files)">
         </div>
 
         <div class="compress-settings">
-            <span>⚡ Chuẩn nén X-quang:</span>
-            <select id="img-max-w" class="input-box" style="width:auto; padding:4px 8px;">
-                <option value="720">Rõ nét & Siêu nhẹ (720px ~ 20KB)</option>
-                <option value="960">HD Chi tiết cao (960px ~ 35KB)</option>
-                <option value="500">Nén cực đại (500px ~ 12KB)</option>
-            </select>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span>⚡ Chuẩn nén WebP (dành cho Google Sheets):</span>
+                <select id="img-max-w" class="input-box" style="width:auto; padding:4px 8px;">
+                    <option value="550">Siêu nhẹ Google Sheets (550px ~ 6KB)</option>
+                    <option value="720">Rõ nét tiêu chuẩn (720px ~ 12KB)</option>
+                    <option value="960">HD Chi tiết cao (960px ~ 22KB)</option>
+                </select>
+            </div>
+            <div style="display:flex; gap:6px; align-items:center; border-top:1px dashed var(--border); padding-top:8px;">
+                <span style="white-space:nowrap; color:var(--primary);">☁️ ImgBB Key (Tùy chọn):</span>
+                <input type="password" id="imgbb-api-key" class="input-box" style="padding:5px 8px; font-size:11.5px;" placeholder="Dán mã api.imgbb.com để tạo link https:// 40 ký tự..." onchange="saveImgbbKey(this.value)">
+            </div>
         </div>
 
         <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" id="img-url-input" class="input-box" placeholder="Hoặc dán đường dẫn ảnh (https://...) vào đây">
+            <input type="text" id="img-url-input" class="input-box" placeholder="Hoặc dán trực tiếp link ảnh (https://...) vào đây">
             <button class="btn btn-primary" onclick="insertImageFromUrlInput()" style="white-space:nowrap;">Chèn Link</button>
         </div>
     </div>
 </div>
 
 <header class="header">
-    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>SMART IMAGE VAULT</span></div>
+    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>SHEETS IMAGE SYNC</span></div>
     <div class="header-actions">
-        <select id="saved-decks-select" class="input-box" style="width:auto; min-width:200px; border-color:var(--primary);" onchange="loadSavedDeckFromApp(this.value)">
-            <option value="">📂 Đề đã đăng trên App (0)</option>
-        </select>
-        <button class="btn" style="color:var(--danger);" onclick="deleteCurrentDeckFromApp()">🗑️ Xóa Đề</button>
-        <button class="btn" onclick="createNewBlankDeck()">➕ Tạo Đề Mới</button>
+        <button class="btn" onclick="syncPreviewToRaw()" title="Đồng bộ chỉnh sửa từ cột phải sang cột trái">✨ Làm Sạch Ô Text</button>
         <button class="btn btn-accent" onclick="exportJSON()">📥 Xuất JSON</button>
         <label class="btn" style="cursor:pointer;">
             📤 Nhập JSON <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)">
         </label>
-        <a href="index.html" class="btn btn-primary">⬅ Ra Sảnh Xem Đề</a>
+        <button class="btn" onclick="loadSample()">📄 Đề Mẫu</button>
+        <a href="index.html" class="btn btn-primary">⬅ Về Sảnh Chính</a>
     </div>
 </header>
 
 <div class="workspace">
-    <!-- CỘT TRÁI: DÁN ĐỀ TỪ PDF / WORD (MÃ ẢNH THU GỌN THÀNH [IMG_1]) -->
+    <!-- CỘT TRÁI: DÁN ĐỀ TỪ PDF / WORD -->
     <div class="panel">
         <div class="panel-title">
             <span>📥 1. DÁN ĐỀ TỪ FILE PDF / WORD VÀO ĐÂY</span>
-            <span style="font-size:11px; color:var(--success);">Tự nối dòng gãy PDF • Tự thu gọn ảnh thành [IMG_1]</span>
+            <span style="font-size:11px; color:var(--success);">Hiển thị gọn [IMG_1] • Khi bấm Copy tự động bung ảnh thật</span>
         </div>
 
         <div class="meta-grid">
@@ -203,8 +203,8 @@
         </div>
 
         <textarea id="raw-input" class="raw-area" oninput="parseRawToQuestions()" placeholder="Copy đề từ PDF/Word dán vào đây.
-- Khi chèn ảnh X-quang, ô này chỉ hiện mã siêu gọn [IMG_1] (7 ký tự) thay vì hàng chục dòng chữ Base64!
-- Bạn cũng có thể bấm Ctrl+V để dán trực tiếp ảnh chụp màn hình vào ô này."></textarea>
+LƯU Ý QUAN TRỌNG KHI ĐƯA LÊN GOOGLE SHEETS:
+- Sau khi chèn ảnh [IMG_1] và tích chọn đáp án đúng ở khung bên phải, hãy bấm nút [🚀 Copy Hàng 4 Cột] hoặc [📋 Copy Cột D] ở góc dưới bên phải để dán sang Google Sheets (Hệ thống sẽ tự động bung [IMG_1] thành ảnh thật và đánh dấu * cho đáp án đúng)!"></textarea>
 
         <div style="display:flex; gap:8px; align-items:center;">
             <span style="font-size:11.5px; font-weight:800; color:var(--warning); white-space:nowrap;">🔑 Đáp án rời:</span>
@@ -212,10 +212,10 @@
         </div>
     </div>
 
-    <!-- CỘT PHẢI: PREVIEW CHỈNH SỬA TRỰC TIẾP & ĐĂNG LÊN SẢNH -->
+    <!-- CỘT PHẢI: PREVIEW CHỈNH SỬA TRỰC TIẾP & COPY LÊN GOOGLE SHEETS -->
     <div class="panel">
         <div class="panel-title">
-            <span>👁️ 2. KẾT QUẢ ĐÃ LÀM SẠCH (CLICK ĐỂ SỬA TRỰC TIẾP)</span>
+            <span>👁️ 2. KẾT QUẢ ĐÃ LÀM SẠCH (TÍCH CHỌN ĐÁP ÁN & BẤM NÚT COPY BÊN DƯỚI)</span>
             <div class="filter-bar">
                 <span class="f-pill active" onclick="setFilter('all', this)" id="pill-all">Tất cả (0)</span>
                 <span class="f-pill" onclick="setFilter('err', this)" id="pill-err" style="color:#fca5a5;">⚠️ Thiếu Đ.Án (0)</span>
@@ -227,11 +227,10 @@
         <div id="view-preview" class="preview-area"></div>
 
         <div class="export-bar">
-            <button class="btn btn-publish" onclick="publishDirectlyToApp()">🚀 Đăng Lên Sảnh (1 Chạm)</button>
-            <button class="btn btn-success" onclick="copyColD()">📋 Copy Cột D</button>
-            <button class="btn btn-primary" onclick="copyFullRowTSV()">🚀 Copy Hàng 4 Cột (Sheets)</button>
-            <button class="btn btn-accent" onclick="testLive('Play')">⚡ Thi Thử Arena</button>
-            <button class="btn" onclick="testLive('Flashcard')" style="border-color:var(--warning); color:var(--warning);">🃏 Lật Thẻ 3D</button>
+            <button class="btn btn-primary" onclick="copyFullRowTSV()" style="padding:12px;">🚀 Copy Hàng 4 Cột (Dán cột A Sheets)</button>
+            <button class="btn btn-success" onclick="copyColD()" style="padding:12px;">📋 Copy Cột D (Đã bung ảnh)</button>
+            <button class="btn btn-accent" onclick="testLive('Play')">⚡ Thi Thử</button>
+            <button class="btn" onclick="testLive('Flashcard')" style="border-color:var(--warning); color:var(--warning);">🃏 Lật Thẻ</button>
         </div>
     </div>
 </div>
@@ -239,7 +238,6 @@
 <script>
     let questions = [];
     let currentFilter = 'all';
-    // KHO LƯU TRỮ ẢNH NGẦM: Giấu chuỗi Base64 dài hàng vạn ký tự thành mã [IMG_1], [IMG_2] chỉ 7 ký tự!
     let imageVault = {};
     let nextImgId = 1;
     let targetQuestionForImg = -1;
@@ -247,10 +245,14 @@
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.innerText = msg; t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2800);
+        setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    // Đăng ký 1 ảnh vào kho ngầm và trả về mã ngắn [IMG_1]
+    function saveImgbbKey(val) {
+        localStorage.setItem('rhm_imgbb_key', val.trim());
+        showToast("☁️ Đã lưu ImgBB Key! Ảnh chèn vào sẽ tự tạo link https:// siêu ngắn.");
+    }
+
     function registerImageInVault(dataUrlOrLink) {
         const cleanData = dataUrlOrLink.replace(/\s+/g, '');
         for (const [id, val] of Object.entries(imageVault)) {
@@ -261,23 +263,19 @@
         return `[IMG_${id}]`;
     }
 
-    // Tự động thu gọn mọi chuỗi [IMG]data:image/...[/IMG] hoặc Base64 bị tràn dòng thành [IMG_1]
     function collapseLongImagesToTokens(text) {
         if (!text) return "";
-        // 1. Bắt các thẻ [IMG]...[/IMG] chuẩn (kể cả khi bị xuống dòng bên trong)
         text = text.replace(/\[IMG\]([\s\S]*?)\[\/IMG\]/gi, (match, inner) => {
             const cleaned = inner.trim();
             if (!cleaned) return "";
             return registerImageInVault(cleaned);
         });
-        // 2. Bắt trường hợp người dùng dán thẻ [IMG]data:image/... bị cụt mất thẻ đóng [/IMG]
         text = text.replace(/\[IMG\](data:image\/[a-zA-Z0-9+;,\-\/=_\s]+)/gi, (match, rawB64) => {
             return registerImageInVault(rawB64);
         });
         return text;
     }
 
-    // Bung mã ngắn [IMG_1] trở lại thành [IMG]data:image...[/IMG] khi Xuất đề / Thi thử / Lưu Sảnh
     function expandTokensToFullSC(text) {
         if (!text) return "";
         return text.replace(/\[IMG_(\d+)\]/gi, (match, id) => {
@@ -285,13 +283,23 @@
         });
     }
 
-    // =========================================================================
-    // HỆ THỐNG CHỌN FILE ẢNH & TỰ ĐỘNG NÉN CANVAS SIÊU NHẸ
-    // =========================================================================
+    // CHẶN LỖI COPY NHẦM CHỮ [IMG_1]: Ngay cả khi bôi đen ô bên trái và nhấn Ctrl+C,
+    // hệ thống cũng tự động bung [IMG_1] thành [IMG]data:...[/IMG] thật vào Clipboard!
+    document.getElementById('raw-input').addEventListener('copy', function(e) {
+        const sel = this.value.substring(this.selectionStart, this.selectionEnd);
+        if (sel && /\[IMG_\d+\]/i.test(sel)) {
+            e.preventDefault();
+            const expanded = expandTokensToFullSC(sel);
+            e.clipboardData.setData('text/plain', expanded);
+            showToast("📋 Đã tự động bung mã [IMG_x] thành dữ liệu ảnh thật vào Clipboard!");
+        }
+    });
+
     function openImageModal(qIdx) {
         targetQuestionForImg = qIdx;
         document.getElementById('img-url-input').value = '';
         document.getElementById('file-img-picker').value = '';
+        document.getElementById('imgbb-api-key').value = localStorage.getItem('rhm_imgbb_key') || '';
         document.getElementById('img-modal').classList.add('open');
     }
 
@@ -299,15 +307,16 @@
         document.getElementById('img-modal').classList.remove('open');
     }
 
+    // NÉN ẢNH SIÊU NHẸ CHUẨN WEBP (~6KB) + TỰ ĐỘNG UPLOAD CLOUD NẾU CÓ KEY
     function compressAndInsertFile(file) {
         if (!file || !file.type.startsWith('image/')) {
             return showToast("⚠️ Vui lòng chọn đúng tệp hình ảnh!");
         }
-        const maxWidth = parseInt(document.getElementById('img-max-w').value || '720', 10);
+        const maxWidth = parseInt(document.getElementById('img-max-w').value || '550', 10);
         const reader = new FileReader();
         reader.onload = function(evt) {
             const img = new Image();
-            img.onload = function() {
+            img.onload = async function() {
                 const canvas = document.createElement('canvas');
                 let w = img.width, h = img.height;
                 if (w > maxWidth) {
@@ -317,18 +326,45 @@
                 canvas.width = w;
                 canvas.height = h;
                 const ctx = canvas.getContext('2d');
-                // Đổ nền trắng phòng trường hợp ảnh PNG trong suốt chuyển sang JPEG
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, w, h);
                 ctx.drawImage(img, 0, 0, w, h);
 
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+                // Dùng định dạng WebP giúp giảm dung lượng ảnh X-quang xuống chỉ còn 5KB - 8KB!
+                let compressedDataUrl = canvas.toDataURL('image/webp', 0.62);
+                if (!compressedDataUrl.startsWith('data:image/webp')) {
+                    compressedDataUrl = canvas.toDataURL('image/jpeg', 0.62);
+                }
+
+                // Nếu người dùng có nhập ImgBB API Key -> Tự động đẩy lên Cloud lấy link ngắn 40 ký tự
+                const apiKey = (localStorage.getItem('rhm_imgbb_key') || '').trim();
+                if (apiKey) {
+                    showToast("☁️ Đang tải ảnh lên Cloud để lấy link ngắn...");
+                    try {
+                        const base64Raw = compressedDataUrl.split(',')[1];
+                        const formData = new FormData();
+                        formData.append('image', base64Raw);
+                        const res = await fetch(`https://api.imgbb.com/1/upload?key=${encodeURIComponent(apiKey)}`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const json = await res.json();
+                        if (json && json.success && json.data && json.data.url) {
+                            const shortUrl = json.data.url;
+                            const token = registerImageInVault(shortUrl);
+                            applyImageTokenToTarget(token);
+                            closeImageModal();
+                            showToast(`☁️ Đã tạo Link Cloud siêu ngắn (${shortUrl.length} ký tự) -> ${token}!`);
+                            return;
+                        }
+                    } catch (err) {}
+                }
+
                 const sizeKB = Math.round((compressedDataUrl.length * 3) / 4 / 1024);
                 const token = registerImageInVault(compressedDataUrl);
-
                 applyImageTokenToTarget(token);
                 closeImageModal();
-                showToast(`🩻 Đã nén ảnh X-quang xuống ${sizeKB} KB & gán mã gọn ${token}!`);
+                showToast(`🩻 Đã nén ảnh siêu nhẹ (${sizeKB} KB) -> Hiển thị gọn là ${token}!`);
             };
             img.src = evt.target.result;
         };
@@ -361,7 +397,6 @@
         }
     }
 
-    // Xóa nhanh 1 ảnh [IMG_X] khỏi câu hỏi trên Preview
     function removeImgTokenFromQuestion(qIdx, tokenId) {
         if (!questions[qIdx]) return;
         const regex = new RegExp(`\\s*\\[IMG_${tokenId}\\]`, 'gi');
@@ -371,7 +406,6 @@
         showToast(`🗑️ Đã gỡ ảnh [IMG_${tokenId}] khỏi Câu #${qIdx + 1}`);
     }
 
-    // Hỗ trợ Kéo-Thả ảnh vào Modal
     const dropZone = document.getElementById('img-drop-zone');
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
     dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -382,7 +416,6 @@
         }
     });
 
-    // Hỗ trợ nhấn Ctrl+V dán thẳng ảnh chụp màn hình ở bất kỳ đâu
     window.addEventListener('paste', (e) => {
         const items = (e.clipboardData || window.clipboardData).items;
         if (!items) return;
@@ -413,12 +446,11 @@
         ta.focus(); parseRawToQuestions();
     }
 
-    // Bắt định dạng Gạch chân, Chữ đỏ, Highlight khi dán chữ từ Word
     document.getElementById('raw-input').addEventListener('paste', function(e) {
         const items = (e.clipboardData || window.clipboardData).items;
         if (items) {
             for (let i = 0; i < items.length; i++) {
-                if (items[i].type.indexOf('image') !== -1) return; // Đã được xử lý bởi trình dán ảnh ở trên
+                if (items[i].type.indexOf('image') !== -1) return;
             }
         }
         const html = (e.clipboardData || window.clipboardData).getData('text/html');
@@ -460,15 +492,12 @@
         return map;
     }
 
-    // THUẬT TOÁN PDF SMART-CLEAN + TỰ ĐỘNG RÚT GỌN BASE64 THÀNH [IMG_1]
     function parseRawToQuestions() {
         const ta = document.getElementById('raw-input');
-        // Nếu phát hiện chuỗi data:image/... dài ngoằng trong ô soạn thảo -> rút gọn ngay lập tức thành [IMG_1]!
         if (ta.value.includes('data:image/')) {
             const collapsed = collapseLongImagesToTokens(ta.value);
             if (collapsed !== ta.value) {
                 ta.value = collapsed;
-                showToast("✨ Đã tự động thu gọn chuỗi ảnh Base64 dài thành mã [IMG_x]!");
             }
         }
 
@@ -512,7 +541,7 @@
             }
 
             const letterOpt = line.match(/^(\*|\-|•|\[x\])?\s*([A-E])[\.\)]\s*(.+)$/i);
-            const symbolOpt = line.match(/^(\*|•)\s+(.+)$/);
+            const symbolOpt = line.match(/^(\*|•|\-)\s+(.+)$/);
 
             if (letterOpt) {
                 curr.inExp = false;
@@ -588,17 +617,17 @@
             const card = document.createElement('div');
             card.className = `q-card ${q.hasErr ? 'err-ans' : ''} ${q.missingExp ? 'warn-exp' : ''} ${q.dupOf ? 'warn-dup' : ''}`;
 
-            // Tìm tất cả mã [IMG_1], [IMG_2] trong câu hỏi để hiển thị ảnh Thumbnail sắc nét
             const tokenMatches = [...q.title.matchAll(/\[IMG_(\d+)\]/gi)];
             let imgHTML = '';
             if (tokenMatches.length > 0) {
                 imgHTML = `<div class="img-preview-row">` + tokenMatches.map(m => {
                     const tId = m[1];
                     const src = imageVault[tId] || '';
+                    const isCloud = src.startsWith('http');
                     return `<div class="img-chip-card">
-                                <img src="${src}" class="img-thumb" onclick="window.open(this.src)" title="Bấm để xem ảnh phóng to">
+                                <img src="${src}" class="img-thumb" onclick="window.open(this.src)" title="Bấm để xem ảnh">
                                 <div class="img-chip-bar">
-                                    <span>[IMG_${tId}]</span>
+                                    <span>[IMG_${tId}] ${isCloud ? '☁️' : '⚡'}</span>
                                     <button class="img-del-btn" onclick="removeImgTokenFromQuestion(${qIdx}, '${tId}')">🗑️ Xóa</button>
                                 </div>
                             </div>`;
@@ -622,8 +651,7 @@
                         <span style="color:var(--primary);">CÂU #${qIdx + 1}</span>
                         ${cCount > 1 ? `<span class="badge b-multi">🔀 ĐA ĐÁP ÁN (${cCount})</span>` : ''}
                         ${q.dupOf ? `<span class="badge b-dup">👯 Trùng Câu #${q.dupOf}</span>` : ''}
-                        ${q.hasErr ? `<span class="badge b-err">⚠️ Chưa chọn đáp án</span>` : ''}
-                        ${q.missingExp ? `<span class="badge b-warn">💡 Chưa có giải thích</span>` : ''}
+                        ${q.hasErr ? `<span class="badge b-err">⚠️ Hãy tích chọn ít nhất 1 đáp án đúng bên dưới!</span>` : ''}
                     </div>
                     <div style="display:flex; gap:4px;">
                         <button class="sc-btn" style="border-color:var(--primary); color:var(--primary);" onclick="openImageModal(${qIdx})">🩻 +Ảnh</button>
@@ -664,7 +692,6 @@
         syncPreviewToRaw(false); renderPreview();
     }
 
-    // Chuỗi gọn hiển thị trong ô #raw-input (giữ nguyên mã [IMG_1] 7 ký tự)
     function buildCompactEditorString() {
         return questions.map((q, idx) => {
             let cleanTitle = q.title.replace(/^Câu\s*\d+\s*[:.)\-]?\s*/i, '');
@@ -674,7 +701,6 @@
         }).join('\n\n').trim();
     }
 
-    // Chuỗi đầy đủ bung [IMG_1] thành [IMG]data:...[/IMG] để đẩy sang Play.html / Flashcard.html / Sheets
     function buildFullExportString() {
         return expandTokensToFullSC(buildCompactEditorString());
     }
@@ -684,103 +710,23 @@
         if (notify) showToast("✨ Đã đồng bộ gọn gàng!");
     }
 
-    // =========================================================================
-    // QUẢN LÝ ĐĂNG ĐỀ 1 CHẠM LÊN SẢNH & XUẤT DỮ LIỆU
-    // =========================================================================
-    function getAppCatalog() {
-        return JSON.parse(localStorage.getItem('rhm_custom_decks') || '[]');
-    }
-
-    function renderSavedDecksDropdown() {
-        const catalog = getAppCatalog();
-        const sel = document.getElementById('saved-decks-select');
-        sel.innerHTML = `<option value="">📂 Đề đã đăng trên App (${catalog.length})</option>` +
-            catalog.map(d => `<option value="${d.id}">📘 [${d.spec}] ${d.title} (${d.count} câu)</option>`).join('');
-    }
-
-    function publishDirectlyToApp() {
-        const fullCode = buildFullExportString();
-        if (!fullCode || !questions.length) return showToast("⚠️ Chưa có câu hỏi nào để đăng!");
-
-        const id = document.getElementById('meta-id').value.trim().replace(/\s+/g, '_') || ('de_rhm_' + Date.now());
-        const title = document.getElementById('meta-title').value.trim() || 'Đề Lâm Sàng RHM';
-        const spec = document.getElementById('meta-spec').value;
-        const desc = document.getElementById('meta-desc').value.trim() || `${questions.length} câu hỏi chuẩn hóa`;
-
-        try {
-            localStorage.setItem(id, fullCode);
-        } catch (err) {
-            return alert("⚠️ Bộ nhớ trình duyệt đã đầy do chứa quá nhiều ảnh nặng! Hãy bấm Xuất JSON để lưu file.");
-        }
-
-        let catalog = getAppCatalog();
-        const existingIdx = catalog.findIndex(item => item.id === id);
-        const deckMeta = {
-            id: id, title: title, spec: spec,
-            desc: `[${spec}] ${desc} (${questions.length} câu)`,
-            count: questions.length, updatedAt: Date.now()
-        };
-
-        if (existingIdx > -1) catalog[existingIdx] = deckMeta;
-        else catalog.unshift(deckMeta);
-
-        localStorage.setItem('rhm_custom_decks', JSON.stringify(catalog));
-        renderSavedDecksDropdown();
-        document.getElementById('saved-decks-select').value = id;
-        showToast("🎉 ĐÃ ĐĂNG LÊN SẢNH CHÍNH! Bấm [⬅ Ra Sảnh Xem Đề] để làm bài ngay!");
-    }
-
-    function loadSavedDeckFromApp(id) {
-        if (!id) return;
-        const catalog = getAppCatalog();
-        const meta = catalog.find(d => d.id === id);
-        const raw = localStorage.getItem(id);
-        if (!raw) return showToast("⚠️ Không tìm thấy nội dung đề này!");
-
-        document.getElementById('meta-id').value = id;
-        if (meta) {
-            document.getElementById('meta-title').value = meta.title || '';
-            if (meta.spec) document.getElementById('meta-spec').value = meta.spec;
-            document.getElementById('meta-desc').value = (meta.desc || '').replace(/^\[.*?\]\s*/, '');
-        }
-        // Tự động thu gọn mọi ảnh trong bộ đề thành [IMG_1] trước khi đưa vào ô soạn thảo
-        document.getElementById('raw-input').value = collapseLongImagesToTokens(raw);
-        parseRawToQuestions();
-        showToast(`📂 Đã mở bộ đề "${meta ? meta.title : id}"!`);
-    }
-
-    function deleteCurrentDeckFromApp() {
-        const id = document.getElementById('meta-id').value.trim();
-        let catalog = getAppCatalog();
-        if (!catalog.some(d => d.id === id)) return showToast("⚠️ Bộ đề này chưa được đăng trên App!");
-        if (!confirm(`Xóa bộ đề "${id}" khỏi Sảnh chính?`)) return;
-        catalog = catalog.filter(d => d.id !== id);
-        localStorage.setItem('rhm_custom_decks', JSON.stringify(catalog));
-        localStorage.removeItem(id);
-        renderSavedDecksDropdown();
-        showToast("🗑️ Đã xóa bộ đề khỏi Sảnh!");
-    }
-
-    function createNewBlankDeck() {
-        const nextNum = getAppCatalog().length + 1;
-        document.getElementById('meta-id').value = `de_rhm_0${nextNum}`;
-        document.getElementById('meta-title').value = `Đề Trắc Nghiệm RHM Số ${nextNum}`;
-        document.getElementById('raw-input').value = '';
-        document.getElementById('ans-key-input').value = '';
-        document.getElementById('saved-decks-select').value = '';
-        parseRawToQuestions();
-        showToast("➕ Đã tạo phôi đề mới!");
-    }
-
+    // COPY CỘT D SANG GOOGLE SHEETS (ĐÃ TỰ ĐỘNG BUNG [IMG_1] THÀNH [IMG]data:...[/IMG])
     function copyColD() {
+        const missing = questions.filter(q => !q.opts.some(o => o.isC)).length;
+        if (missing > 0 && !confirm(`⚠️ Còn ${missing} câu chưa chọn đáp án đúng (dấu *). Bạn vẫn muốn Copy chứ?`)) return;
+
         const code = buildFullExportString();
         if (!code) return showToast("⚠️ Chưa có câu hỏi!");
         navigator.clipboard.writeText(code);
-        showToast("📋 Đã copy Cột D (đã bung ảnh đầy đủ)!");
+        showToast("📋 Đã copy Cột D (Đã tự động bung [IMG_1] thành ảnh thật)! Nháy đúp vào ô D2 trên Sheets rồi nhấn Ctrl+V.");
     }
 
+    // COPY HÀNG 4 CỘT SANG GOOGLE SHEETS (TỰ ĐỘNG BUNG ẢNH & CHIA NHỎ DÒNG < 44.000 KÝ TỰ)
     function copyFullRowTSV() {
         if (!questions.length) return showToast("⚠️ Chưa có câu hỏi!");
+        const missing = questions.filter(q => !q.opts.some(o => o.isC)).length;
+        if (missing > 0 && !confirm(`⚠️ Còn ${missing} câu chưa chọn đáp án đúng (dấu *). Bạn vẫn muốn Copy chứ?`)) return;
+
         const id = document.getElementById('meta-id').value.trim() || 'de_rhm_01';
         const title = document.getElementById('meta-title').value.trim() || 'Đề RHM';
         const spec = document.getElementById('meta-spec').value;
@@ -805,7 +751,9 @@
 
         const tsvRows = chunks.map(c => `${id}\t${title}\t${desc}\t"${c.replace(/"/g, '""')}"`).join('\n');
         navigator.clipboard.writeText(tsvRows);
-        showToast(chunks.length > 1 ? `🚀 Đã copy & tự chia thành ${chunks.length} dòng (<44.000 ký tự/ô) cho Google Sheets!` : "🚀 Đã copy nguyên hàng 4 cột! Bấm ô A2 trên Sheets rồi nhấn Ctrl+V.");
+        showToast(chunks.length > 1
+            ? `🚀 Đã bung ảnh & tự tách thành ${chunks.length} dòng (<44.000 ký tự/ô)! Chỉ cần bấm 1 lần vào ô Cột A trên Sheets rồi Ctrl+V!`
+            : "🚀 Đã copy Hàng 4 Cột (kèm ảnh thật)! Chỉ cần bấm 1 lần vào ô Cột A trên Sheets rồi Ctrl+V!");
     }
 
     function exportJSON() {
@@ -827,7 +775,7 @@
         a.href = URL.createObjectURL(blob);
         a.download = `${payload.id || 'rhm_bank'}.json`;
         a.click();
-        showToast("📥 Đã xuất ngân hàng câu hỏi ra file JSON!");
+        showToast("📥 Đã xuất file JSON!");
     }
 
     function importJSON(e) {
@@ -872,22 +820,11 @@ Câu 2: Khẳng định nào sau đây là đúng về việc trám bít ống t
 B. Với răng chưa đóng chóp là dùng kĩ thuật sinh chóp
 C. Trám bít để vi khuẩn không phát triển
 D. Trám bít để bịt kín hệ thống ống tủy không để lại khoảng
-trống
-Câu 3: Vật liệu trám ngược nào sau đây có tính tương hợp
-sinh học kém nhất
-- A. Amalgan B. MTA
-C. IRM D. Biodentine
-Câu 4: Để tăng hiệu quả của thuốc đặt nội tuỷ, có thể trộn
-Ca(OH)2 với chất nào sau đây?
-A. Cả A và B đúng * B. Chlorhexidine
-C. Cả A và B sai D. NaOCl`;
+trống`;
         parseRawToQuestions();
     }
 
-    window.onload = () => {
-        renderSavedDecksDropdown();
-        loadSample();
-    };
+    window.onload = loadSample;
 </script>
 </body>
 </html>
