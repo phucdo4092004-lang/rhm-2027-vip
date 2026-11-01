@@ -37,7 +37,7 @@
         main { max-width: 1160px; margin: 0 auto; padding: 25px 20px 70px 20px; }
         .dashboard-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; margin-bottom: 26px; }
         .dash-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 22px; backdrop-filter: blur(20px); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; }
-        .rank-badge { background: var(--accent-grad); color: #fff; padding: 5px 14px; border-radius: 50px; font-size: 11.5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 0 15px rgba(255,0,222,0.35); }
+        .rank-badge { background: var(--accent-grad); color: #fff; padding: 5px 14px; border-radius: 50px; font-size: 11.5px; font-weight: 900; text-transform: uppercase; }
         .exp-bar-bg { width: 100%; height: 9px; background: var(--glass); border-radius: 10px; overflow: hidden; margin: 10px 0; border: 1px solid var(--border); }
         .exp-bar-fill { height: 100%; width: 0%; background: var(--primary-grad); transition: width 0.6s ease; }
         .mini-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; padding-top: 12px; border-top: 1px dashed var(--border); text-align: center; }
@@ -61,8 +61,6 @@
         .card { background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 24px; padding: 24px; border: 1px solid var(--border); transition: 0.25s; position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
         .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary-grad); }
         .card.type-read::before { background: var(--accent-grad); }
-        .card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(380px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 242, 254, 0.14), transparent 40%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .card:hover::after { opacity: 1; }
         .card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: var(--shadow); }
         .card h3 { font-size: 17.5px; font-weight: 900; margin-bottom: 8px; color: var(--primary); }
         .card.type-read h3 { color: var(--accent); }
@@ -181,6 +179,13 @@
   </div>
 
 <script>
+  // 1. DANH SÁCH FILE JSON TRÊN GITHUB (KHÔNG GIỚI HẠN 50.000 KÝ TỰ)
+  // Khi bạn xuất file .json từ Studio và tải lên GitHub, chỉ cần điền tên file vào mảng này:
+  const GITHUB_JSON_BANKS = [
+      'rhm_bank_cchn_2027.json'
+  ];
+
+  // 2. LINK GOOGLE SHEETS CSV (ĐÃ HỖ TRỢ TỰ ĐỘNG GHÉP NỐI NHIỀU DÒNG CÙNG ID KHI > 50.000 KÝ TỰ)
   const LINK_SHEET_QUIZ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1d3Z-IwrWF2aFT6yTVAFHN8Hfuehx5EsKdZKC-xyp_zPN7LoHzBImwOf7ohc_qL3HXhcFnGRhVoJ/pub?gid=0&single=true&output=csv";
   const LINK_SHEET_READ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBGimZ9-Wucx42mB2y_AiLB7DAMSKngpXiS2D9iuVckZczZDBbsk7PWwKVR6UKcPLCi1yP3hjaCeJF/pub?gid=0&single=true&output=csv";
 
@@ -203,14 +208,6 @@
       }
   }
   function resetPomo() { if (pomoTimer) clearInterval(pomoTimer); pomoTimer = null; pomoTime = 25 * 60; document.getElementById('pomo-display').innerText = "25:00"; document.getElementById('pomo-btn').innerText = "▶ BẮT ĐẦU"; }
-
-  document.addEventListener('mousemove', (e) => {
-      document.querySelectorAll('.card').forEach(c => {
-          const r = c.getBoundingClientRect();
-          c.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
-          c.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
-      });
-  });
 
   function removeTones(s) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase(); }
   function searchApp() {
@@ -239,33 +236,37 @@
       return arr;
   }
 
-  async function fetchData(url, containerId, page, loaderId) {
-    const container = document.getElementById(containerId), loader = document.getElementById(loaderId);
-    try {
-      const res = await fetch(url); const data = await res.text();
-      const rows = parseCSV(data).slice(1); loader.style.display = 'none';
-      let html = '';
-      rows.forEach(cols => {
-        if (cols.length < 4 || !cols[0].trim()) return;
-        const id = cols[0].trim(), title = cols[1].trim(), rawDesc = cols[2].trim(), content = cols[3].trim();
-        try { localStorage.setItem(id, content); } catch(e){}
+  function renderCardHTML(id, title, rawDesc, page, extraQuery = '') {
+      let specMatch = rawDesc.match(/^\[(.*?)\]\s*(.*)$/);
+      let specBadge = specMatch ? `<span class="spec-tag">🩺 ${specMatch[1]}</span>` : '';
+      let cleanDesc = specMatch ? specMatch[2] : rawDesc;
 
-        let specMatch = rawDesc.match(/^\[(.*?)\]\s*(.*)$/);
-        let specBadge = specMatch ? `<span class="spec-tag">🩺 ${specMatch[1]}</span>` : '';
-        let cleanDesc = specMatch ? specMatch[2] : rawDesc;
+      let isDone = localStorage.getItem('done_' + id) === 'true';
+      let best = parseInt(localStorage.getItem('best_' + id) || '0', 10);
+      if (isDone && best < 100) best = 100;
 
-        let isDone = localStorage.getItem('done_' + id) === 'true';
-        let best = parseInt(localStorage.getItem('best_' + id) || '0', 10);
-        if (isDone && best < 100) best = 100;
+      if (page === 'Play') { quizCount++; if (isDone) doneCount++; totalEXP += best * 2; }
+      else { readCount++; }
 
-        if (page === 'Play') { quizCount++; if (isDone) doneCount++; totalEXP += best * 2; }
-        else { readCount++; }
+      let targetUrl = `${page}.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}${extraQuery}`;
+      let flashUrl = `Flashcard.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}${extraQuery}`;
 
-        let btns = page === 'Play' ? `<a href="Play.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}" class="btn-action btn-main-quiz">🚀 THI ARENA</a><a href="Flashcard.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}" class="btn-action btn-flash">🃏 LẬT THẺ 3D</a>` : `<a href="Read.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}" class="btn-action btn-main-read">📖 ĐỌC TÀI LIỆU</a>`;
+      let btns = page === 'Play'
+          ? `<a href="${targetUrl}" class="btn-action btn-main-quiz">🚀 THI ARENA</a><a href="${flashUrl}" class="btn-action btn-flash">🃏 LẬT THẺ 3D</a>`
+          : `<a href="${targetUrl}" class="btn-action btn-main-read">📖 ĐỌC TÀI LIỆU</a>`;
 
-        html += `<div class="card ${page === 'Play' ? 'type-quiz' : 'type-read'}"><div onclick="location.href='${page}.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}'" style="cursor:pointer;flex:1;">${specBadge}<h3>${title}</h3><p>${cleanDesc}</p>${page === 'Play' ? `<div style="font-size:11.5px;font-weight:800;">🏆 Kỷ lục: <b style="color:var(--primary);">${best}%</b> ${isDone ? '✅' : ''}</div>` : ''}</div><div class="btn-group">${btns}</div></div>`;
-      });
-      container.innerHTML = html;
+      return `<div class="card ${page === 'Play' ? 'type-quiz' : 'type-read'}">
+                <div onclick="location.href='${targetUrl}'" style="cursor:pointer;flex:1;">
+                  ${specBadge}
+                  <h3>${title}</h3>
+                  <p>${cleanDesc}</p>
+                  ${page === 'Play' ? `<div style="font-size:11.5px;font-weight:800;">🏆 Kỷ lục: <b style="color:var(--primary);">${best}%</b> ${isDone ? '✅' : ''}</div>` : ''}
+                </div>
+                <div class="btn-group">${btns}</div>
+              </div>`;
+  }
+
+  function refreshDashboardStats() {
       document.getElementById('stat-quiz').innerText = quizCount;
       document.getElementById('stat-done').innerText = doneCount;
       document.getElementById('stat-read').innerText = readCount;
@@ -274,6 +275,54 @@
       document.getElementById('master-percent').innerText = `Master: ${pct}%`;
       document.getElementById('exp-bar').style.width = `${pct}%`;
       document.getElementById('user-rank').innerText = totalEXP >= 800 ? "👑 Thủ Khoa CCHN" : (totalEXP >= 300 ? "🩺 Bác Sĩ Nội Trú" : "👨‍🎓 Sinh Viên RHM");
+  }
+
+  // TẢI ĐỀ TRỰC TIẾP TỪ FILE JSON TRÊN GITHUB
+  async function loadGitHubJSONBanks() {
+      const container = document.getElementById('quiz-list');
+      for (const fileName of GITHUB_JSON_BANKS) {
+          try {
+              const res = await fetch('./' + fileName);
+              if (!res.ok) continue;
+              const data = await res.json();
+              const id = data.id || fileName.replace('.json', '');
+              const title = data.title || id;
+              const desc = `[${data.specialty || 'Lâm sàng'}] ${data.description || (data.questions ? data.questions.length + ' câu hỏi' : '')}`;
+              try { localStorage.setItem(id, JSON.stringify(data)); } catch(e) {}
+              container.innerHTML += renderCardHTML(id, title, desc, 'Play', `&json=${encodeURIComponent('./' + fileName)}`);
+              refreshDashboardStats();
+          } catch(e) {}
+      }
+  }
+
+  // TẢI ĐỀ TỪ GOOGLE SHEETS (TỰ ĐỘNG GỘP CÁC DÒNG TRÙNG ID NẾU ĐỀ DÀI > 50.000 KÝ TỰ)
+  async function fetchData(url, containerId, page, loaderId) {
+    const container = document.getElementById(containerId), loader = document.getElementById(loaderId);
+    try {
+      const res = await fetch(url); const data = await res.text();
+      const rows = parseCSV(data).slice(1); loader.style.display = 'none';
+
+      // Gom nhóm và nối nội dung các dòng có cùng ID
+      const mergedMap = new Map();
+      rows.forEach(cols => {
+        if (cols.length < 4 || !cols[0].trim()) return;
+        const id = cols[0].trim(), title = cols[1].trim(), rawDesc = cols[2].trim(), content = cols[3].trim();
+        if (mergedMap.has(id)) {
+            const existing = mergedMap.get(id);
+            existing.content += "\n" + content;
+        } else {
+            mergedMap.set(id, { id, title, rawDesc, content });
+        }
+      });
+
+      let html = '';
+      mergedMap.forEach(item => {
+        try { localStorage.setItem(item.id, item.content); } catch(e){}
+        html += renderCardHTML(item.id, item.title, item.rawDesc, page);
+      });
+
+      container.innerHTML += html;
+      refreshDashboardStats();
     } catch(e) { loader.innerHTML = "❌ Lỗi kết nối mạng!"; }
   }
 
@@ -296,6 +345,7 @@
       document.documentElement.setAttribute('data-theme', localStorage.getItem('theme_pref') || 'dark');
       const diff = Math.max(0, Math.ceil((new Date('2027-06-01').getTime() - Date.now()) / 86400000));
       document.getElementById('countdown-days').innerText = `Còn ${diff} ngày`;
+      loadGitHubJSONBanks();
       fetchData(LINK_SHEET_QUIZ, 'quiz-list', 'Play', 'loader-quiz');
       fetchData(LINK_SHEET_READ, 'read-list', 'Read', 'loader-read');
   };
