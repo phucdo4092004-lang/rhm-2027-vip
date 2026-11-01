@@ -22,7 +22,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Biên Tập RHM Pro - Đăng Đề 1 Chạm</title>
+    <title>Studio Biên Tập RHM Pro - Nén Ảnh X-Quang Thông Minh</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -41,8 +41,10 @@
         .btn { background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 8px 13px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
         .btn:hover { border-color: var(--primary); transform: translateY(-1px); }
         .btn-primary { background: var(--primary-grad); color: #000; border: none; }
-        .btn-publish { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 12px 20px; font-size: 13.5px; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
-        .btn-publish:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-accent { background: var(--accent-grad); color: #fff; border: none; }
+        .btn-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: var(--success); }
+        .btn-success:hover { background: var(--success); color: #000; }
+        .btn-publish { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35); }
 
         .workspace { display: grid; grid-template-columns: 1fr 1.15fr; gap: 18px; max-width: 1560px; margin: 16px auto; padding: 0 18px; }
         .panel { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 18px; backdrop-filter: blur(20px); display: flex; flex-direction: column; gap: 12px; height: calc(100vh - 82px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
@@ -55,7 +57,7 @@
         .toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; background: var(--panel); padding: 8px 10px; border-radius: 12px; border: 1px solid var(--border); }
         .chk-label { display: flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--muted); cursor: pointer; user-select: none; margin-right: 4px; }
         .chk-label input { accent-color: var(--primary); width: 14px; height: 14px; }
-        .sc-btn { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text); padding: 4px 9px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit; }
+        .sc-btn { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; font-family: inherit; transition: 0.15s; }
         .sc-btn:hover { border-color: var(--primary); color: var(--primary); }
 
         textarea.raw-area { flex: 1; width: 100%; background: rgba(2, 6, 23, 0.75); border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: var(--text); font-family: 'Consolas', monospace; font-size: 13px; line-height: 1.6; resize: none; outline: none; }
@@ -79,8 +81,15 @@
         .b-warn { background: rgba(245, 158, 11, 0.2); color: #fde68a; }
 
         .q-title-edit { width: 100%; background: rgba(2, 6, 23, 0.6); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; color: var(--text); font-family: inherit; font-weight: 800; font-size: 13.5px; margin-bottom: 8px; outline: none; }
-        .img-preview-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-        .img-thumb { max-height: 90px; border-radius: 8px; border: 1px solid var(--primary); }
+        .q-title-edit:focus { border-color: var(--primary); }
+
+        /* KHUNG HIỂN THỊ ẢNH X-QUANG TRONG PREVIEW */
+        .img-preview-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+        .img-chip-card { position: relative; background: rgba(2, 6, 23, 0.8); border: 1.5px solid var(--primary); border-radius: 10px; padding: 6px; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+        .img-thumb { max-height: 110px; max-width: 200px; border-radius: 6px; object-fit: contain; cursor: zoom-in; }
+        .img-chip-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 10.5px; font-weight: 800; color: var(--primary); gap: 8px; padding: 0 4px; }
+        .img-del-btn { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: none; border-radius: 4px; padding: 1px 6px; cursor: pointer; font-size: 10px; font-weight: 800; }
+        .img-del-btn:hover { background: var(--danger); color: #fff; }
 
         .q-opt { padding: 6px 10px; border-radius: 8px; background: rgba(2, 6, 23, 0.55); border: 1px solid var(--border); margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
         .q-opt.is-correct { background: rgba(16, 185, 129, 0.16); border-color: var(--success); color: var(--success); }
@@ -89,41 +98,84 @@
         .icon-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; }
         .icon-btn:hover { color: var(--danger); }
 
-        .publish-bar { display: flex; gap: 10px; align-items: center; padding-top: 4px; border-top: 1px solid var(--border); flex-wrap: wrap; }
-        #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; border: 2px solid var(--primary); padding: 11px 24px; border-radius: 50px; font-weight: 800; font-size: 13px; z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+        .export-bar { display: grid; grid-template-columns: 1.3fr 1fr 1.1fr auto auto; gap: 8px; padding-top: 4px; border-top: 1px solid var(--border); }
+
+        /* HỘP THOẠI CHỌN FILE ẢNH & TỰ ĐỘNG NÉN CANVAS */
+        .img-modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(14px); z-index: 10000; display: none; align-items: center; justify-content: center; }
+        .img-modal-overlay.open { display: flex; }
+        .img-modal-box { background: var(--card); border: 2px solid var(--primary); border-radius: 24px; padding: 24px; width: 92%; max-width: 460px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); text-align: center; }
+        .drop-zone { border: 2px dashed var(--primary); background: rgba(0, 242, 254, 0.05); border-radius: 16px; padding: 26px 16px; cursor: pointer; transition: 0.2s; margin: 14px 0; }
+        .drop-zone:hover, .drop-zone.dragover { background: rgba(0, 242, 254, 0.14); transform: scale(1.01); }
+        .compress-settings { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--panel); padding: 8px 12px; border-radius: 10px; font-size: 11.5px; font-weight: 700; color: var(--muted); margin-bottom: 12px; }
+
+        #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; border: 2px solid var(--primary); padding: 11px 24px; border-radius: 50px; font-weight: 800; font-size: 13px; z-index: 10001; opacity: 0; transition: 0.3s; pointer-events: none; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        @media (max-width: 1080px) { .workspace { grid-template-columns: 1fr; } .panel { height: 680px; } .meta-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 1080px) { .workspace { grid-template-columns: 1fr; } .panel { height: 680px; } .meta-grid, .export-bar { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
 
 <div id="toast">✅ Đã thực hiện!</div>
 
+<!-- HỘP THOẠI CHỌN ẢNH TỪ MÁY & NÉN SIÊU NHẸ CANVAS -->
+<div class="img-modal-overlay" id="img-modal">
+    <div class="img-modal-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="color:var(--primary); font-weight:900; font-size:16px;">🩻 CHÈN ẢNH X-QUANG / LÂM SÀNG</h3>
+            <button onclick="closeImageModal()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:4px;">Tự động nén siêu nhẹ & thu gọn mã thành <b>[IMG_1]</b> (7 ký tự)</p>
+
+        <div class="drop-zone" id="img-drop-zone" onclick="document.getElementById('file-img-picker').click()">
+            <div style="font-size:34px; margin-bottom:8px;">📁</div>
+            <div style="font-weight:900; font-size:14px; color:var(--primary);">BẤM ĐỂ CHỌN ẢNH TỪ MÁY TÍNH / ĐIỆN THOẠI</div>
+            <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">Hoặc kéo thả ảnh vào đây • Hoặc nhấn <b>Ctrl + V</b> để dán ảnh chụp màn hình</div>
+            <input type="file" id="file-img-picker" accept="image/*" style="display:none;" onchange="handleImageFiles(this.files)">
+        </div>
+
+        <div class="compress-settings">
+            <span>⚡ Chuẩn nén X-quang:</span>
+            <select id="img-max-w" class="input-box" style="width:auto; padding:4px 8px;">
+                <option value="720">Rõ nét & Siêu nhẹ (720px ~ 20KB)</option>
+                <option value="960">HD Chi tiết cao (960px ~ 35KB)</option>
+                <option value="500">Nén cực đại (500px ~ 12KB)</option>
+            </select>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="img-url-input" class="input-box" placeholder="Hoặc dán đường dẫn ảnh (https://...) vào đây">
+            <button class="btn btn-primary" onclick="insertImageFromUrlInput()" style="white-space:nowrap;">Chèn Link</button>
+        </div>
+    </div>
+</div>
+
 <header class="header">
-    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>1-CLICK PUBLISH</span></div>
+    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>SMART IMAGE VAULT</span></div>
     <div class="header-actions">
-        <!-- DANH SÁCH ĐỀ ĐÃ ĐĂNG TRONG APP ĐỂ CHỌN SỬA / XÓA NHANH -->
-        <select id="saved-decks-select" class="input-box" style="width:auto; min-width:210px; border-color:var(--primary);" onchange="loadSavedDeckFromApp(this.value)">
+        <select id="saved-decks-select" class="input-box" style="width:auto; min-width:200px; border-color:var(--primary);" onchange="loadSavedDeckFromApp(this.value)">
             <option value="">📂 Đề đã đăng trên App (0)</option>
         </select>
-        <button class="btn" style="color:var(--danger);" onclick="deleteCurrentDeckFromApp()" title="Xóa bộ đề đang chọn khỏi Sảnh">🗑️ Xóa Đề Này</button>
+        <button class="btn" style="color:var(--danger);" onclick="deleteCurrentDeckFromApp()">🗑️ Xóa Đề</button>
         <button class="btn" onclick="createNewBlankDeck()">➕ Tạo Đề Mới</button>
-        <button class="btn" onclick="setupCloudToken()" title="Cài đặt đồng bộ đám mây cho mọi máy khác cùng thấy">☁️ Đồng bộ Cloud</button>
+        <button class="btn btn-accent" onclick="exportJSON()">📥 Xuất JSON</button>
+        <label class="btn" style="cursor:pointer;">
+            📤 Nhập JSON <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)">
+        </label>
         <a href="index.html" class="btn btn-primary">⬅ Ra Sảnh Xem Đề</a>
     </div>
 </header>
 
 <div class="workspace">
-    <!-- CỘT TRÁI: DÁN THẲNG ĐỀ TỪ PDF / WORD -->
+    <!-- CỘT TRÁI: DÁN ĐỀ TỪ PDF / WORD (MÃ ẢNH THU GỌN THÀNH [IMG_1]) -->
     <div class="panel">
         <div class="panel-title">
             <span>📥 1. DÁN ĐỀ TỪ FILE PDF / WORD VÀO ĐÂY</span>
-            <span style="font-size:11px; color:var(--success);">Tự nối dòng gãy PDF • Tự bắt dấu * và dấu -</span>
+            <span style="font-size:11px; color:var(--success);">Tự nối dòng gãy PDF • Tự thu gọn ảnh thành [IMG_1]</span>
         </div>
 
         <div class="meta-grid">
-            <input type="text" id="meta-id" class="input-box" placeholder="Mã đề (de_so_1)" value="de_rhm_moi_01">
-            <input type="text" id="meta-title" class="input-box" placeholder="Tên bộ đề hiển thị ngoài Sảnh" value="Đề Lâm Sàng Nội Nha #1">
+            <input type="text" id="meta-id" class="input-box" placeholder="ID (de_noi_nha_01)" value="de_noi_nha_01">
+            <input type="text" id="meta-title" class="input-box" placeholder="Tên bộ đề" value="Trắc Nghiệm Nội Nha Lâm Sàng">
             <select id="meta-spec" class="input-box">
                 <option value="Nội nha">🦷 Nội nha</option>
                 <option value="Nha chu">🩸 Nha chu</option>
@@ -134,7 +186,7 @@
                 <option value="Bệnh học miệng">🔬 Bệnh học miệng</option>
                 <option value="Chẩn đoán hình ảnh">🩻 Chẩn đoán hình ảnh</option>
             </select>
-            <input type="text" id="meta-desc" class="input-box" placeholder="Mô tả ngắn" value="Đề ôn tập CCHN 2027">
+            <input type="text" id="meta-desc" class="input-box" placeholder="Mô tả ngắn" value="Đề chuẩn hóa CCHN 2027">
         </div>
 
         <div class="toolbar">
@@ -143,24 +195,27 @@
             <label class="chk-label"><input type="checkbox" id="chk-color" checked> Đỏ/Highlight</label>
             <label class="chk-label"><input type="checkbox" id="chk-bold"> In đậm</label>
             <div style="flex:1;"></div>
-            <button class="sc-btn" onclick="syncPreviewToRaw()">✨ Làm Sạch Text</button>
-            <button class="sc-btn" onclick="promptImageInsert(-1)">🩻 +Ảnh X-Quang</button>
-            <button class="sc-btn" onclick="addNewBlankQuestion()">➕ +1 Câu Lẻ</button>
+            <button class="sc-btn" onclick="insertTag('[B]', '[/B]')"><b>B</b></button>
+            <button class="sc-btn" onclick="insertTag('[RED]', '[/RED]')" style="color:#ef4444;">ĐỎ</button>
+            <button class="sc-btn" onclick="insertTag('[BLUE]', '[/BLUE]')" style="color:#3b82f6;">XANH</button>
+            <button class="sc-btn" style="border-color:var(--primary); color:var(--primary);" onclick="openImageModal(-1)">🩻 Chèn X-Quang/Ảnh</button>
+            <button class="sc-btn" onclick="addNewBlankQuestion()">➕ Thêm Câu</button>
         </div>
 
-        <textarea id="raw-input" class="raw-area" oninput="parseRawToQuestions()" placeholder="Bước 1: Copy (Ctrl+C) câu hỏi từ PDF hoặc Word dán (Ctrl+V) vào đây.
-Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá [🚀 ĐĂNG THẲNG LÊN SẢNH] ở góc dưới bên phải là xong!"></textarea>
+        <textarea id="raw-input" class="raw-area" oninput="parseRawToQuestions()" placeholder="Copy đề từ PDF/Word dán vào đây.
+- Khi chèn ảnh X-quang, ô này chỉ hiện mã siêu gọn [IMG_1] (7 ký tự) thay vì hàng chục dòng chữ Base64!
+- Bạn cũng có thể bấm Ctrl+V để dán trực tiếp ảnh chụp màn hình vào ô này."></textarea>
 
         <div style="display:flex; gap:8px; align-items:center;">
             <span style="font-size:11.5px; font-weight:800; color:var(--warning); white-space:nowrap;">🔑 Đáp án rời:</span>
-            <input type="text" id="ans-key-input" class="input-box" oninput="parseRawToQuestions()" placeholder="Nếu đề chưa có dấu * hoặc -, gõ đáp án vào đây (VD: 1D 2A 3BC 4B)...">
+            <input type="text" id="ans-key-input" class="input-box" oninput="parseRawToQuestions()" placeholder="Nếu đề chưa đánh dấu * hoặc -, gõ đáp án vào đây (VD: 1D 2A 3A 4B)...">
         </div>
     </div>
 
-    <!-- CỘT PHẢI: PREVIEW & NÚT ĐĂNG THẲNG LÊN SẢNH 1 CHẠM -->
+    <!-- CỘT PHẢI: PREVIEW CHỈNH SỬA TRỰC TIẾP & ĐĂNG LÊN SẢNH -->
     <div class="panel">
         <div class="panel-title">
-            <span>👁️ 2. KIỂM TRA & BẤM ĐĂNG LÊN SẢNH</span>
+            <span>👁️ 2. KẾT QUẢ ĐÃ LÀM SẠCH (CLICK ĐỂ SỬA TRỰC TIẾP)</span>
             <div class="filter-bar">
                 <span class="f-pill active" onclick="setFilter('all', this)" id="pill-all">Tất cả (0)</span>
                 <span class="f-pill" onclick="setFilter('err', this)" id="pill-err" style="color:#fca5a5;">⚠️ Thiếu Đ.Án (0)</span>
@@ -171,17 +226,12 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
 
         <div id="view-preview" class="preview-area"></div>
 
-        <!-- THANH ĐĂNG ĐỀ 1 CHẠM NGAY TRÊN APP -->
-        <div class="publish-bar">
-            <button class="btn btn-publish" style="flex:1.5; justify-content:center;" onclick="publishDirectlyToApp()">
-                🚀 ĐĂNG THẲNG LÊN SẢNH APP (1 CHẠM)
-            </button>
-            <button class="btn" onclick="testLive('Play')" style="border-color:var(--primary); color:var(--primary); padding:12px 15px;">
-                ⚡ Thi Thử Luôn
-            </button>
-            <button class="btn" onclick="copyFullRowTSV()" title="Dự phòng: Copy sang Google Sheets (tự cắt nhỏ < 44.000 ký tự)">
-                📋 Copy Sheets
-            </button>
+        <div class="export-bar">
+            <button class="btn btn-publish" onclick="publishDirectlyToApp()">🚀 Đăng Lên Sảnh (1 Chạm)</button>
+            <button class="btn btn-success" onclick="copyColD()">📋 Copy Cột D</button>
+            <button class="btn btn-primary" onclick="copyFullRowTSV()">🚀 Copy Hàng 4 Cột (Sheets)</button>
+            <button class="btn btn-accent" onclick="testLive('Play')">⚡ Thi Thử Arena</button>
+            <button class="btn" onclick="testLive('Flashcard')" style="border-color:var(--warning); color:var(--warning);">🃏 Lật Thẻ 3D</button>
         </div>
     </div>
 </div>
@@ -189,6 +239,10 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
 <script>
     let questions = [];
     let currentFilter = 'all';
+    // KHO LƯU TRỮ ẢNH NGẦM: Giấu chuỗi Base64 dài hàng vạn ký tự thành mã [IMG_1], [IMG_2] chỉ 7 ký tự!
+    let imageVault = {};
+    let nextImgId = 1;
+    let targetQuestionForImg = -1;
 
     function showToast(msg) {
         const t = document.getElementById('toast');
@@ -196,31 +250,177 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
         setTimeout(() => t.classList.remove('show'), 2800);
     }
 
+    // Đăng ký 1 ảnh vào kho ngầm và trả về mã ngắn [IMG_1]
+    function registerImageInVault(dataUrlOrLink) {
+        const cleanData = dataUrlOrLink.replace(/\s+/g, '');
+        for (const [id, val] of Object.entries(imageVault)) {
+            if (val === cleanData) return `[IMG_${id}]`;
+        }
+        const id = nextImgId++;
+        imageVault[id] = cleanData;
+        return `[IMG_${id}]`;
+    }
+
+    // Tự động thu gọn mọi chuỗi [IMG]data:image/...[/IMG] hoặc Base64 bị tràn dòng thành [IMG_1]
+    function collapseLongImagesToTokens(text) {
+        if (!text) return "";
+        // 1. Bắt các thẻ [IMG]...[/IMG] chuẩn (kể cả khi bị xuống dòng bên trong)
+        text = text.replace(/\[IMG\]([\s\S]*?)\[\/IMG\]/gi, (match, inner) => {
+            const cleaned = inner.trim();
+            if (!cleaned) return "";
+            return registerImageInVault(cleaned);
+        });
+        // 2. Bắt trường hợp người dùng dán thẻ [IMG]data:image/... bị cụt mất thẻ đóng [/IMG]
+        text = text.replace(/\[IMG\](data:image\/[a-zA-Z0-9+;,\-\/=_\s]+)/gi, (match, rawB64) => {
+            return registerImageInVault(rawB64);
+        });
+        return text;
+    }
+
+    // Bung mã ngắn [IMG_1] trở lại thành [IMG]data:image...[/IMG] khi Xuất đề / Thi thử / Lưu Sảnh
+    function expandTokensToFullSC(text) {
+        if (!text) return "";
+        return text.replace(/\[IMG_(\d+)\]/gi, (match, id) => {
+            return imageVault[id] ? `[IMG]${imageVault[id]}[/IMG]` : match;
+        });
+    }
+
+    // =========================================================================
+    // HỆ THỐNG CHỌN FILE ẢNH & TỰ ĐỘNG NÉN CANVAS SIÊU NHẸ
+    // =========================================================================
+    function openImageModal(qIdx) {
+        targetQuestionForImg = qIdx;
+        document.getElementById('img-url-input').value = '';
+        document.getElementById('file-img-picker').value = '';
+        document.getElementById('img-modal').classList.add('open');
+    }
+
+    function closeImageModal() {
+        document.getElementById('img-modal').classList.remove('open');
+    }
+
+    function compressAndInsertFile(file) {
+        if (!file || !file.type.startsWith('image/')) {
+            return showToast("⚠️ Vui lòng chọn đúng tệp hình ảnh!");
+        }
+        const maxWidth = parseInt(document.getElementById('img-max-w').value || '720', 10);
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                let w = img.width, h = img.height;
+                if (w > maxWidth) {
+                    h = Math.round((h * maxWidth) / w);
+                    w = maxWidth;
+                }
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                // Đổ nền trắng phòng trường hợp ảnh PNG trong suốt chuyển sang JPEG
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, w, h);
+                ctx.drawImage(img, 0, 0, w, h);
+
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+                const sizeKB = Math.round((compressedDataUrl.length * 3) / 4 / 1024);
+                const token = registerImageInVault(compressedDataUrl);
+
+                applyImageTokenToTarget(token);
+                closeImageModal();
+                showToast(`🩻 Đã nén ảnh X-quang xuống ${sizeKB} KB & gán mã gọn ${token}!`);
+            };
+            img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function handleImageFiles(files) {
+        if (files && files.length > 0) compressAndInsertFile(files[0]);
+    }
+
+    function insertImageFromUrlInput() {
+        const url = document.getElementById('img-url-input').value.trim();
+        if (!url) return showToast("⚠️ Hãy dán đường dẫn ảnh!");
+        const token = registerImageInVault(url);
+        applyImageTokenToTarget(token);
+        closeImageModal();
+        showToast(`🩻 Đã chèn ảnh ${token}!`);
+    }
+
+    function applyImageTokenToTarget(token) {
+        if (targetQuestionForImg === -1) {
+            const ta = document.getElementById('raw-input');
+            const s = ta.selectionStart, e = ta.selectionEnd;
+            ta.value = ta.value.substring(0, s) + " " + token + " " + ta.value.substring(e);
+            parseRawToQuestions();
+        } else if (questions[targetQuestionForImg]) {
+            questions[targetQuestionForImg].title = questions[targetQuestionForImg].title.trim() + " " + token;
+            syncPreviewToRaw(false);
+            renderPreview();
+        }
+    }
+
+    // Xóa nhanh 1 ảnh [IMG_X] khỏi câu hỏi trên Preview
+    function removeImgTokenFromQuestion(qIdx, tokenId) {
+        if (!questions[qIdx]) return;
+        const regex = new RegExp(`\\s*\\[IMG_${tokenId}\\]`, 'gi');
+        questions[qIdx].title = questions[qIdx].title.replace(regex, '').trim();
+        syncPreviewToRaw(false);
+        renderPreview();
+        showToast(`🗑️ Đã gỡ ảnh [IMG_${tokenId}] khỏi Câu #${qIdx + 1}`);
+    }
+
+    // Hỗ trợ Kéo-Thả ảnh vào Modal
+    const dropZone = document.getElementById('img-drop-zone');
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault(); dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            compressAndInsertFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    // Hỗ trợ nhấn Ctrl+V dán thẳng ảnh chụp màn hình ở bất kỳ đâu
+    window.addEventListener('paste', (e) => {
+        const items = (e.clipboardData || window.clipboardData).items;
+        if (!items) return;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                e.preventDefault();
+                const file = items[i].getAsFile();
+                if (!document.getElementById('img-modal').classList.contains('open')) {
+                    targetQuestionForImg = -1;
+                }
+                compressAndInsertFile(file);
+                return;
+            }
+        }
+    });
+
     function normalizeForDup(str) {
         return str.replace(/^Câu\s*\d+\s*[:.)\-]?\s*/i, '')
-                  .replace(/\[IMG\].*?\[\/IMG\]/gi, '')
+                  .replace(/\[IMG_\d+\]/gi, '')
                   .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                   .toLowerCase().replace(/[^a-z0-9]/g, '');
     }
 
-    function promptImageInsert(qIdx) {
-        const url = prompt("🩻 Nhập đường dẫn (URL) hình ảnh X-quang, Giải phẫu hoặc Lâm sàng:");
-        if (!url || !url.trim()) return;
-        const tag = `[IMG]${url.trim()}[/IMG]`;
-        if (qIdx === -1) {
-            const ta = document.getElementById('raw-input');
-            ta.value += "\n" + tag;
-            parseRawToQuestions();
-        } else {
-            questions[qIdx].title += " " + tag;
-            syncPreviewToRaw(false);
-            renderPreview();
-        }
-        showToast("🩻 Đã chèn hình ảnh!");
+    function insertTag(open, close) {
+        const ta = document.getElementById('raw-input');
+        const s = ta.selectionStart, e = ta.selectionEnd, txt = ta.value;
+        ta.value = txt.substring(0, s) + open + txt.substring(s, e) + close + txt.substring(e);
+        ta.focus(); parseRawToQuestions();
     }
 
-    // Bắt định dạng Gạch chân, Chữ đỏ, Highlight từ Word
+    // Bắt định dạng Gạch chân, Chữ đỏ, Highlight khi dán chữ từ Word
     document.getElementById('raw-input').addEventListener('paste', function(e) {
+        const items = (e.clipboardData || window.clipboardData).items;
+        if (items) {
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) return; // Đã được xử lý bởi trình dán ảnh ở trên
+            }
+        }
         const html = (e.clipboardData || window.clipboardData).getData('text/html');
         if (!html) return;
         const u = document.getElementById('chk-underline').checked;
@@ -260,9 +460,19 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
         return map;
     }
 
-    // THUẬT TOÁN PDF SMART-CLEAN: NỐI DÒNG GÃY & BẮT DẤU * / -
+    // THUẬT TOÁN PDF SMART-CLEAN + TỰ ĐỘNG RÚT GỌN BASE64 THÀNH [IMG_1]
     function parseRawToQuestions() {
-        let raw = document.getElementById('raw-input').value;
+        const ta = document.getElementById('raw-input');
+        // Nếu phát hiện chuỗi data:image/... dài ngoằng trong ô soạn thảo -> rút gọn ngay lập tức thành [IMG_1]!
+        if (ta.value.includes('data:image/')) {
+            const collapsed = collapseLongImagesToTokens(ta.value);
+            if (collapsed !== ta.value) {
+                ta.value = collapsed;
+                showToast("✨ Đã tự động thu gọn chuỗi ảnh Base64 dài thành mã [IMG_x]!");
+            }
+        }
+
+        let raw = collapseLongImagesToTokens(ta.value);
         const keyMap = parseAnswerKey();
 
         const inlineOptRegex = /([^\n])\s+((?:[\*\-•]\s*)?[A-E][\.\)]\s+)/g;
@@ -378,8 +588,22 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
             const card = document.createElement('div');
             card.className = `q-card ${q.hasErr ? 'err-ans' : ''} ${q.missingExp ? 'warn-exp' : ''} ${q.dupOf ? 'warn-dup' : ''}`;
 
-            const imgs = [...q.title.matchAll(/\[IMG\](.*?)\[\/IMG\]/gi)].map(m => m[1]);
-            const imgHTML = imgs.length ? `<div class="img-preview-row">${imgs.map(u => `<img src="${u}" class="img-thumb" onerror="this.style.display='none'">`).join('')}</div>` : '';
+            // Tìm tất cả mã [IMG_1], [IMG_2] trong câu hỏi để hiển thị ảnh Thumbnail sắc nét
+            const tokenMatches = [...q.title.matchAll(/\[IMG_(\d+)\]/gi)];
+            let imgHTML = '';
+            if (tokenMatches.length > 0) {
+                imgHTML = `<div class="img-preview-row">` + tokenMatches.map(m => {
+                    const tId = m[1];
+                    const src = imageVault[tId] || '';
+                    return `<div class="img-chip-card">
+                                <img src="${src}" class="img-thumb" onclick="window.open(this.src)" title="Bấm để xem ảnh phóng to">
+                                <div class="img-chip-bar">
+                                    <span>[IMG_${tId}]</span>
+                                    <button class="img-del-btn" onclick="removeImgTokenFromQuestion(${qIdx}, '${tId}')">🗑️ Xóa</button>
+                                </div>
+                            </div>`;
+                }).join('') + `</div>`;
+            }
 
             let optsHTML = '';
             q.opts.forEach((o, oIdx) => {
@@ -399,9 +623,10 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
                         ${cCount > 1 ? `<span class="badge b-multi">🔀 ĐA ĐÁP ÁN (${cCount})</span>` : ''}
                         ${q.dupOf ? `<span class="badge b-dup">👯 Trùng Câu #${q.dupOf}</span>` : ''}
                         ${q.hasErr ? `<span class="badge b-err">⚠️ Chưa chọn đáp án</span>` : ''}
+                        ${q.missingExp ? `<span class="badge b-warn">💡 Chưa có giải thích</span>` : ''}
                     </div>
                     <div style="display:flex; gap:4px;">
-                        <button class="sc-btn" onclick="promptImageInsert(${qIdx})">🩻 +Ảnh</button>
+                        <button class="sc-btn" style="border-color:var(--primary); color:var(--primary);" onclick="openImageModal(${qIdx})">🩻 +Ảnh</button>
                         <button class="sc-btn" onclick="addOpt(${qIdx})">➕ +Đ.Án</button>
                         <button class="sc-btn" style="color:var(--danger);" onclick="deleteQuestion(${qIdx})">🗑️ Xóa</button>
                     </div>
@@ -409,7 +634,7 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
                 <input type="text" class="q-title-edit" value="${q.title.replace(/"/g, '&quot;')}" oninput="editTitle(${qIdx}, this.value)">
                 ${imgHTML}
                 <div>${optsHTML}</div>
-                <input type="text" class="input-box" style="margin-top:6px;" value="${q.explanation.replace(/"/g, '&quot;')}" placeholder="💡 Nhập giải thích lâm sàng (nếu có)..." oninput="editExp(${qIdx}, this.value)">
+                <input type="text" class="input-box" style="margin-top:6px;" value="${q.explanation.replace(/"/g, '&quot;')}" placeholder="💡 Nhập giải thích lâm sàng (không bắt buộc)..." oninput="editExp(${qIdx}, this.value)">
             `;
             cont.appendChild(card);
         });
@@ -424,7 +649,7 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
 
     function toggleOpt(qIdx, oIdx, checked) { questions[qIdx].opts[oIdx].isC = checked; renderPreview(); }
     function editOpt(qIdx, oIdx, val) { questions[qIdx].opts[oIdx].text = val; }
-    function editTitle(qIdx, val) { questions[qIdx].title = val; }
+    function editTitle(qIdx, val) { questions[qIdx].title = collapseLongImagesToTokens(val); renderPreview(); }
     function editExp(qIdx, val) { questions[qIdx].explanation = val; }
     function addOpt(qIdx) { questions[qIdx].opts.push({ text: "Phương án mới", isC: false }); renderPreview(); }
     function removeOpt(qIdx, oIdx) { questions[qIdx].opts.splice(oIdx, 1); renderPreview(); }
@@ -439,7 +664,8 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
         syncPreviewToRaw(false); renderPreview();
     }
 
-    function buildStandardString() {
+    // Chuỗi gọn hiển thị trong ô #raw-input (giữ nguyên mã [IMG_1] 7 ký tự)
+    function buildCompactEditorString() {
         return questions.map((q, idx) => {
             let cleanTitle = q.title.replace(/^Câu\s*\d+\s*[:.)\-]?\s*/i, '');
             let header = `Câu ${idx + 1}: ${cleanTitle}`;
@@ -448,13 +674,18 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
         }).join('\n\n').trim();
     }
 
+    // Chuỗi đầy đủ bung [IMG_1] thành [IMG]data:...[/IMG] để đẩy sang Play.html / Flashcard.html / Sheets
+    function buildFullExportString() {
+        return expandTokensToFullSC(buildCompactEditorString());
+    }
+
     function syncPreviewToRaw(notify = true) {
-        document.getElementById('raw-input').value = buildStandardString();
-        if (notify) showToast("✨ Đã làm sạch ô văn bản bên trái!");
+        document.getElementById('raw-input').value = buildCompactEditorString();
+        if (notify) showToast("✨ Đã đồng bộ gọn gàng!");
     }
 
     // =========================================================================
-    // TÍNH NĂNG MỚI: ĐĂNG THẲNG LÊN SẢNH APP (1 CHẠM) & ĐỒNG BỘ CLOUD GITHUB
+    // QUẢN LÝ ĐĂNG ĐỀ 1 CHẠM LÊN SẢNH & XUẤT DỮ LIỆU
     // =========================================================================
     function getAppCatalog() {
         return JSON.parse(localStorage.getItem('rhm_custom_decks') || '[]');
@@ -467,51 +698,36 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
             catalog.map(d => `<option value="${d.id}">📘 [${d.spec}] ${d.title} (${d.count} câu)</option>`).join('');
     }
 
-    async function publishDirectlyToApp() {
-        const code = buildStandardString();
-        if (!code || !questions.length) return showToast("⚠️ Chưa có câu hỏi nào để đăng!");
+    function publishDirectlyToApp() {
+        const fullCode = buildFullExportString();
+        if (!fullCode || !questions.length) return showToast("⚠️ Chưa có câu hỏi nào để đăng!");
 
         const id = document.getElementById('meta-id').value.trim().replace(/\s+/g, '_') || ('de_rhm_' + Date.now());
         const title = document.getElementById('meta-title').value.trim() || 'Đề Lâm Sàng RHM';
         const spec = document.getElementById('meta-spec').value;
         const desc = document.getElementById('meta-desc').value.trim() || `${questions.length} câu hỏi chuẩn hóa`;
 
-        // 1. Lưu nội dung câu hỏi trực tiếp vào bộ nhớ App
-        localStorage.setItem(id, code);
+        try {
+            localStorage.setItem(id, fullCode);
+        } catch (err) {
+            return alert("⚠️ Bộ nhớ trình duyệt đã đầy do chứa quá nhiều ảnh nặng! Hãy bấm Xuất JSON để lưu file.");
+        }
 
-        // 2. Cập nhật Danh mục Sảnh Chính (rhm_custom_decks)
         let catalog = getAppCatalog();
         const existingIdx = catalog.findIndex(item => item.id === id);
         const deckMeta = {
-            id: id,
-            title: title,
-            spec: spec,
+            id: id, title: title, spec: spec,
             desc: `[${spec}] ${desc} (${questions.length} câu)`,
-            count: questions.length,
-            updatedAt: Date.now()
+            count: questions.length, updatedAt: Date.now()
         };
 
-        if (existingIdx > -1) {
-            catalog[existingIdx] = deckMeta;
-        } else {
-            catalog.unshift(deckMeta);
-        }
+        if (existingIdx > -1) catalog[existingIdx] = deckMeta;
+        else catalog.unshift(deckMeta);
+
         localStorage.setItem('rhm_custom_decks', JSON.stringify(catalog));
         renderSavedDecksDropdown();
         document.getElementById('saved-decks-select').value = id;
-
-        // 3. Nếu người dùng đã cài đặt khóa Cloud GitHub -> tự động bắn file .json lên GitHub luôn!
-        const ghToken = localStorage.getItem('rhm_gh_token');
-        if (ghToken) {
-            showToast("☁️ Đã lưu vào App & đang đồng bộ lên đám mây GitHub...");
-            const ok = await pushJsonToGitHub(id, title, spec, desc, ghToken);
-            if (ok) {
-                showToast("🎉 ĐÃ ĐĂNG LÊN SẢNH & ĐỒNG BỘ CLOUD CHO MỌI MÁY THÀNH CÔNG!");
-                return;
-            }
-        }
-
-        showToast("🎉 ĐÃ ĐĂNG THẲNG LÊN SẢNH CHÍNH! Bấm [⬅ Ra Sảnh Xem Đề] để làm ngay!");
+        showToast("🎉 ĐÃ ĐĂNG LÊN SẢNH CHÍNH! Bấm [⬅ Ra Sảnh Xem Đề] để làm bài ngay!");
     }
 
     function loadSavedDeckFromApp(id) {
@@ -527,23 +743,22 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
             if (meta.spec) document.getElementById('meta-spec').value = meta.spec;
             document.getElementById('meta-desc').value = (meta.desc || '').replace(/^\[.*?\]\s*/, '');
         }
-        document.getElementById('raw-input').value = raw;
+        // Tự động thu gọn mọi ảnh trong bộ đề thành [IMG_1] trước khi đưa vào ô soạn thảo
+        document.getElementById('raw-input').value = collapseLongImagesToTokens(raw);
         parseRawToQuestions();
-        showToast(`📂 Đã mở bộ đề "${meta ? meta.title : id}" để chỉnh sửa!`);
+        showToast(`📂 Đã mở bộ đề "${meta ? meta.title : id}"!`);
     }
 
     function deleteCurrentDeckFromApp() {
         const id = document.getElementById('meta-id').value.trim();
         let catalog = getAppCatalog();
-        if (!catalog.some(d => d.id === id)) {
-            return showToast("⚠️ Bộ đề này chưa được đăng trong danh sách App!");
-        }
-        if (!confirm(`Bạn có chắc muốn xóa bộ đề "${id}" khỏi Sảnh chính không?`)) return;
+        if (!catalog.some(d => d.id === id)) return showToast("⚠️ Bộ đề này chưa được đăng trên App!");
+        if (!confirm(`Xóa bộ đề "${id}" khỏi Sảnh chính?`)) return;
         catalog = catalog.filter(d => d.id !== id);
         localStorage.setItem('rhm_custom_decks', JSON.stringify(catalog));
         localStorage.removeItem(id);
         renderSavedDecksDropdown();
-        showToast("🗑️ Đã xóa bộ đề khỏi Sảnh chính!");
+        showToast("🗑️ Đã xóa bộ đề khỏi Sảnh!");
     }
 
     function createNewBlankDeck() {
@@ -554,54 +769,16 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
         document.getElementById('ans-key-input').value = '';
         document.getElementById('saved-decks-select').value = '';
         parseRawToQuestions();
-        showToast("➕ Đã tạo phôi đề mới! Hãy dán câu hỏi vào ô bên trái.");
+        showToast("➕ Đã tạo phôi đề mới!");
     }
 
-    // Tùy chọn: Đồng bộ đám mây GitHub 1 chạm (Nếu muốn đẩy cho mọi máy khác cùng học)
-    function setupCloudToken() {
-        const current = localStorage.getItem('rhm_gh_token') || '';
-        const token = prompt("☁️ ĐỒNG BỘ ĐÁM MÂY TỰ ĐỘNG (TÙY CHỌN):\n- Nếu chỉ học trên máy này: Bấm Hủy (Không cần cài, bấm nút Đăng Lên Sảnh là dùng được luôn).\n- Nếu muốn mỗi lần bấm Đăng Đề, toàn bộ điện thoại/máy tính khác cũng thấy đề mới ngay lập tức: Dán mã GitHub Personal Access Token (repo) của bạn vào đây:", current);
-        if (token !== null) {
-            if (token.trim()) {
-                localStorage.setItem('rhm_gh_token', token.trim());
-                showToast("☁️ Đã lưu khóa Cloud! Từ giờ bấm Đăng Đề sẽ tự động đẩy lên GitHub!");
-            } else {
-                localStorage.removeItem('rhm_gh_token');
-                showToast("📴 Đã tắt đồng bộ Cloud (Chỉ lưu trực tiếp trên máy).");
-            }
-        }
+    function copyColD() {
+        const code = buildFullExportString();
+        if (!code) return showToast("⚠️ Chưa có câu hỏi!");
+        navigator.clipboard.writeText(code);
+        showToast("📋 Đã copy Cột D (đã bung ảnh đầy đủ)!");
     }
 
-    async function pushJsonToGitHub(id, title, spec, desc, token) {
-        try {
-            const repo = "phucdo4092004-lang/rhm-2027-vip";
-            const path = `${id}.json`;
-            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
-            const payloadObj = { id, title, specialty: spec, description: desc, updatedAt: new Date().toISOString(), questions };
-            const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(payloadObj, null, 2))));
-
-            let sha = null;
-            const checkRes = await fetch(apiUrl, { headers: { "Authorization": `Bearer ${token}` } });
-            if (checkRes.ok) {
-                const existingFile = await checkRes.json();
-                sha = existingFile.sha;
-            }
-
-            const body = { message: `Đăng bộ đề ${title} từ Studio`, content: contentBase64 };
-            if (sha) body.sha = sha;
-
-            const putRes = await fetch(apiUrl, {
-                method: "PUT",
-                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-            return putRes.ok;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    // Dự phòng: Copy sang Google Sheets tự động cắt dòng < 44.000 ký tự
     function copyFullRowTSV() {
         if (!questions.length) return showToast("⚠️ Chưa có câu hỏi!");
         const id = document.getElementById('meta-id').value.trim() || 'de_rhm_01';
@@ -613,10 +790,10 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
         let chunks = [], currentChunk = [], currentLen = 0;
 
         questions.forEach((q, idx) => {
-            let cleanTitle = q.title.replace(/^Câu\s*\d+\s*[:.)\-]?\s*/i, '');
+            let cleanTitle = expandTokensToFullSC(q.title.replace(/^Câu\s*\d+\s*[:.)\-]?\s*/i, ''));
             let qBlock = `Câu ${idx + 1}: ${cleanTitle}\n` +
-                         q.opts.map(o => `${o.isC ? '*' : '•'} ${o.text}`).join('\n') +
-                         (q.explanation ? '\n' + q.explanation : '');
+                         q.opts.map(o => `${o.isC ? '*' : '•'} ${expandTokensToFullSC(o.text)}`).join('\n') +
+                         (q.explanation ? '\n' + expandTokensToFullSC(q.explanation) : '');
             if (currentLen + qBlock.length > MAX_CELL_CHARS && currentChunk.length > 0) {
                 chunks.push(currentChunk.join('\n\n'));
                 currentChunk = [qBlock]; currentLen = qBlock.length;
@@ -628,13 +805,60 @@ Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá 
 
         const tsvRows = chunks.map(c => `${id}\t${title}\t${desc}\t"${c.replace(/"/g, '""')}"`).join('\n');
         navigator.clipboard.writeText(tsvRows);
-        showToast("📋 Đã copy (tự động chia nhỏ < 44.000 ký tự)! Dán vào cột A trên Sheets.");
+        showToast(chunks.length > 1 ? `🚀 Đã copy & tự chia thành ${chunks.length} dòng (<44.000 ký tự/ô) cho Google Sheets!` : "🚀 Đã copy nguyên hàng 4 cột! Bấm ô A2 trên Sheets rồi nhấn Ctrl+V.");
+    }
+
+    function exportJSON() {
+        const exportedQuestions = questions.map(q => ({
+            title: expandTokensToFullSC(q.title),
+            opts: q.opts.map(o => ({ text: expandTokensToFullSC(o.text), isC: o.isC })),
+            explanation: expandTokensToFullSC(q.explanation || '')
+        }));
+        const payload = {
+            id: document.getElementById('meta-id').value.trim(),
+            title: document.getElementById('meta-title').value.trim(),
+            specialty: document.getElementById('meta-spec').value,
+            description: document.getElementById('meta-desc').value.trim(),
+            exportedAt: new Date().toISOString(),
+            questions: exportedQuestions
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${payload.id || 'rhm_bank'}.json`;
+        a.click();
+        showToast("📥 Đã xuất ngân hàng câu hỏi ra file JSON!");
+    }
+
+    function importJSON(e) {
+        const file = e.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            try {
+                const data = JSON.parse(evt.target.result);
+                document.getElementById('meta-id').value = data.id || 'de_json';
+                document.getElementById('meta-title').value = data.title || 'Đề Nhập JSON';
+                if (data.specialty) document.getElementById('meta-spec').value = data.specialty;
+                document.getElementById('meta-desc').value = data.description || '';
+                questions = (data.questions || []).map(q => ({
+                    title: collapseLongImagesToTokens(q.title || ''),
+                    opts: (q.opts || []).map(o => ({ text: collapseLongImagesToTokens(o.text || ''), isC: !!o.isC })),
+                    explanation: collapseLongImagesToTokens(q.explanation || '')
+                }));
+                syncPreviewToRaw(false);
+                renderPreview();
+                showToast("📤 Đã nạp file JSON thành công!");
+            } catch (err) { alert("❌ File JSON không hợp lệ!"); }
+        };
+        reader.readAsText(file);
     }
 
     function testLive(page) {
-        publishDirectlyToApp();
-        const id = document.getElementById('meta-id').value.trim() || 'de_rhm_moi_01';
-        const title = document.getElementById('meta-title').value.trim() || 'Đề RHM';
+        const fullCode = buildFullExportString();
+        if (!fullCode) return showToast("⚠️ Chưa có câu hỏi!");
+        const id = document.getElementById('meta-id').value.trim() || 'test_studio';
+        const title = document.getElementById('meta-title').value.trim() || 'Đề Test Studio';
+        localStorage.setItem(id, fullCode);
         window.open(`${page}.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}`, '_blank');
     }
 
@@ -662,13 +886,7 @@ C. Cả A và B sai D. NaOCl`;
 
     window.onload = () => {
         renderSavedDecksDropdown();
-        const catalog = getAppCatalog();
-        if (catalog.length > 0) {
-            loadSavedDeckFromApp(catalog[0].id);
-            document.getElementById('saved-decks-select').value = catalog[0].id;
-        } else {
-            loadSample();
-        }
+        loadSample();
     };
 </script>
 </body>
