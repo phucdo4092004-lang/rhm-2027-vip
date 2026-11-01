@@ -3,45 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Thư Viện VIP - Phúc RHM</title>
+    <title>Thư Viện Lâm Sàng RHM VIP</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/svg+xml" href="./icon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #0ea5e9; --primary-grad: linear-gradient(90deg, #0284c7, #0ea5e9); --accent: #ec4899; }
-        
-        [data-theme="dark"] { --bg: #020617; --card: rgba(15, 23, 42, 0.92); --header-bg: rgba(2, 6, 23, 0.85); --text: #f1f5f9; --glass: rgba(255,255,255,0.08); --border: rgba(255,255,255,0.14); }
-        [data-theme="light"] { --bg: #f8fafc; --card: #ffffff; --header-bg: rgba(255, 255, 255, 0.9); --text: #1e293b; --glass: rgba(15, 23, 42, 0.05); --border: rgba(15, 23, 42, 0.12); }
-        [data-theme="sepia"] { --bg: #f4ecd8; --card: #fdf6e3; --header-bg: rgba(244, 236, 216, 0.92); --text: #433422; --glass: rgba(67, 52, 34, 0.08); --border: rgba(67, 52, 34, 0.15); }
-        
-        body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.8; transition: background 0.3s, color 0.3s; }
+        [data-theme="dark"] { --bg: #020617; --card: rgba(15, 23, 42, 0.94); --header-bg: rgba(2, 6, 23, 0.88); --text: #f1f5f9; --glass: rgba(255,255,255,0.08); --border: rgba(255,255,255,0.14); }
+        [data-theme="light"] { --bg: #f8fafc; --card: #ffffff; --header-bg: rgba(255, 255, 255, 0.92); --text: #1e293b; --glass: rgba(15, 23, 42, 0.05); --border: rgba(15, 23, 42, 0.12); }
+        [data-theme="sepia"] { --bg: #f4ecd8; --card: #fdf6e3; --header-bg: rgba(244, 236, 216, 0.94); --text: #433422; --glass: rgba(67, 52, 34, 0.08); --border: rgba(67, 52, 34, 0.15); }
+        * { box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.8; transition: background 0.3s; }
         #reading-progress { position: fixed; top: 0; left: 0; height: 4px; width: 0%; background: linear-gradient(90deg, #00f2fe, #ff00de); z-index: 2000; }
-
-        .header { position: sticky; top: 0; background: var(--header-bg); backdrop-filter: blur(20px); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; gap: 10px; z-index: 100; border-bottom: 1px solid var(--border); }
-        .in-doc-search { flex: 1; max-width: 320px; background: var(--glass); border: 1px solid var(--border); border-radius: 50px; padding: 7px 14px; color: var(--text); font-family: inherit; font-size: 13px; outline: none; }
-        
-        .btn-tool { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 13px; transition: 0.25s; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; font-family: inherit; }
-        .btn-tool:hover { background: var(--primary-grad); color: #fff; border-color: transparent; }
-        .btn-exit { width: auto; padding: 8px 15px; border-radius: 50px; background: var(--primary-grad); color: #fff; border: none; }
-        .btn-menu { width: auto; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--primary); color: var(--primary); }
-
-        .drawer { position: fixed; top: 0; right: -320px; width: 290px; height: 100vh; background: var(--card); border-left: 2px solid var(--primary); z-index: 9999; transition: 0.35s ease; padding: 25px; box-sizing: border-box; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.4); }
-        .drawer.open { right: 0; }
-        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: none; backdrop-filter: blur(5px); }
-        .drawer-overlay.show { display: block; }
-        .setting-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
-
-        .container { max-width: 860px; margin: 28px auto 80px auto; padding: 35px 30px; background: var(--card); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); border: 1px solid var(--border); }
-        #content { font-family: 'Lora', serif; font-size: 18px; line-height: 1.8; white-space: pre-wrap; color: var(--text); margin-top: 20px; }
-        
+        .header { position: sticky; top: 0; background: var(--header-bg); backdrop-filter: blur(20px); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; gap: 10px; z-index: 100; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        .in-doc-search { flex: 1; max-width: 300px; background: var(--glass); border: 1px solid var(--border); border-radius: 50px; padding: 7px 14px; color: var(--text); font-family: inherit; font-size: 13px; outline: none; }
+        .btn-bar { background: var(--glass); color: var(--text); border: 1px solid var(--border); padding: 7px 13px; border-radius: 50px; font-weight: 800; font-size: 12px; cursor: pointer; text-decoration: none; font-family: inherit; }
+        .container { max-width: 860px; margin: 28px auto 80px auto; padding: 36px 32px; background: var(--card); border-radius: 26px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); border: 1px solid var(--border); }
+        #content { font-family: 'Lora', serif; font-size: 18.5px; line-height: 1.85; white-space: pre-wrap; color: var(--text); margin-top: 20px; }
         mark.hl { background: #facc15; color: #000; padding: 1px 4px; border-radius: 4px; font-weight: 700; }
         .sc-img { display: block; max-width: 100%; border-radius: 12px; margin: 20px auto; border: 2px solid var(--primary); }
         .sc-red { color: #ef4444; font-weight: 700; background: rgba(239,68,68,0.12); padding: 2px 8px; border-radius: 6px; }
         .sc-blue { color: #0ea5e9; font-weight: 700; background: rgba(14,165,233,0.12); padding: 2px 8px; border-radius: 6px; }
-
-        /* NÚT NỔI HỎI GEMINI KHI BÔI ĐEN ĐOẠN VĂN */
-        #ai-selection-btn { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #8b5cf6, #ec4899); color: #fff; border: none; padding: 11px 22px; border-radius: 50px; font-weight: 900; font-size: 13px; cursor: pointer; z-index: 1500; box-shadow: 0 10px 25px rgba(236,72,153,0.4); display: none; font-family: inherit; }
-        .btn-top { position: fixed; bottom: 25px; right: 20px; background: var(--primary); color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; font-weight: bold; border: none; cursor: pointer; display: none; z-index: 1000; align-items: center; justify-content: center; }
+        #ai-selection-btn { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #8b5cf6, #ec4899); color: #fff; border: none; padding: 11px 22px; border-radius: 50px; font-weight: 900; font-size: 13px; cursor: pointer; z-index: 1500; display: none; box-shadow: 0 10px 25px rgba(236,72,153,0.4); }
     </style>
 </head>
 <body>
@@ -49,121 +32,57 @@
     <button id="ai-selection-btn" onclick="askGeminiSelection()">🤖 Giải thích đoạn bôi đen với Gemini</button>
 
     <div class="header">
-        <a href="index.html" class="btn-tool btn-exit">⬅ SẢNH</a>
-        <input type="text" id="docSearch" class="in-doc-search" oninput="highlightText()" placeholder="🔍 Tìm từ khóa trong bài...">
-        <button class="btn-tool btn-menu" onclick="toggleMenu()">⚙️ CÔNG CỤ</button>
-    </div>
-    
-    <div id="drawer-overlay" class="drawer-overlay" onclick="toggleMenu()"></div>
-
-    <div id="settings-drawer" class="drawer">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-            <h3 style="margin:0; color:var(--primary); font-weight:900;">⚙️ TÙY CHỈNH ĐỌC</h3>
-            <button onclick="toggleMenu()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">&times;</button>
-        </div>
-
-        <div class="setting-group" style="flex-direction: row; gap: 8px;">
-            <button class="btn-tool" onclick="adjSize(2)">A+ Chữ To</button>
-            <button class="btn-tool" onclick="adjSize(-2)">A- Chữ Nhỏ</button>
-        </div>
-
-        <div class="setting-group">
-            <button class="btn-tool" id="btn-font" onclick="toggleFont()">🔤 Font: Có chân (Lora)</button>
-            <button class="btn-tool" onclick="setTheme('dark')">🌘 Nền Tối (OLED)</button>
-            <button class="btn-tool" onclick="setTheme('light')">☀️ Nền Sáng</button>
-            <button class="btn-tool" onclick="setTheme('sepia')" style="background:#f4ecd8; color:#433422;">📜 Nền Giấy Cổ (Sepia)</button>
-        </div>
-
-        <div class="setting-group">
-            <button class="btn-tool" style="background:linear-gradient(45deg, #ff00de, #ff8a00); color:#fff; border:none;" id="btn-read-action" onclick="speak()">🔊 ĐỌC BÀI BẰNG GIỌNG AI</button>
+        <a href="index.html" class="btn-bar" style="background:var(--primary-grad); color:#fff; border:none;">⬅ SẢNH</a>
+        <input type="text" id="docSearch" class="in-doc-search" oninput="highlightText()" placeholder="🔍 Tìm kiếm từ khóa trong bài...">
+        <div style="display:flex; gap:6px;">
+            <button class="btn-bar" onclick="adjSize(2)">A+</button>
+            <button class="btn-bar" onclick="adjSize(-2)">A-</button>
+            <button class="btn-bar" onclick="setTheme('dark')">🌘</button>
+            <button class="btn-bar" onclick="setTheme('light')">☀️</button>
+            <button class="btn-bar" onclick="setTheme('sepia')" style="background:#f4ecd8; color:#433422;">📜 Sepia</button>
         </div>
     </div>
-    
+
     <div class="container">
-        <h1 id="title" style="color:var(--primary); border-bottom: 2px dashed var(--accent); padding-bottom: 15px; font-weight: 900; font-size: 24px; text-align: center; margin-top: 0;">ĐANG TẢI...</h1>
+        <h1 id="title" style="color:var(--primary); border-bottom:2px dashed var(--accent); padding-bottom:15px; font-weight:900; font-size:24px; text-align:center; margin-top:0;">ĐANG TẢI...</h1>
         <div id="content">Đang kết nối CSDL...</div>
     </div>
 
-    <button class="btn-top" id="btnTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
-
 <script>
-    let fSize = 18; let isSerif = true; let originalParsedHTML = ""; let selectedText = "";
-
-    window.onscroll = function() {
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        document.getElementById('reading-progress').style.width = (scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0) + '%';
-        document.getElementById('btnTop').style.display = scrollTop > 300 ? "flex" : "none";
+    let fSize = 18.5, originalHTML = "", selectedText = "";
+    window.onscroll = () => {
+        const st = document.documentElement.scrollTop || document.body.scrollTop;
+        const sh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        document.getElementById('reading-progress').style.width = (sh > 0 ? (st / sh) * 100 : 0) + '%';
     };
-
-    // Nhận diện khi bôi đen văn bản để hiện nút hỏi Gemini
     document.addEventListener('selectionchange', () => {
-        const sel = window.getSelection().toString().trim();
+        const s = window.getSelection().toString().trim();
         const btn = document.getElementById('ai-selection-btn');
-        if (sel.length > 5) {
-            selectedText = sel;
-            btn.style.display = 'block';
-        } else {
-            btn.style.display = 'none';
-        }
+        if (s.length > 5) { selectedText = s; btn.style.display = 'block'; } else { btn.style.display = 'none'; }
     });
-
     function askGeminiSelection() {
-        const prompt = `Chào Gemini, tôi là sinh viên Răng Hàm Mặt. Hãy giải thích chi tiết và tóm tắt cơ chế lâm sàng dễ nhớ cho đoạn kiến thức sau:\n\n"${selectedText}"`;
-        navigator.clipboard.writeText(prompt).then(() => {
-            window.open('https://gemini.google.com/', '_blank');
-        });
+        navigator.clipboard.writeText(`Chào Gemini, tôi là sinh viên Răng Hàm Mặt. Hãy giải thích cơ chế lâm sàng dễ nhớ cho đoạn kiến thức sau:\n\n"${selectedText}"`).then(() => window.open('https://gemini.google.com/', '_blank'));
     }
-
     function highlightText() {
         const kw = document.getElementById('docSearch').value.trim();
-        const cont = document.getElementById('content');
-        if (!kw) { cont.innerHTML = originalParsedHTML; return; }
-        const safeKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`(${safeKw})(?![^<]*>)`, 'gi');
-        cont.innerHTML = originalParsedHTML.replace(regex, '<mark class="hl">$1</mark>');
+        const c = document.getElementById('content');
+        if (!kw) { c.innerHTML = originalHTML; return; }
+        const safe = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        c.innerHTML = originalHTML.replace(new RegExp(`(${safe})(?![^<]*>)`, 'gi'), '<mark class="hl">$1</mark>');
     }
-
-    function toggleMenu() { document.getElementById('settings-drawer').classList.toggle('open'); document.getElementById('drawer-overlay').classList.toggle('show'); }
     function setTheme(t) { document.documentElement.setAttribute('data-theme', t); if (t !== 'sepia') localStorage.setItem('theme_pref', t); }
     function adjSize(v) { fSize = Math.max(14, Math.min(30, fSize + v)); document.getElementById('content').style.fontSize = fSize + 'px'; }
-    
-    function toggleFont() {
-        isSerif = !isSerif;
-        document.getElementById('content').style.fontFamily = isSerif ? "'Lora', serif" : "'Plus Jakarta Sans', sans-serif";
-        document.getElementById('btn-font').innerText = isSerif ? "🔤 Font: Có chân (Lora)" : "🔤 Font: Không chân";
-    }
+    function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>').replace(/\[BR\]/gi, '<br>'); }
 
-    function parseSC(txt) {
-        if (!txt) return "";
-        return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
-                  .replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>')
-                  .replace(/\[RED\](.*?)\[\/RED\]/gi, '<span class="sc-red">$1</span>')
-                  .replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span class="sc-blue">$1</span>')
-                  .replace(/\[BR\]/gi, '<br>');
-    }
-
-    function speak() {
-        const synth = window.speechSynthesis;
-        const btn = document.getElementById('btn-read-action');
-        if (synth.speaking) { synth.cancel(); btn.innerHTML = "🔊 TIẾP TỤC ĐỌC"; return; }
-        let utter = new SpeechSynthesisUtterance(document.getElementById('content').innerText);
-        utter.lang = 'vi-VN';
-        utter.onend = () => { btn.innerHTML = "🔊 ĐỌC BÀI BẰNG GIỌNG AI"; };
-        synth.speak(utter);
-        btn.innerHTML = "⏸ DỪNG ĐỌC";
-        toggleMenu();
-    }
-
-    window.onload = function() {
+    window.onload = () => {
         document.documentElement.setAttribute('data-theme', localStorage.getItem('theme_pref') || 'dark');
         const id = new URLSearchParams(window.location.search).get('id');
         const title = new URLSearchParams(window.location.search).get('title');
-        const rawContent = localStorage.getItem(id);
-        if(rawContent) {
+        const raw = localStorage.getItem(id);
+        if (raw) {
             document.getElementById('title').innerText = title || "TÀI LIỆU RHM";
-            originalParsedHTML = parseSC(rawContent);
-            document.getElementById('content').innerHTML = originalParsedHTML;
+            originalHTML = parseSC(raw);
+            document.getElementById('content').innerHTML = originalHTML;
         }
     };
 </script>
