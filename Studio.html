@@ -22,7 +22,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Biên Tập RHM Pro - PDF Smart Clean</title>
+    <title>Studio Biên Tập RHM Pro - Đăng Đề 1 Chạm</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -41,9 +41,8 @@
         .btn { background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 8px 13px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
         .btn:hover { border-color: var(--primary); transform: translateY(-1px); }
         .btn-primary { background: var(--primary-grad); color: #000; border: none; }
-        .btn-accent { background: var(--accent-grad); color: #fff; border: none; }
-        .btn-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: var(--success); }
-        .btn-success:hover { background: var(--success); color: #000; }
+        .btn-publish { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 12px 20px; font-size: 13.5px; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
+        .btn-publish:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
         .workspace { display: grid; grid-template-columns: 1fr 1.15fr; gap: 18px; max-width: 1560px; margin: 16px auto; padding: 0 18px; }
         .panel { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 18px; backdrop-filter: blur(20px); display: flex; flex-direction: column; gap: 12px; height: calc(100vh - 82px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
@@ -80,7 +79,6 @@
         .b-warn { background: rgba(245, 158, 11, 0.2); color: #fde68a; }
 
         .q-title-edit { width: 100%; background: rgba(2, 6, 23, 0.6); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; color: var(--text); font-family: inherit; font-weight: 800; font-size: 13.5px; margin-bottom: 8px; outline: none; }
-        .q-title-edit:focus { border-color: var(--primary); }
         .img-preview-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
         .img-thumb { max-height: 90px; border-radius: 8px; border: 1px solid var(--primary); }
 
@@ -89,12 +87,12 @@
         .q-opt input[type="checkbox"] { accent-color: var(--success); width: 16px; height: 16px; cursor: pointer; }
         .q-opt input[type="text"] { flex: 1; background: transparent; border: none; color: inherit; font-family: inherit; font-size: 13px; font-weight: 600; outline: none; }
         .icon-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; }
-        .icon-btn:hover { color: var(--danger); background: rgba(255,255,255,0.08); }
+        .icon-btn:hover { color: var(--danger); }
 
-        .export-bar { display: grid; grid-template-columns: 1fr 1.2fr auto auto; gap: 8px; }
-        #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; border: 2px solid var(--primary); padding: 10px 22px; border-radius: 50px; font-weight: 800; font-size: 12.5px; z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; }
+        .publish-bar { display: flex; gap: 10px; align-items: center; padding-top: 4px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+        #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; border: 2px solid var(--primary); padding: 11px 24px; border-radius: 50px; font-weight: 800; font-size: 13px; z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        @media (max-width: 1080px) { .workspace { grid-template-columns: 1fr; } .panel { height: 680px; } .meta-grid, .export-bar { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 1080px) { .workspace { grid-template-columns: 1fr; } .panel { height: 680px; } .meta-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
@@ -102,19 +100,16 @@
 <div id="toast">✅ Đã thực hiện!</div>
 
 <header class="header">
-    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>PDF SMART-CLEAN</span></div>
+    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>1-CLICK PUBLISH</span></div>
     <div class="header-actions">
-        <select id="history-select" class="input-box" style="width:auto; padding:7px 10px;" onchange="restoreHistory(this.value)">
-            <option value="">🕒 Lịch sử chỉnh sửa (0)</option>
+        <!-- DANH SÁCH ĐỀ ĐÃ ĐĂNG TRONG APP ĐỂ CHỌN SỬA / XÓA NHANH -->
+        <select id="saved-decks-select" class="input-box" style="width:auto; min-width:210px; border-color:var(--primary);" onchange="loadSavedDeckFromApp(this.value)">
+            <option value="">📂 Đề đã đăng trên App (0)</option>
         </select>
-        <button class="btn" onclick="saveSnapshot('Lưu thủ công')">💾 Lưu Nháp</button>
-        <button class="btn" onclick="syncPreviewToRaw()" title="Biến ô văn bản bên trái thành định dạng chuẩn * và •">✨ Làm Sạch Ô Text</button>
-        <button class="btn btn-accent" onclick="exportJSON()">📥 Xuất JSON</button>
-        <label class="btn" style="cursor:pointer;">
-            📤 Nhập JSON <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)">
-        </label>
-        <button class="btn" onclick="loadSample()">📄 Đề PDF Mẫu</button>
-        <a href="index.html" class="btn btn-primary">⬅ Sảnh Chính</a>
+        <button class="btn" style="color:var(--danger);" onclick="deleteCurrentDeckFromApp()" title="Xóa bộ đề đang chọn khỏi Sảnh">🗑️ Xóa Đề Này</button>
+        <button class="btn" onclick="createNewBlankDeck()">➕ Tạo Đề Mới</button>
+        <button class="btn" onclick="setupCloudToken()" title="Cài đặt đồng bộ đám mây cho mọi máy khác cùng thấy">☁️ Đồng bộ Cloud</button>
+        <a href="index.html" class="btn btn-primary">⬅ Ra Sảnh Xem Đề</a>
     </div>
 </header>
 
@@ -127,8 +122,8 @@
         </div>
 
         <div class="meta-grid">
-            <input type="text" id="meta-id" class="input-box" placeholder="ID (de_noi_nha_01)" value="de_noi_nha_01">
-            <input type="text" id="meta-title" class="input-box" placeholder="Tên bộ đề" value="Trắc Nghiệm Nội Nha Lâm Sàng">
+            <input type="text" id="meta-id" class="input-box" placeholder="Mã đề (de_so_1)" value="de_rhm_moi_01">
+            <input type="text" id="meta-title" class="input-box" placeholder="Tên bộ đề hiển thị ngoài Sảnh" value="Đề Lâm Sàng Nội Nha #1">
             <select id="meta-spec" class="input-box">
                 <option value="Nội nha">🦷 Nội nha</option>
                 <option value="Nha chu">🩸 Nha chu</option>
@@ -139,7 +134,7 @@
                 <option value="Bệnh học miệng">🔬 Bệnh học miệng</option>
                 <option value="Chẩn đoán hình ảnh">🩻 Chẩn đoán hình ảnh</option>
             </select>
-            <input type="text" id="meta-desc" class="input-box" placeholder="Mô tả ngắn" value="Đề chuẩn hóa CCHN 2027">
+            <input type="text" id="meta-desc" class="input-box" placeholder="Mô tả ngắn" value="Đề ôn tập CCHN 2027">
         </div>
 
         <div class="toolbar">
@@ -148,25 +143,24 @@
             <label class="chk-label"><input type="checkbox" id="chk-color" checked> Đỏ/Highlight</label>
             <label class="chk-label"><input type="checkbox" id="chk-bold"> In đậm</label>
             <div style="flex:1;"></div>
-            <button class="sc-btn" onclick="insertTag('[B]', '[/B]')"><b>B</b></button>
-            <button class="sc-btn" onclick="insertTag('[RED]', '[/RED]')" style="color:#ef4444;">ĐỎ</button>
-            <button class="sc-btn" onclick="insertTag('[BLUE]', '[/BLUE]')" style="color:#3b82f6;">XANH</button>
-            <button class="sc-btn" onclick="promptImageInsert(-1)">🩻 Chèn X-Quang/Ảnh</button>
-            <button class="sc-btn" onclick="addNewBlankQuestion()">➕ Thêm Câu</button>
+            <button class="sc-btn" onclick="syncPreviewToRaw()">✨ Làm Sạch Text</button>
+            <button class="sc-btn" onclick="promptImageInsert(-1)">🩻 +Ảnh X-Quang</button>
+            <button class="sc-btn" onclick="addNewBlankQuestion()">➕ +1 Câu Lẻ</button>
         </div>
 
-        <textarea id="raw-input" class="raw-area" oninput="parseRawToQuestions()" placeholder="Cứ Copy (Ctrl+C) thẳng từ file PDF bị gãy dòng, dính ngang A B C D hoặc có dấu - A., * B. rồi Dán (Ctrl+V) vào đây! Hệ thống sẽ tự động nối dòng và tách chuẩn 100%."></textarea>
+        <textarea id="raw-input" class="raw-area" oninput="parseRawToQuestions()" placeholder="Bước 1: Copy (Ctrl+C) câu hỏi từ PDF hoặc Word dán (Ctrl+V) vào đây.
+Bước 2: Nhìn sang bên phải kiểm tra, sau đó bấm nút màu xanh lá [🚀 ĐĂNG THẲNG LÊN SẢNH] ở góc dưới bên phải là xong!"></textarea>
 
         <div style="display:flex; gap:8px; align-items:center;">
             <span style="font-size:11.5px; font-weight:800; color:var(--warning); white-space:nowrap;">🔑 Đáp án rời:</span>
-            <input type="text" id="ans-key-input" class="input-box" oninput="parseRawToQuestions()" placeholder="Nếu PDF không có dấu * hoặc -, gõ đáp án vào đây (VD: 1D 2A 3A 4B)...">
+            <input type="text" id="ans-key-input" class="input-box" oninput="parseRawToQuestions()" placeholder="Nếu đề chưa có dấu * hoặc -, gõ đáp án vào đây (VD: 1D 2A 3BC 4B)...">
         </div>
     </div>
 
-    <!-- CỘT PHẢI: PREVIEW CHỈNH SỬA TRỰC TIẾP & COPY SANG SHEETS -->
+    <!-- CỘT PHẢI: PREVIEW & NÚT ĐĂNG THẲNG LÊN SẢNH 1 CHẠM -->
     <div class="panel">
         <div class="panel-title">
-            <span>👁️ 2. KẾT QUẢ ĐÃ LÀM SẠCH (CLICK ĐỂ SỬA TRỰC TIẾP)</span>
+            <span>👁️ 2. KIỂM TRA & BẤM ĐĂNG LÊN SẢNH</span>
             <div class="filter-bar">
                 <span class="f-pill active" onclick="setFilter('all', this)" id="pill-all">Tất cả (0)</span>
                 <span class="f-pill" onclick="setFilter('err', this)" id="pill-err" style="color:#fca5a5;">⚠️ Thiếu Đ.Án (0)</span>
@@ -177,11 +171,17 @@
 
         <div id="view-preview" class="preview-area"></div>
 
-        <div class="export-bar">
-            <button class="btn btn-success" onclick="copyColD()">📋 Copy Cột D</button>
-            <button class="btn btn-primary" onclick="copyFullRowTSV()">🚀 Copy Hàng 4 Cột (Dán A2 Sheets)</button>
-            <button class="btn btn-accent" onclick="testLive('Play')">⚡ Thi Thử Arena</button>
-            <button class="btn" onclick="testLive('Flashcard')" style="border-color:var(--warning); color:var(--warning);">🃏 Lật Thẻ 3D</button>
+        <!-- THANH ĐĂNG ĐỀ 1 CHẠM NGAY TRÊN APP -->
+        <div class="publish-bar">
+            <button class="btn btn-publish" style="flex:1.5; justify-content:center;" onclick="publishDirectlyToApp()">
+                🚀 ĐĂNG THẲNG LÊN SẢNH APP (1 CHẠM)
+            </button>
+            <button class="btn" onclick="testLive('Play')" style="border-color:var(--primary); color:var(--primary); padding:12px 15px;">
+                ⚡ Thi Thử Luôn
+            </button>
+            <button class="btn" onclick="copyFullRowTSV()" title="Dự phòng: Copy sang Google Sheets (tự cắt nhỏ < 44.000 ký tự)">
+                📋 Copy Sheets
+            </button>
         </div>
     </div>
 </div>
@@ -189,12 +189,11 @@
 <script>
     let questions = [];
     let currentFilter = 'all';
-    let historyLog = JSON.parse(localStorage.getItem('rhm_studio_history') || '[]');
 
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.innerText = msg; t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2600);
+        setTimeout(() => t.classList.remove('show'), 2800);
     }
 
     function normalizeForDup(str) {
@@ -204,25 +203,20 @@
                   .toLowerCase().replace(/[^a-z0-9]/g, '');
     }
 
-    function insertTag(open, close) {
-        const ta = document.getElementById('raw-input');
-        const s = ta.selectionStart, e = ta.selectionEnd, txt = ta.value;
-        ta.value = txt.substring(0, s) + open + txt.substring(s, e) + close + txt.substring(e);
-        ta.focus(); parseRawToQuestions();
-    }
-
     function promptImageInsert(qIdx) {
         const url = prompt("🩻 Nhập đường dẫn (URL) hình ảnh X-quang, Giải phẫu hoặc Lâm sàng:");
         if (!url || !url.trim()) return;
         const tag = `[IMG]${url.trim()}[/IMG]`;
         if (qIdx === -1) {
-            insertTag(tag, '');
+            const ta = document.getElementById('raw-input');
+            ta.value += "\n" + tag;
+            parseRawToQuestions();
         } else {
             questions[qIdx].title += " " + tag;
             syncPreviewToRaw(false);
             renderPreview();
         }
-        showToast("🩻 Đã chèn hình ảnh lâm sàng!");
+        showToast("🩻 Đã chèn hình ảnh!");
     }
 
     // Bắt định dạng Gạch chân, Chữ đỏ, Highlight từ Word
@@ -253,7 +247,6 @@
         const s = this.selectionStart, end = this.selectionEnd;
         this.value = this.value.substring(0, s) + clean.trim() + this.value.substring(end);
         parseRawToQuestions();
-        saveSnapshot('Dán đề mới');
     });
 
     function parseAnswerKey() {
@@ -267,13 +260,11 @@
         return map;
     }
 
-    // THUẬT TOÁN PDF SMART-CLEAN: TỰ NỐI DÒNG GÃY & BẮT DẤU * / -
+    // THUẬT TOÁN PDF SMART-CLEAN: NỐI DÒNG GÃY & BẮT DẤU * / -
     function parseRawToQuestions() {
         let raw = document.getElementById('raw-input').value;
         const keyMap = parseAnswerKey();
 
-        // 1. Tách các đáp án nằm ngang trên cùng 1 dòng (bao gồm cả "A. ... * D. ..." hoặc "- A. ... B. ...")
-        // Tránh tách nhầm cụm "Cả A và B" vì cụm đó không có dấu chấm/ngoặc đơn sau chữ A, B
         const inlineOptRegex = /([^\n])\s+((?:[\*\-•]\s*)?[A-E][\.\)]\s+)/g;
         raw = raw.replace(inlineOptRegex, '$1\n$2');
         raw = raw.replace(inlineOptRegex, '$1\n$2');
@@ -286,7 +277,6 @@
             line = line.trim();
             if (!line) return;
 
-            // 2. Nhận diện dòng bắt đầu Câu hỏi mới ("Câu 1:", "Bài 1.", "1:")
             const qMatch = line.match(/^(?:Câu|Bài|Question)\s*(\d+)\s*[:.)\-]?\s*(.*)$/i) ||
                            ((!curr || curr.opts.length >= 2) && line.match(/^(\d+)\s*[:.)]\s+(.+)$/));
 
@@ -304,7 +294,6 @@
                 return;
             }
 
-            // 3. Nhận diện từ khóa Giải thích tường minh
             const expMatch = line.match(/^(?:💡\s*)?(?:Giải thích|Lời giải|Hướng dẫn|HD|=>)\s*[:\-]?\s*(.+)$/i);
             if (expMatch) {
                 curr.inExp = true;
@@ -312,8 +301,6 @@
                 return;
             }
 
-            // 4. Nhận diện dòng Đáp án:
-            // Hỗ trợ: "* D. ...", "- A. ...", "• B. ...", "A. ...", "* Nội dung", "• Nội dung"
             const letterOpt = line.match(/^(\*|\-|•|\[x\])?\s*([A-E])[\.\)]\s*(.+)$/i);
             const symbolOpt = line.match(/^(\*|•)\s+(.+)$/);
 
@@ -321,7 +308,6 @@
                 curr.inExp = false;
                 const prefix = (letterOpt[1] || '').trim();
                 let txt = letterOpt[3].trim();
-                // Dấu * hoặc dấu - hoặc [x] đứng trước A. B. C. D. đều được tính là đáp án đúng
                 let isC = (prefix === '*' || prefix === '-' || prefix.toLowerCase() === '[x]' || txt.startsWith('*'));
                 txt = txt.replace(/^\*+|\*+$/g, '').trim();
                 curr.opts.push({ text: txt, isC: isC });
@@ -334,29 +320,23 @@
                 return;
             }
 
-            // 5. XỬ LÝ DÒNG PDF BỊ RỚT (NỐI DÒNG THÔNG MINH):
-            // Nếu chưa có đáp án nào -> nối tiếp vào câu hỏi (VD: "kính hiển vi" + "nha khoa là")
             if (curr.opts.length === 0) {
                 curr.title += " " + line;
             } else if (curr.inExp) {
-                // Nếu đang trong khối Giải thích -> nối vào giải thích
                 curr.explanation += " " + line;
             } else {
-                // Nếu đang ở danh sách đáp án mà bị rớt dòng (VD: "không để lại khoảng" + "trống") -> nối thẳng vào đáp án vừa tạo!
                 curr.opts[curr.opts.length - 1].text += " " + line;
             }
         });
 
         if (curr) questions.push(curr);
 
-        // Áp dụng bảng đáp án rời nếu người dùng nhập
         questions.forEach((q, idx) => {
             const k = keyMap[idx + 1];
             if (k && k.length) q.opts.forEach((o, oIdx) => { o.isC = k.includes(oIdx); });
         });
 
         renderPreview();
-        autoSaveDraft();
     }
 
     function renderPreview() {
@@ -405,9 +385,9 @@
             q.opts.forEach((o, oIdx) => {
                 optsHTML += `
                     <div class="q-opt ${o.isC ? 'is-correct' : ''}">
-                        <input type="checkbox" ${o.isC ? 'checked' : ''} onchange="toggleOpt(${qIdx}, ${oIdx}, this.checked)" title="Tích chọn đáp án đúng">
+                        <input type="checkbox" ${o.isC ? 'checked' : ''} onchange="toggleOpt(${qIdx}, ${oIdx}, this.checked)">
                         <input type="text" value="${o.text.replace(/"/g, '&quot;')}" oninput="editOpt(${qIdx}, ${oIdx}, this.value)">
-                        <button class="icon-btn" onclick="removeOpt(${qIdx}, ${oIdx})" title="Xóa phương án">&times;</button>
+                        <button class="icon-btn" onclick="removeOpt(${qIdx}, ${oIdx})">&times;</button>
                     </div>
                 `;
             });
@@ -416,10 +396,9 @@
                 <div class="q-head">
                     <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                         <span style="color:var(--primary);">CÂU #${qIdx + 1}</span>
-                        ${cCount > 1 ? `<span class="badge b-multi">🔀 NHIỀU ĐÁP ÁN (${cCount})</span>` : ''}
+                        ${cCount > 1 ? `<span class="badge b-multi">🔀 ĐA ĐÁP ÁN (${cCount})</span>` : ''}
                         ${q.dupOf ? `<span class="badge b-dup">👯 Trùng Câu #${q.dupOf}</span>` : ''}
-                        ${q.hasErr ? `<span class="badge b-err">⚠️ Chưa chọn đáp án đúng</span>` : ''}
-                        ${q.missingExp ? `<span class="badge b-warn">💡 Chưa có giải thích</span>` : ''}
+                        ${q.hasErr ? `<span class="badge b-err">⚠️ Chưa chọn đáp án</span>` : ''}
                     </div>
                     <div style="display:flex; gap:4px;">
                         <button class="sc-btn" onclick="promptImageInsert(${qIdx})">🩻 +Ảnh</button>
@@ -430,7 +409,7 @@
                 <input type="text" class="q-title-edit" value="${q.title.replace(/"/g, '&quot;')}" oninput="editTitle(${qIdx}, this.value)">
                 ${imgHTML}
                 <div>${optsHTML}</div>
-                <input type="text" class="input-box" style="margin-top:6px;" value="${q.explanation.replace(/"/g, '&quot;')}" placeholder="💡 Nhập giải thích lâm sàng (không bắt buộc)..." oninput="editExp(${qIdx}, this.value)">
+                <input type="text" class="input-box" style="margin-top:6px;" value="${q.explanation.replace(/"/g, '&quot;')}" placeholder="💡 Nhập giải thích lâm sàng (nếu có)..." oninput="editExp(${qIdx}, this.value)">
             `;
             cont.appendChild(card);
         });
@@ -443,17 +422,17 @@
         renderPreview();
     }
 
-    function toggleOpt(qIdx, oIdx, checked) { questions[qIdx].opts[oIdx].isC = checked; renderPreview(); autoSaveDraft(); }
-    function editOpt(qIdx, oIdx, val) { questions[qIdx].opts[oIdx].text = val; autoSaveDraft(); }
-    function editTitle(qIdx, val) { questions[qIdx].title = val; autoSaveDraft(); }
-    function editExp(qIdx, val) { questions[qIdx].explanation = val; autoSaveDraft(); }
+    function toggleOpt(qIdx, oIdx, checked) { questions[qIdx].opts[oIdx].isC = checked; renderPreview(); }
+    function editOpt(qIdx, oIdx, val) { questions[qIdx].opts[oIdx].text = val; }
+    function editTitle(qIdx, val) { questions[qIdx].title = val; }
+    function editExp(qIdx, val) { questions[qIdx].explanation = val; }
     function addOpt(qIdx) { questions[qIdx].opts.push({ text: "Phương án mới", isC: false }); renderPreview(); }
     function removeOpt(qIdx, oIdx) { questions[qIdx].opts.splice(oIdx, 1); renderPreview(); }
     function deleteQuestion(qIdx) { questions.splice(qIdx, 1); syncPreviewToRaw(false); renderPreview(); }
     function addNewBlankQuestion() {
         const n = questions.length + 1;
         questions.push({
-            title: `Câu ${n}: Nhập nội dung câu hỏi lâm sàng mới...`,
+            title: `Câu ${n}: Nhập nội dung câu hỏi mới...`,
             opts: [{ text: "Phương án A", isC: true }, { text: "Phương án B", isC: false }, { text: "Phương án C", isC: false }, { text: "Phương án D", isC: false }],
             explanation: ""
         });
@@ -471,124 +450,194 @@
 
     function syncPreviewToRaw(notify = true) {
         document.getElementById('raw-input').value = buildStandardString();
-        if (notify) showToast("✨ Đã biến ô văn bản bên trái thành chuẩn * và •!");
+        if (notify) showToast("✨ Đã làm sạch ô văn bản bên trái!");
     }
 
-    function copyColD() {
+    // =========================================================================
+    // TÍNH NĂNG MỚI: ĐĂNG THẲNG LÊN SẢNH APP (1 CHẠM) & ĐỒNG BỘ CLOUD GITHUB
+    // =========================================================================
+    function getAppCatalog() {
+        return JSON.parse(localStorage.getItem('rhm_custom_decks') || '[]');
+    }
+
+    function renderSavedDecksDropdown() {
+        const catalog = getAppCatalog();
+        const sel = document.getElementById('saved-decks-select');
+        sel.innerHTML = `<option value="">📂 Đề đã đăng trên App (${catalog.length})</option>` +
+            catalog.map(d => `<option value="${d.id}">📘 [${d.spec}] ${d.title} (${d.count} câu)</option>`).join('');
+    }
+
+    async function publishDirectlyToApp() {
         const code = buildStandardString();
-        if (!code) return showToast("⚠️ Chưa có câu hỏi!");
-        navigator.clipboard.writeText(code);
-        showToast("📋 Đã copy Cột D! Nháy đúp vào ô D2 trên Sheets rồi Ctrl+V.");
+        if (!code || !questions.length) return showToast("⚠️ Chưa có câu hỏi nào để đăng!");
+
+        const id = document.getElementById('meta-id').value.trim().replace(/\s+/g, '_') || ('de_rhm_' + Date.now());
+        const title = document.getElementById('meta-title').value.trim() || 'Đề Lâm Sàng RHM';
+        const spec = document.getElementById('meta-spec').value;
+        const desc = document.getElementById('meta-desc').value.trim() || `${questions.length} câu hỏi chuẩn hóa`;
+
+        // 1. Lưu nội dung câu hỏi trực tiếp vào bộ nhớ App
+        localStorage.setItem(id, code);
+
+        // 2. Cập nhật Danh mục Sảnh Chính (rhm_custom_decks)
+        let catalog = getAppCatalog();
+        const existingIdx = catalog.findIndex(item => item.id === id);
+        const deckMeta = {
+            id: id,
+            title: title,
+            spec: spec,
+            desc: `[${spec}] ${desc} (${questions.length} câu)`,
+            count: questions.length,
+            updatedAt: Date.now()
+        };
+
+        if (existingIdx > -1) {
+            catalog[existingIdx] = deckMeta;
+        } else {
+            catalog.unshift(deckMeta);
+        }
+        localStorage.setItem('rhm_custom_decks', JSON.stringify(catalog));
+        renderSavedDecksDropdown();
+        document.getElementById('saved-decks-select').value = id;
+
+        // 3. Nếu người dùng đã cài đặt khóa Cloud GitHub -> tự động bắn file .json lên GitHub luôn!
+        const ghToken = localStorage.getItem('rhm_gh_token');
+        if (ghToken) {
+            showToast("☁️ Đã lưu vào App & đang đồng bộ lên đám mây GitHub...");
+            const ok = await pushJsonToGitHub(id, title, spec, desc, ghToken);
+            if (ok) {
+                showToast("🎉 ĐÃ ĐĂNG LÊN SẢNH & ĐỒNG BỘ CLOUD CHO MỌI MÁY THÀNH CÔNG!");
+                return;
+            }
+        }
+
+        showToast("🎉 ĐÃ ĐĂNG THẲNG LÊN SẢNH CHÍNH! Bấm [⬅ Ra Sảnh Xem Đề] để làm ngay!");
     }
 
+    function loadSavedDeckFromApp(id) {
+        if (!id) return;
+        const catalog = getAppCatalog();
+        const meta = catalog.find(d => d.id === id);
+        const raw = localStorage.getItem(id);
+        if (!raw) return showToast("⚠️ Không tìm thấy nội dung đề này!");
+
+        document.getElementById('meta-id').value = id;
+        if (meta) {
+            document.getElementById('meta-title').value = meta.title || '';
+            if (meta.spec) document.getElementById('meta-spec').value = meta.spec;
+            document.getElementById('meta-desc').value = (meta.desc || '').replace(/^\[.*?\]\s*/, '');
+        }
+        document.getElementById('raw-input').value = raw;
+        parseRawToQuestions();
+        showToast(`📂 Đã mở bộ đề "${meta ? meta.title : id}" để chỉnh sửa!`);
+    }
+
+    function deleteCurrentDeckFromApp() {
+        const id = document.getElementById('meta-id').value.trim();
+        let catalog = getAppCatalog();
+        if (!catalog.some(d => d.id === id)) {
+            return showToast("⚠️ Bộ đề này chưa được đăng trong danh sách App!");
+        }
+        if (!confirm(`Bạn có chắc muốn xóa bộ đề "${id}" khỏi Sảnh chính không?`)) return;
+        catalog = catalog.filter(d => d.id !== id);
+        localStorage.setItem('rhm_custom_decks', JSON.stringify(catalog));
+        localStorage.removeItem(id);
+        renderSavedDecksDropdown();
+        showToast("🗑️ Đã xóa bộ đề khỏi Sảnh chính!");
+    }
+
+    function createNewBlankDeck() {
+        const nextNum = getAppCatalog().length + 1;
+        document.getElementById('meta-id').value = `de_rhm_0${nextNum}`;
+        document.getElementById('meta-title').value = `Đề Trắc Nghiệm RHM Số ${nextNum}`;
+        document.getElementById('raw-input').value = '';
+        document.getElementById('ans-key-input').value = '';
+        document.getElementById('saved-decks-select').value = '';
+        parseRawToQuestions();
+        showToast("➕ Đã tạo phôi đề mới! Hãy dán câu hỏi vào ô bên trái.");
+    }
+
+    // Tùy chọn: Đồng bộ đám mây GitHub 1 chạm (Nếu muốn đẩy cho mọi máy khác cùng học)
+    function setupCloudToken() {
+        const current = localStorage.getItem('rhm_gh_token') || '';
+        const token = prompt("☁️ ĐỒNG BỘ ĐÁM MÂY TỰ ĐỘNG (TÙY CHỌN):\n- Nếu chỉ học trên máy này: Bấm Hủy (Không cần cài, bấm nút Đăng Lên Sảnh là dùng được luôn).\n- Nếu muốn mỗi lần bấm Đăng Đề, toàn bộ điện thoại/máy tính khác cũng thấy đề mới ngay lập tức: Dán mã GitHub Personal Access Token (repo) của bạn vào đây:", current);
+        if (token !== null) {
+            if (token.trim()) {
+                localStorage.setItem('rhm_gh_token', token.trim());
+                showToast("☁️ Đã lưu khóa Cloud! Từ giờ bấm Đăng Đề sẽ tự động đẩy lên GitHub!");
+            } else {
+                localStorage.removeItem('rhm_gh_token');
+                showToast("📴 Đã tắt đồng bộ Cloud (Chỉ lưu trực tiếp trên máy).");
+            }
+        }
+    }
+
+    async function pushJsonToGitHub(id, title, spec, desc, token) {
+        try {
+            const repo = "phucdo4092004-lang/rhm-2027-vip";
+            const path = `${id}.json`;
+            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
+            const payloadObj = { id, title, specialty: spec, description: desc, updatedAt: new Date().toISOString(), questions };
+            const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(payloadObj, null, 2))));
+
+            let sha = null;
+            const checkRes = await fetch(apiUrl, { headers: { "Authorization": `Bearer ${token}` } });
+            if (checkRes.ok) {
+                const existingFile = await checkRes.json();
+                sha = existingFile.sha;
+            }
+
+            const body = { message: `Đăng bộ đề ${title} từ Studio`, content: contentBase64 };
+            if (sha) body.sha = sha;
+
+            const putRes = await fetch(apiUrl, {
+                method: "PUT",
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            return putRes.ok;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // Dự phòng: Copy sang Google Sheets tự động cắt dòng < 44.000 ký tự
     function copyFullRowTSV() {
-        const code = buildStandardString();
-        if (!code) return showToast("⚠️ Chưa có câu hỏi!");
+        if (!questions.length) return showToast("⚠️ Chưa có câu hỏi!");
         const id = document.getElementById('meta-id').value.trim() || 'de_rhm_01';
         const title = document.getElementById('meta-title').value.trim() || 'Đề RHM';
         const spec = document.getElementById('meta-spec').value;
         const desc = `[${spec}] ` + (document.getElementById('meta-desc').value.trim() || `${questions.length} câu hỏi`);
-        const escaped = '"' + code.replace(/"/g, '""') + '"';
-        navigator.clipboard.writeText(`${id}\t${title}\t${desc}\t${escaped}`);
-        saveSnapshot('Xuất TSV Sheets');
-        showToast("🚀 Đã copy nguyên hàng 4 cột! Chỉ cần bấm 1 lần vào ô A2 trên Sheets rồi Ctrl+V.");
-    }
 
-    function exportJSON() {
-        const payload = {
-            id: document.getElementById('meta-id').value.trim(),
-            title: document.getElementById('meta-title').value.trim(),
-            specialty: document.getElementById('meta-spec').value,
-            description: document.getElementById('meta-desc').value.trim(),
-            exportedAt: new Date().toISOString(),
-            questions: questions
-        };
-        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `${payload.id || 'rhm_bank'}.json`;
-        a.click();
-        showToast("📥 Đã xuất ngân hàng câu hỏi ra file JSON!");
-    }
+        const MAX_CELL_CHARS = 44000;
+        let chunks = [], currentChunk = [], currentLen = 0;
 
-    function importJSON(e) {
-        const file = e.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-            try {
-                const data = JSON.parse(evt.target.result);
-                document.getElementById('meta-id').value = data.id || 'de_json';
-                document.getElementById('meta-title').value = data.title || 'Đề Nhập JSON';
-                if (data.specialty) document.getElementById('meta-spec').value = data.specialty;
-                document.getElementById('meta-desc').value = data.description || '';
-                questions = data.questions || [];
-                syncPreviewToRaw(false);
-                renderPreview();
-                saveSnapshot('Nhập file JSON');
-                showToast("📤 Đã nạp ngân hàng câu hỏi JSON thành công!");
-            } catch (err) { alert("❌ File JSON không đúng định dạng!"); }
-        };
-        reader.readAsText(file);
-    }
-
-    function autoSaveDraft() {
-        localStorage.setItem('rhm_studio_autosave', JSON.stringify({
-            id: document.getElementById('meta-id').value,
-            title: document.getElementById('meta-title').value,
-            spec: document.getElementById('meta-spec').value,
-            desc: document.getElementById('meta-desc').value,
-            raw: buildStandardString()
-        }));
-    }
-
-    function saveSnapshot(label = 'Bản lưu') {
-        const raw = buildStandardString();
-        if (!raw) return;
-        const time = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        historyLog.unshift({
-            label: `${time} - ${label} (${questions.length} câu)`,
-            id: document.getElementById('meta-id').value,
-            title: document.getElementById('meta-title').value,
-            spec: document.getElementById('meta-spec').value,
-            desc: document.getElementById('meta-desc').value,
-            raw: raw
+        questions.forEach((q, idx) => {
+            let cleanTitle = q.title.replace(/^Câu\s*\d+\s*[:.)\-]?\s*/i, '');
+            let qBlock = `Câu ${idx + 1}: ${cleanTitle}\n` +
+                         q.opts.map(o => `${o.isC ? '*' : '•'} ${o.text}`).join('\n') +
+                         (q.explanation ? '\n' + q.explanation : '');
+            if (currentLen + qBlock.length > MAX_CELL_CHARS && currentChunk.length > 0) {
+                chunks.push(currentChunk.join('\n\n'));
+                currentChunk = [qBlock]; currentLen = qBlock.length;
+            } else {
+                currentChunk.push(qBlock); currentLen += qBlock.length + 2;
+            }
         });
-        historyLog = historyLog.slice(0, 10);
-        localStorage.setItem('rhm_studio_history', JSON.stringify(historyLog));
-        renderHistorySelect();
-        showToast("💾 Đã lưu vào lịch sử chỉnh sửa!");
-    }
+        if (currentChunk.length > 0) chunks.push(currentChunk.join('\n\n'));
 
-    function renderHistorySelect() {
-        const sel = document.getElementById('history-select');
-        sel.innerHTML = `<option value="">🕒 Lịch sử chỉnh sửa (${historyLog.length})</option>` +
-            historyLog.map((h, i) => `<option value="${i}">${h.label}</option>`).join('');
-    }
-
-    function restoreHistory(idx) {
-        if (idx === "") return;
-        const h = historyLog[parseInt(idx, 10)];
-        if (!h) return;
-        document.getElementById('meta-id').value = h.id || '';
-        document.getElementById('meta-title').value = h.title || '';
-        if (h.spec) document.getElementById('meta-spec').value = h.spec;
-        document.getElementById('meta-desc').value = h.desc || '';
-        document.getElementById('raw-input').value = h.raw || '';
-        parseRawToQuestions();
-        document.getElementById('history-select').value = "";
-        showToast("⏪ Đã khôi phục phiên bản từ lịch sử!");
+        const tsvRows = chunks.map(c => `${id}\t${title}\t${desc}\t"${c.replace(/"/g, '""')}"`).join('\n');
+        navigator.clipboard.writeText(tsvRows);
+        showToast("📋 Đã copy (tự động chia nhỏ < 44.000 ký tự)! Dán vào cột A trên Sheets.");
     }
 
     function testLive(page) {
-        const code = buildStandardString();
-        if (!code) return showToast("⚠️ Chưa có câu hỏi!");
-        const id = document.getElementById('meta-id').value.trim() || 'test_studio';
-        const title = document.getElementById('meta-title').value.trim() || 'Đề Test Studio';
-        localStorage.setItem(id, code);
+        publishDirectlyToApp();
+        const id = document.getElementById('meta-id').value.trim() || 'de_rhm_moi_01';
+        const title = document.getElementById('meta-title').value.trim() || 'Đề RHM';
         window.open(`${page}.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}`, '_blank');
     }
 
-    // Nạp sẵn đúng 4 câu PDF của bạn để kiểm tra ngay
     function loadSample() {
         document.getElementById('raw-input').value = `Câu 1: Mức độ phóng đại thông thường của một kính hiển vi
 nha khoa là
@@ -609,12 +658,17 @@ Ca(OH)2 với chất nào sau đây?
 A. Cả A và B đúng * B. Chlorhexidine
 C. Cả A và B sai D. NaOCl`;
         parseRawToQuestions();
-        showToast("📄 Đã tự động nối dòng gãy PDF và nhận diện cả dấu * lẫn dấu -!");
     }
 
     window.onload = () => {
-        renderHistorySelect();
-        loadSample();
+        renderSavedDecksDropdown();
+        const catalog = getAppCatalog();
+        if (catalog.length > 0) {
+            loadSavedDeckFromApp(catalog[0].id);
+            document.getElementById('saved-decks-select').value = catalog[0].id;
+        } else {
+            loadSample();
+        }
     };
 </script>
 </body>
