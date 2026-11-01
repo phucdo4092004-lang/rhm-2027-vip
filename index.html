@@ -93,7 +93,7 @@
         <div class="logo-icon">🦷</div> TRẠM CHỈ HUY RHM
     </div>
     <div style="display:flex; gap:8px;">
-      <button class="btn-top-bar" onclick="openStudioVault()" style="color:var(--primary); border-color:var(--primary);">🛠️ Studio</button>
+      <button class="btn-top-bar" onclick="openStudioVault()" style="background:var(--primary-grad); color:#000; border:none;">➕ Thêm / Soạn Đề</button>
       <button class="btn-top-bar" onclick="toggleMode()">🌓 Sáng/Tối</button>
     </div>
   </header>
@@ -179,17 +179,12 @@
   </div>
 
 <script>
-  // 1. DANH SÁCH FILE JSON TRÊN GITHUB (KHÔNG GIỚI HẠN 50.000 KÝ TỰ)
-  // Khi bạn xuất file .json từ Studio và tải lên GitHub, chỉ cần điền tên file vào mảng này:
-  const GITHUB_JSON_BANKS = [
-      'rhm_bank_cchn_2027.json'
-  ];
-
-  // 2. LINK GOOGLE SHEETS CSV (ĐÃ HỖ TRỢ TỰ ĐỘNG GHÉP NỐI NHIỀU DÒNG CÙNG ID KHI > 50.000 KÝ TỰ)
+  const GITHUB_REPO = "phucdo4092004-lang/rhm-2027-vip";
   const LINK_SHEET_QUIZ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1d3Z-IwrWF2aFT6yTVAFHN8Hfuehx5EsKdZKC-xyp_zPN7LoHzBImwOf7ohc_qL3HXhcFnGRhVoJ/pub?gid=0&single=true&output=csv";
   const LINK_SHEET_READ = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBGimZ9-Wucx42mB2y_AiLB7DAMSKngpXiS2D9iuVckZczZDBbsk7PWwKVR6UKcPLCi1yP3hjaCeJF/pub?gid=0&single=true&output=csv";
 
   let quizCount = 0, doneCount = 0, readCount = 0, totalEXP = 0;
+  let renderedIds = new Set();
   let pomoTime = 25 * 60, pomoTimer = null;
 
   function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
@@ -237,6 +232,9 @@
   }
 
   function renderCardHTML(id, title, rawDesc, page, extraQuery = '') {
+      if (page === 'Play' && renderedIds.has(id)) return '';
+      if (page === 'Play') renderedIds.add(id);
+
       let specMatch = rawDesc.match(/^\[(.*?)\]\s*(.*)$/);
       let specBadge = specMatch ? `<span class="spec-tag">🩺 ${specMatch[1]}</span>` : '';
       let cleanDesc = specMatch ? specMatch[2] : rawDesc;
@@ -277,39 +275,70 @@
       document.getElementById('user-rank').innerText = totalEXP >= 800 ? "👑 Thủ Khoa CCHN" : (totalEXP >= 300 ? "🩺 Bác Sĩ Nội Trú" : "👨‍🎓 Sinh Viên RHM");
   }
 
-  // TẢI ĐỀ TRỰC TIẾP TỪ FILE JSON TRÊN GITHUB
-  async function loadGitHubJSONBanks() {
+  // 1. HIỂN THỊ NGAY CÁC ĐỀ ĐÃ ĐĂNG TRỰC TIẾP TỪ STUDIO.HTML (1-CLICK)
+  function loadDirectAppDecks() {
       const container = document.getElementById('quiz-list');
-      for (const fileName of GITHUB_JSON_BANKS) {
-          try {
-              const res = await fetch('./' + fileName);
-              if (!res.ok) continue;
-              const data = await res.json();
-              const id = data.id || fileName.replace('.json', '');
-              const title = data.title || id;
-              const desc = `[${data.specialty || 'Lâm sàng'}] ${data.description || (data.questions ? data.questions.length + ' câu hỏi' : '')}`;
-              try { localStorage.setItem(id, JSON.stringify(data)); } catch(e) {}
-              container.innerHTML += renderCardHTML(id, title, desc, 'Play', `&json=${encodeURIComponent('./' + fileName)}`);
-              refreshDashboardStats();
-          } catch(e) {}
+      const catalog = JSON.parse(localStorage.getItem('rhm_custom_decks') || '[]');
+      let html = '';
+      catalog.forEach(item => {
+          html += renderCardHTML(item.id, item.title, item.desc || `[${item.spec}] Bộ đề App`, 'Play');
+      });
+      if (html) {
+          container.innerHTML += html;
+          document.getElementById('loader-quiz').style.display = 'none';
+          refreshDashboardStats();
       }
   }
 
-  // TẢI ĐỀ TỪ GOOGLE SHEETS (TỰ ĐỘNG GỘP CÁC DÒNG TRÙNG ID NẾU ĐỀ DÀI > 50.000 KÝ TỰ)
+  // 2. TỰ ĐỘNG QUÉT MỌI FILE .JSON TRÊN KHO GITHUB (KHÔNG BAO GIỜ CẦN SỬA CODE INDEX.HTML)
+  async function autoDiscoverGitHubJsonFiles() {
+      const container = document.getElementById('quiz-list');
+      try {
+          const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/`);
+          if (!res.ok) return;
+          const files = await res.json();
+          const jsonFiles = files.filter(f => f.name.endsWith('.json') && f.name !== 'manifest.json' && f.name !== 'package.json');
+
+          for (const f of jsonFiles) {
+              try {
+                  const dataRes = await fetch('./' + f.name);
+                  if (!dataRes.ok) continue;
+                  const data = await dataRes.json();
+                  const id = data.id || f.name.replace('.json', '');
+                  const title = data.title || id;
+                  const desc = `[${data.specialty || 'Lâm sàng'}] ${data.description || (data.questions ? data.questions.length + ' câu hỏi' : '')}`;
+
+                  // Chuyển sẵn sang chuỗi chuẩn để cả Play.html và Flashcard.html đều đọc được ngay
+                  if (data.questions && Array.isArray(data.questions)) {
+                      const stdText = data.questions.map((q, idx) => {
+                          let cleanT = (q.title || '').replace(/^Câu\s*\d+\s*[:.)\-]?\s*/i, '');
+                          let opts = (q.opts || []).map(o => `${o.isC ? '*' : '•'} ${o.text}`).join('\n');
+                          return `Câu ${idx + 1}: ${cleanT}\n${opts}${q.explanation ? '\n' + q.explanation : ''}`;
+                      }).join('\n\n');
+                      try { localStorage.setItem(id, stdText); } catch(e) {}
+                  }
+
+                  container.innerHTML += renderCardHTML(id, title, desc, 'Play', `&json=${encodeURIComponent('./' + f.name)}`);
+                  document.getElementById('loader-quiz').style.display = 'none';
+                  refreshDashboardStats();
+              } catch(err) {}
+          }
+      } catch(e) {}
+  }
+
+  // 3. TẢI ĐỀ TỪ GOOGLE SHEETS (TỰ ĐỘNG GỘP CÁC DÒNG TRÙNG ID KHI > 50.000 KÝ TỰ)
   async function fetchData(url, containerId, page, loaderId) {
     const container = document.getElementById(containerId), loader = document.getElementById(loaderId);
     try {
       const res = await fetch(url); const data = await res.text();
       const rows = parseCSV(data).slice(1); loader.style.display = 'none';
 
-      // Gom nhóm và nối nội dung các dòng có cùng ID
       const mergedMap = new Map();
       rows.forEach(cols => {
         if (cols.length < 4 || !cols[0].trim()) return;
         const id = cols[0].trim(), title = cols[1].trim(), rawDesc = cols[2].trim(), content = cols[3].trim();
         if (mergedMap.has(id)) {
-            const existing = mergedMap.get(id);
-            existing.content += "\n" + content;
+            mergedMap.get(id).content += "\n" + content;
         } else {
             mergedMap.set(id, { id, title, rawDesc, content });
         }
@@ -323,7 +352,7 @@
 
       container.innerHTML += html;
       refreshDashboardStats();
-    } catch(e) { loader.innerHTML = "❌ Lỗi kết nối mạng!"; }
+    } catch(e) { loader.style.display = 'none'; }
   }
 
   let taps = 0;
@@ -345,7 +374,9 @@
       document.documentElement.setAttribute('data-theme', localStorage.getItem('theme_pref') || 'dark');
       const diff = Math.max(0, Math.ceil((new Date('2027-06-01').getTime() - Date.now()) / 86400000));
       document.getElementById('countdown-days').innerText = `Còn ${diff} ngày`;
-      loadGitHubJSONBanks();
+
+      loadDirectAppDecks();
+      autoDiscoverGitHubJsonFiles();
       fetchData(LINK_SHEET_QUIZ, 'quiz-list', 'Play', 'loader-quiz');
       fetchData(LINK_SHEET_READ, 'read-list', 'Read', 'loader-read');
   };
