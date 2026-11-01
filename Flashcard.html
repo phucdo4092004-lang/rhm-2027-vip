@@ -3,66 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Flashcard 3D Anki - Phúc VIP</title>
+    <title>Flashcard 3D Hologram - RHM VIP</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/svg+xml" href="./icon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         [data-theme="dark"] {
             --primary: #f59e0b; --bg-theme: radial-gradient(circle at center, #291000 0%, #020617 100%);
-            --card-bg: rgba(15, 23, 42, 0.94); --header-bg: rgba(0, 0, 0, 0.65); --text: #ffffff;
+            --card-bg: rgba(15, 23, 42, 0.94); --header-bg: rgba(2, 6, 23, 0.75); --text: #ffffff;
             --hint-bg: rgba(245, 158, 11, 0.14); --border: #f59e0b; --exp-bg: rgba(0, 0, 0, 0.45);
         }
         [data-theme="light"] {
             --primary: #d97706; --bg-theme: radial-gradient(circle at center, #fef3c7 0%, #fde68a 100%);
-            --card-bg: rgba(255, 255, 255, 0.96); --header-bg: rgba(255, 255, 255, 0.85); --text: #0f172a;
-            --hint-bg: rgba(217, 119, 6, 0.12); --border: #d97706; --exp-bg: rgba(254, 243, 199, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.96); --header-bg: rgba(255, 255, 255, 0.88); --text: #0f172a;
+            --hint-bg: rgba(217, 119, 6, 0.12); --border: #d97706; --exp-bg: rgba(254, 243, 199, 0.75);
         }
-
         * { box-sizing: border-box; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-theme); color: var(--text); margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; transition: background 0.4s; }
-
-        .header { position: fixed; top: 0; width: 100%; padding: 12px 20px; background: var(--header-bg); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; z-index: 100; border-bottom: 1px solid rgba(245, 158, 11, 0.25); }
-        .btn-tool { background: rgba(128, 128, 128, 0.12); color: var(--primary); border: 1px solid var(--primary); padding: 8px 14px; border-radius: 50px; font-weight: 800; text-decoration: none; cursor: pointer; font-size: 12.5px; transition: 0.2s; font-family: inherit; }
-        .btn-tool:hover { background: var(--primary); color: #fff; }
-
-        .card-container { perspective: 1200px; width: 88%; max-width: 480px; height: 58vh; position: relative; z-index: 10; }
-        .flashcard { width: 100%; height: 100%; transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; cursor: pointer; position: absolute; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-theme); color: var(--text); margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .header { position: fixed; top: 0; width: 100%; padding: 12px 20px; background: var(--header-bg); backdrop-filter: blur(14px); display: flex; justify-content: space-between; align-items: center; z-index: 100; border-bottom: 1px solid rgba(245, 158, 11, 0.25); }
+        .btn-tool { background: rgba(128,128,128,0.12); color: var(--primary); border: 1px solid var(--primary); padding: 7px 14px; border-radius: 50px; font-weight: 800; text-decoration: none; cursor: pointer; font-size: 12.5px; font-family: inherit; }
+        .card-container { perspective: 1300px; width: 88%; max-width: 500px; height: 60vh; position: relative; z-index: 10; }
+        .flashcard { width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; cursor: pointer; position: absolute; }
         .flashcard.flipped { transform: rotateY(180deg); }
-
-        .card-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px 24px 50px 24px; border-radius: 28px; border: 2px solid var(--border); text-align: center; background: var(--card-bg); box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35); overflow-y: auto; }
+        .card-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px 24px 50px 24px; border-radius: 28px; border: 2px solid var(--border); text-align: center; background: var(--card-bg); box-shadow: 0 25px 55px rgba(0,0,0,0.45); overflow-y: auto; }
         .card-back { transform: rotateY(180deg); border-color: #10b981; }
-
-        .q-text { font-size: 18.5px; font-weight: 800; line-height: 1.55; color: var(--text); width: 100%; }
-        .a-text { font-size: 18.5px; font-weight: 900; color: #10b981; line-height: 1.55; width: 100%; }
+        .q-text { font-size: 18px; font-weight: 800; line-height: 1.55; width: 100%; }
+        .a-text { font-size: 17.5px; font-weight: 900; color: #10b981; line-height: 1.55; width: 100%; }
         .hint { position: absolute; bottom: 14px; font-size: 11px; font-weight: 800; color: var(--primary); background: var(--hint-bg); padding: 5px 14px; border-radius: 20px; }
         .sc-img { max-width: 100%; max-height: 180px; border-radius: 12px; margin: 10px auto; border: 1px solid var(--primary); display: block; }
-
-        /* THANH ĐÁNH GIÁ GHI NHỚ CHỦ ĐỘNG (ANKI BAR) */
-        .anki-controls { display: flex; gap: 12px; margin-top: 18px; z-index: 50; width: 88%; max-width: 480px; }
-        .btn-anki { flex: 1; padding: 12px; border-radius: 16px; border: none; font-weight: 900; font-size: 13px; cursor: pointer; font-family: inherit; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-anki:hover { transform: translateY(-3px); }
-        .btn-again { background: rgba(239, 68, 68, 0.18); color: #ef4444; border: 1.5px solid #ef4444; }
-        .btn-good { background: rgba(16, 185, 129, 0.18); color: #10b981; border: 1.5px solid #10b981; }
-
-        .nav-arrow { position: fixed; top: 46%; background: var(--header-bg); backdrop-filter: blur(10px); border: 2px solid var(--primary); color: var(--primary); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; z-index: 1000; transform: translateY(-50%); user-select: none; }
+        .anki-controls { display: flex; gap: 12px; margin-top: 18px; width: 88%; max-width: 500px; z-index: 20; }
+        .btn-anki { flex: 1; padding: 12px; border-radius: 14px; font-weight: 900; font-size: 13px; cursor: pointer; font-family: inherit; }
+        .nav-arrow { position: fixed; top: 46%; background: var(--header-bg); border: 2px solid var(--primary); color: var(--primary); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; z-index: 100; transform: translateY(-50%); }
         #nav-prev { left: 10px; } #nav-next { right: 10px; }
-
-        .progress-bar-bg { position: fixed; bottom: 0; left: 0; width: 100%; height: 6px; background: rgba(128,128,128,0.2); z-index: 900; }
-        .progress-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
-        #toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%) scale(0.8); background: var(--card-bg); color: var(--text); border: 2px solid var(--primary); padding: 9px 20px; border-radius: 50px; font-weight: 800; font-size: 12.5px; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.25s; }
-        #toast.show { transform: translateX(-50%) scale(1); opacity: 1; }
+        .progress-bar-bg { position: fixed; bottom: 0; left: 0; width: 100%; height: 6px; background: rgba(128,128,128,0.2); }
+        .progress-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s; }
     </style>
 </head>
 <body>
 
-<div id="toast">✅ Thông báo</div>
-
 <div class="header">
     <a href="index.html" class="btn-tool">⬅ SẢNH</a>
-    <span id="card-counter" style="font-weight:900; color:var(--primary); font-size: 14px;">1 / ?</span>
+    <span id="card-counter" style="font-weight:900; color:var(--primary); font-size:14px;">1 / ?</span>
     <div style="display:flex; gap:8px;">
-        <button onclick="speakCard()" class="btn-tool" title="Đọc thẻ">🔊</button>
+        <button onclick="speakCard()" class="btn-tool">🔊</button>
         <button onclick="shuffleCards()" class="btn-tool">🔀 ĐẢO</button>
         <button onclick="toggleMode()" class="btn-tool">🌓</button>
     </div>
@@ -71,71 +54,38 @@
 <div id="nav-prev" class="nav-arrow" onclick="move(-1)">❮</div>
 <div id="nav-next" class="nav-arrow" onclick="move(1)">❯</div>
 
-<div class="card-container" id="touch-area" onclick="flipCard()">
+<div class="card-container" onclick="document.getElementById('flashcard').classList.toggle('flipped')">
     <div class="flashcard" id="flashcard">
-        <div class="card-face card-front">
-            <div class="q-text" id="q-text">Đang tải thẻ...</div>
-            <div class="hint">👆 Chạm hoặc nhấn Space để lật • Vuốt để chuyển thẻ</div>
+        <div class="card-face">
+            <div class="q-text" id="q-text">Đang tải...</div>
+            <div class="hint">👆 Chạm hoặc nhấn Space để lật thẻ 3D</div>
         </div>
         <div class="card-face card-back">
             <div class="a-text" id="a-text">Đáp án</div>
-            <div class="hint" style="color:#10b981;">👆 Đánh giá mức độ thuộc ở thanh bên dưới</div>
+            <div class="hint" style="color:#10b981;">👆 Đánh giá mức độ thuộc bên dưới</div>
         </div>
     </div>
 </div>
 
 <div class="anki-controls">
-    <button class="btn-anki btn-again" onclick="markAgain()">🔴 Chưa thuộc (Lặp lại)</button>
-    <button class="btn-anki btn-good" onclick="move(1)">🟢 Đã thuộc (Tiếp theo)</button>
+    <button class="btn-anki" style="background:rgba(239,68,68,0.18); color:#ef4444; border:1.5px solid #ef4444;" onclick="markAgain()">🔴 Chưa thuộc (Lặp lại)</button>
+    <button class="btn-anki" style="background:rgba(16,185,129,0.18); color:#10b981; border:1.5px solid #10b981;" onclick="move(1)">🟢 Đã thuộc (Tiếp theo)</button>
 </div>
 
 <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
 
 <script>
-    let flashcards = []; let currentIdx = 0; let touchStartX = 0;
-
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg; t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2000);
-    }
-
-    function parseSC(txt) {
-        return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">')
-                  .replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>')
-                  .replace(/\[RED\](.*?)\[\/RED\]/gi, '<span style="color:#ef4444;font-weight:800;">$1</span>')
-                  .replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span style="color:#3b82f6;font-weight:800;">$1</span>')
-                  .replace(/\[BR\]/gi, '<br>');
-    }
-
-    function toggleMode() {
-        const h = document.documentElement;
-        const nextTheme = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        h.setAttribute('data-theme', nextTheme);
-        localStorage.setItem('theme_pref', nextTheme);
-    }
-
-    function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
-
+    let flashcards = [], currentIdx = 0;
+    function parseSC(txt) { return txt.replace(/\[IMG\](.*?)\[\/IMG\]/gi, '<img src="$1" class="sc-img">').replace(/\[B\](.*?)\[\/B\]/gi, '<b>$1</b>').replace(/\[RED\](.*?)\[\/RED\]/gi, '<span style="color:#ef4444;font-weight:800;">$1</span>').replace(/\[BLUE\](.*?)\[\/BLUE\]/gi, '<span style="color:#3b82f6;font-weight:800;">$1</span>').replace(/\[BR\]/gi, '<br>'); }
+    function toggleMode() { const h = document.documentElement; const n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; h.setAttribute('data-theme', n); localStorage.setItem('theme_pref', n); }
     function speakCard() {
         if (!flashcards.length) return;
         window.speechSynthesis.cancel();
-        const isFlipped = document.getElementById('flashcard').classList.contains('flipped');
-        const raw = isFlipped ? flashcards[currentIdx].ans : flashcards[currentIdx].title;
-        const utter = new SpeechSynthesisUtterance(raw.replace(/<[^>]*>?/gm, ' '));
-        utter.lang = 'vi-VN';
-        window.speechSynthesis.speak(utter);
+        const isBack = document.getElementById('flashcard').classList.contains('flipped');
+        const u = new SpeechSynthesisUtterance((isBack ? flashcards[currentIdx].ans : flashcards[currentIdx].title).replace(/<[^>]*>?/gm, ' '));
+        u.lang = 'vi-VN'; window.speechSynthesis.speak(u);
     }
-
-    // Đẩy thẻ chưa thuộc xuống cuối hàng đợi để học lại
-    function markAgain() {
-        if (flashcards.length < 2) return;
-        const currentCard = flashcards.splice(currentIdx, 1)[0];
-        flashcards.push(currentCard);
-        showToast("🔄 Đã đưa thẻ xuống cuối hàng đợi để ôn lại!");
-        showCard(currentIdx);
-    }
-
+    function markAgain() { if (flashcards.length < 2) return; flashcards.push(flashcards.splice(currentIdx, 1)[0]); showCard(currentIdx); }
     function showCard(idx) {
         if (!flashcards.length) return;
         document.getElementById('flashcard').classList.remove('flipped');
@@ -148,31 +98,11 @@
             document.getElementById('nav-next').style.display = idx < flashcards.length - 1 ? 'flex' : 'none';
         }, 120);
     }
-
-    function move(dir) {
-        let next = currentIdx + dir;
-        if (next >= 0 && next < flashcards.length) { currentIdx = next; showCard(currentIdx); }
-        else if (next >= flashcards.length) showToast("🎉 Bạn đã hoàn thành toàn bộ thẻ!");
-    }
-
-    function shuffleCards() {
-        for (let i = flashcards.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
-        }
-        currentIdx = 0; showCard(0); showToast("🔀 Đã trộn ngẫu nhiên bộ thẻ!");
-    }
-
-    // Vuốt cảm ứng trên điện thoại
-    const area = document.getElementById('touch-area');
-    area.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-    area.addEventListener('touchend', e => {
-        let diff = e.changedTouches[0].screenX - touchStartX;
-        if (Math.abs(diff) > 60) { if (diff < 0) move(1); else move(-1); }
-    }, {passive: true});
+    function move(d) { let n = currentIdx + d; if (n >= 0 && n < flashcards.length) { currentIdx = n; showCard(currentIdx); } }
+    function shuffleCards() { flashcards.sort(() => Math.random() - 0.5); currentIdx = 0; showCard(0); }
 
     window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); flipCard(); }
+        if (e.code === 'Space') { e.preventDefault(); document.getElementById('flashcard').classList.toggle('flipped'); }
         else if (e.code === 'ArrowRight') move(1);
         else if (e.code === 'ArrowLeft') move(-1);
     });
@@ -180,36 +110,29 @@
     window.onload = function() {
         document.documentElement.setAttribute('data-theme', localStorage.getItem('theme_pref') || 'dark');
         const id = new URLSearchParams(window.location.search).get('id');
-        const rawData = localStorage.getItem(id);
-        if (!rawData) return;
-
+        const raw = localStorage.getItem(id); if (!raw) return;
         let q = null;
-        rawData.split(/\\n|\n/).forEach(line => {
+        raw.split(/\\n|\n/).forEach(line => {
             line = line.trim(); if (!line) return;
             if (line.match(/^Câu\s*\d+:/i)) {
                 if (q) flashcards.push(q);
-                let cleanedTitle = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
-                q = { title: parseSC(cleanedTitle), opts: [], explanation: "" };
+                q = { title: parseSC(line), opts: [], explanation: "" };
             } else if (q) {
                 if (line.startsWith('*')) q.opts.push({ text: parseSC(line.substring(1).trim()), isC: true });
                 else if (line.startsWith('•')) q.opts.push({ text: parseSC(line.substring(1).trim()), isC: false });
                 else {
-                    let cleanedLine = line.replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').replace(/\(?(Chọn )?\d+ đáp án\)?/gi, '').trim();
-                    if (q.opts.length === 0) q.title += "<br>" + parseSC(cleanedLine);
-                    else q.explanation += (q.explanation ? "<br>" : "") + parseSC(cleanedLine);
+                    if (q.opts.length === 0) q.title += "<br>" + parseSC(line);
+                    else q.explanation += (q.explanation ? "<br>" : "") + parseSC(line);
                 }
             }
         });
         if (q) flashcards.push(q);
-
         flashcards.forEach(fc => {
-            let correctOpts = fc.opts.filter(o => o.isC).map(o => o.text);
-            fc.ans = `✅ ${correctOpts.length ? correctOpts.join('<br><br>') : "Chưa cập nhật đáp án"}`;
-            if (fc.explanation) {
-                fc.ans += `<div style="margin-top:16px; font-size:13.5px; font-weight:500; color:var(--text); background:var(--exp-bg); padding:12px 15px; border-radius:14px; border:1px dashed var(--primary); text-align:left; line-height:1.6;"><b>💡 Giải thích:</b><br>${fc.explanation}</div>`;
-            }
+            let cOpts = fc.opts.filter(o => o.isC).map(o => `✅ ${o.text}`);
+            fc.ans = cOpts.length ? cOpts.join('<br><br>') : "Chưa cập nhật đáp án";
+            if (fc.explanation) fc.ans += `<div style="margin-top:14px; font-size:13.5px; font-weight:500; color:var(--text); background:var(--exp-bg); padding:12px; border-radius:12px; border:1px dashed var(--primary); text-align:left;"><b>💡 Giải thích:</b><br>${fc.explanation}</div>`;
         });
-        if (flashcards.length > 0) showCard(0);
+        if (flashcards.length) showCard(0);
     };
 </script>
 </body>
