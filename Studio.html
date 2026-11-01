@@ -22,7 +22,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Biên Tập RHM Pro - Đỗ Hồng Phúc</title>
+    <title>Studio Biên Tập RHM Pro - PDF Smart Clean</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -102,33 +102,33 @@
 <div id="toast">✅ Đã thực hiện!</div>
 
 <header class="header">
-    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>PRO WORKSPACE</span></div>
+    <div class="logo">🦷 STUDIO BIÊN TẬP RHM <span>PDF SMART-CLEAN</span></div>
     <div class="header-actions">
         <select id="history-select" class="input-box" style="width:auto; padding:7px 10px;" onchange="restoreHistory(this.value)">
             <option value="">🕒 Lịch sử chỉnh sửa (0)</option>
         </select>
         <button class="btn" onclick="saveSnapshot('Lưu thủ công')">💾 Lưu Nháp</button>
-        <button class="btn" onclick="syncPreviewToRaw()" title="Đồng bộ chỉnh sửa từ Preview sang ô văn bản">🔄 Đồng bộ Text</button>
+        <button class="btn" onclick="syncPreviewToRaw()" title="Biến ô văn bản bên trái thành định dạng chuẩn * và •">✨ Làm Sạch Ô Text</button>
         <button class="btn btn-accent" onclick="exportJSON()">📥 Xuất JSON</button>
         <label class="btn" style="cursor:pointer;">
             📤 Nhập JSON <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)">
         </label>
-        <button class="btn" onclick="loadSample()">📄 Đề Mẫu</button>
+        <button class="btn" onclick="loadSample()">📄 Đề PDF Mẫu</button>
         <a href="index.html" class="btn btn-primary">⬅ Sảnh Chính</a>
     </div>
 </header>
 
 <div class="workspace">
-    <!-- CỘT TRÁI: SOẠN THẢO & NHẬP WORD -->
+    <!-- CỘT TRÁI: DÁN THẲNG ĐỀ TỪ PDF / WORD -->
     <div class="panel">
         <div class="panel-title">
-            <span>📥 1. NGUỒN ĐỀ THI (WORD / TEXT / BẢNG ĐÁP ÁN)</span>
-            <span style="font-size:11px; color:var(--muted);">Hỗ trợ câu đơn & nhiều đáp án đúng</span>
+            <span>📥 1. DÁN ĐỀ TỪ FILE PDF / WORD VÀO ĐÂY</span>
+            <span style="font-size:11px; color:var(--success);">Tự nối dòng gãy PDF • Tự bắt dấu * và dấu -</span>
         </div>
 
         <div class="meta-grid">
-            <input type="text" id="meta-id" class="input-box" placeholder="ID (de_nha_chu_01)" value="de_rhm_01">
-            <input type="text" id="meta-title" class="input-box" placeholder="Tên bộ đề" value="Lâm Sàng RHM Tổng Hợp #1">
+            <input type="text" id="meta-id" class="input-box" placeholder="ID (de_noi_nha_01)" value="de_noi_nha_01">
+            <input type="text" id="meta-title" class="input-box" placeholder="Tên bộ đề" value="Trắc Nghiệm Nội Nha Lâm Sàng">
             <select id="meta-spec" class="input-box">
                 <option value="Nội nha">🦷 Nội nha</option>
                 <option value="Nha chu">🩸 Nha chu</option>
@@ -155,20 +155,18 @@
             <button class="sc-btn" onclick="addNewBlankQuestion()">➕ Thêm Câu</button>
         </div>
 
-        <textarea id="raw-input" class="raw-area" oninput="parseRawToQuestions()" placeholder="Copy đề từ Word (Ctrl+C) và Dán (Ctrl+V) vào đây...
-- Đáp án đúng bắt đầu bằng dấu * (Có thể đánh dấu * ở nhiều dòng cho câu hỏi nhiều đáp án).
-- Dán link ảnh X-quang bằng cú pháp [IMG]https://...[/IMG] hoặc bấm nút Chèn X-Quang."></textarea>
+        <textarea id="raw-input" class="raw-area" oninput="parseRawToQuestions()" placeholder="Cứ Copy (Ctrl+C) thẳng từ file PDF bị gãy dòng, dính ngang A B C D hoặc có dấu - A., * B. rồi Dán (Ctrl+V) vào đây! Hệ thống sẽ tự động nối dòng và tách chuẩn 100%."></textarea>
 
         <div style="display:flex; gap:8px; align-items:center;">
             <span style="font-size:11.5px; font-weight:800; color:var(--warning); white-space:nowrap;">🔑 Đáp án rời:</span>
-            <input type="text" id="ans-key-input" class="input-box" oninput="parseRawToQuestions()" placeholder="Hỗ trợ cả đơn và đa đáp án (VD: 1A 2BC 3D 4ACD)...">
+            <input type="text" id="ans-key-input" class="input-box" oninput="parseRawToQuestions()" placeholder="Nếu PDF không có dấu * hoặc -, gõ đáp án vào đây (VD: 1D 2A 3A 4B)...">
         </div>
     </div>
 
-    <!-- CỘT PHẢI: PREVIEW CHỈNH SỬA TRỰC TIẾP & KIỂM LỖI -->
+    <!-- CỘT PHẢI: PREVIEW CHỈNH SỬA TRỰC TIẾP & COPY SANG SHEETS -->
     <div class="panel">
         <div class="panel-title">
-            <span>👁️ 2. TRẠM KIỂM DUYỆT & CHỈNH SỬA TRỰC TIẾP</span>
+            <span>👁️ 2. KẾT QUẢ ĐÃ LÀM SẠCH (CLICK ĐỂ SỬA TRỰC TIẾP)</span>
             <div class="filter-bar">
                 <span class="f-pill active" onclick="setFilter('all', this)" id="pill-all">Tất cả (0)</span>
                 <span class="f-pill" onclick="setFilter('err', this)" id="pill-err" style="color:#fca5a5;">⚠️ Thiếu Đ.Án (0)</span>
@@ -196,7 +194,7 @@
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.innerText = msg; t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2500);
+        setTimeout(() => t.classList.remove('show'), 2600);
     }
 
     function normalizeForDup(str) {
@@ -254,9 +252,8 @@
         let clean = (div.innerText || div.textContent).replace(/(\[\[C\]\])+/g, '*');
         const s = this.selectionStart, end = this.selectionEnd;
         this.value = this.value.substring(0, s) + clean.trim() + this.value.substring(end);
-        showToast("✨ Đã tự động nhận diện đáp án từ Word!");
         parseRawToQuestions();
-        saveSnapshot('Dán từ Word');
+        saveSnapshot('Dán đề mới');
     });
 
     function parseAnswerKey() {
@@ -270,61 +267,89 @@
         return map;
     }
 
+    // THUẬT TOÁN PDF SMART-CLEAN: TỰ NỐI DÒNG GÃY & BẮT DẤU * / -
     function parseRawToQuestions() {
         let raw = document.getElementById('raw-input').value;
         const keyMap = parseAnswerKey();
-        raw = raw.replace(/([^\n])\s+(\*?[A-F][\.\)]\s+)/g, '$1\n$2');
-        raw = raw.replace(/([^\n])\s+(\*?[A-F][\.\)]\s+)/g, '$1\n$2');
+
+        // 1. Tách các đáp án nằm ngang trên cùng 1 dòng (bao gồm cả "A. ... * D. ..." hoặc "- A. ... B. ...")
+        // Tránh tách nhầm cụm "Cả A và B" vì cụm đó không có dấu chấm/ngoặc đơn sau chữ A, B
+        const inlineOptRegex = /([^\n])\s+((?:[\*\-•]\s*)?[A-E][\.\)]\s+)/g;
+        raw = raw.replace(inlineOptRegex, '$1\n$2');
+        raw = raw.replace(inlineOptRegex, '$1\n$2');
 
         const lines = raw.split(/\r?\n/);
         questions = [];
         let curr = null, qNum = 0;
 
         lines.forEach(line => {
-            line = line.trim(); if (!line) return;
-            const qMatch = line.match(/^(?:Câu|Bài|Question)?\s*(\d+)\s*[:.)\-]\s*(.+)$/i);
-            const isNewQ = line.match(/^(?:Câu|Bài|Question)\s*\d+/i) || (qMatch && (!curr || curr.opts.length >= 2));
+            line = line.trim();
+            if (!line) return;
 
-            if (isNewQ && qMatch) {
+            // 2. Nhận diện dòng bắt đầu Câu hỏi mới ("Câu 1:", "Bài 1.", "1:")
+            const qMatch = line.match(/^(?:Câu|Bài|Question)\s*(\d+)\s*[:.)\-]?\s*(.*)$/i) ||
+                           ((!curr || curr.opts.length >= 2) && line.match(/^(\d+)\s*[:.)]\s+(.+)$/));
+
+            if (qMatch) {
                 if (curr) questions.push(curr);
                 qNum++;
-                let cleanT = qMatch[2].replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').trim();
-                curr = { title: `Câu ${qNum}: ${cleanT}`, opts: [], explanation: "" };
-                return;
-            }
-            if (!curr) {
-                qNum++;
-                curr = { title: `Câu ${qNum}: ${line}`, opts: [], explanation: "" };
+                let cleanT = (qMatch[2] || '').replace(/\[?(Chọn )?\d+ đáp án\]?/gi, '').trim();
+                curr = { title: `Câu ${qNum}: ${cleanT}`, opts: [], explanation: "", inExp: false };
                 return;
             }
 
+            if (!curr) {
+                qNum++;
+                curr = { title: `Câu ${qNum}: ${line}`, opts: [], explanation: "", inExp: false };
+                return;
+            }
+
+            // 3. Nhận diện từ khóa Giải thích tường minh
             const expMatch = line.match(/^(?:💡\s*)?(?:Giải thích|Lời giải|Hướng dẫn|HD|=>)\s*[:\-]?\s*(.+)$/i);
             if (expMatch) {
+                curr.inExp = true;
                 curr.explanation += (curr.explanation ? "<br>" : "") + expMatch[1].trim();
                 return;
             }
 
-            const optMatch = line.match(/^(\*|•|\[x\])?\s*([A-F])[\.\)]\s*(.+)$/i) || line.match(/^(\*|•)\s*(.+)$/i);
-            if (optMatch) {
-                let isC = false, txt = "";
-                if (optMatch.length === 4) {
-                    const p = optMatch[1] || "";
-                    txt = optMatch[3].trim();
-                    if (p === '*' || p.toLowerCase() === '[x]' || txt.startsWith('*')) {
-                        isC = true; txt = txt.replace(/^\*+|\*+$/g, '').trim();
-                    }
-                } else {
-                    isC = optMatch[1] === '*';
-                    txt = optMatch[2].trim();
-                }
+            // 4. Nhận diện dòng Đáp án:
+            // Hỗ trợ: "* D. ...", "- A. ...", "• B. ...", "A. ...", "* Nội dung", "• Nội dung"
+            const letterOpt = line.match(/^(\*|\-|•|\[x\])?\s*([A-E])[\.\)]\s*(.+)$/i);
+            const symbolOpt = line.match(/^(\*|•)\s+(.+)$/);
+
+            if (letterOpt) {
+                curr.inExp = false;
+                const prefix = (letterOpt[1] || '').trim();
+                let txt = letterOpt[3].trim();
+                // Dấu * hoặc dấu - hoặc [x] đứng trước A. B. C. D. đều được tính là đáp án đúng
+                let isC = (prefix === '*' || prefix === '-' || prefix.toLowerCase() === '[x]' || txt.startsWith('*'));
+                txt = txt.replace(/^\*+|\*+$/g, '').trim();
                 curr.opts.push({ text: txt, isC: isC });
+                return;
+            }
+
+            if (symbolOpt) {
+                curr.inExp = false;
+                curr.opts.push({ text: symbolOpt[2].trim(), isC: symbolOpt[1] === '*' });
+                return;
+            }
+
+            // 5. XỬ LÝ DÒNG PDF BỊ RỚT (NỐI DÒNG THÔNG MINH):
+            // Nếu chưa có đáp án nào -> nối tiếp vào câu hỏi (VD: "kính hiển vi" + "nha khoa là")
+            if (curr.opts.length === 0) {
+                curr.title += " " + line;
+            } else if (curr.inExp) {
+                // Nếu đang trong khối Giải thích -> nối vào giải thích
+                curr.explanation += " " + line;
             } else {
-                if (curr.opts.length === 0) curr.title += " " + line;
-                else curr.explanation += (curr.explanation ? "<br>" : "") + line;
+                // Nếu đang ở danh sách đáp án mà bị rớt dòng (VD: "không để lại khoảng" + "trống") -> nối thẳng vào đáp án vừa tạo!
+                curr.opts[curr.opts.length - 1].text += " " + line;
             }
         });
+
         if (curr) questions.push(curr);
 
+        // Áp dụng bảng đáp án rời nếu người dùng nhập
         questions.forEach((q, idx) => {
             const k = keyMap[idx + 1];
             if (k && k.length) q.opts.forEach((o, oIdx) => { o.isC = k.includes(oIdx); });
@@ -373,7 +398,6 @@
             const card = document.createElement('div');
             card.className = `q-card ${q.hasErr ? 'err-ans' : ''} ${q.missingExp ? 'warn-exp' : ''} ${q.dupOf ? 'warn-dup' : ''}`;
 
-            // Trích xuất ảnh [IMG] để hiển thị thumbnail
             const imgs = [...q.title.matchAll(/\[IMG\](.*?)\[\/IMG\]/gi)].map(m => m[1]);
             const imgHTML = imgs.length ? `<div class="img-preview-row">${imgs.map(u => `<img src="${u}" class="img-thumb" onerror="this.style.display='none'">`).join('')}</div>` : '';
 
@@ -381,7 +405,7 @@
             q.opts.forEach((o, oIdx) => {
                 optsHTML += `
                     <div class="q-opt ${o.isC ? 'is-correct' : ''}">
-                        <input type="checkbox" ${o.isC ? 'checked' : ''} onchange="toggleOpt(${qIdx}, ${oIdx}, this.checked)" title="Tích chọn đáp án đúng (hỗ trợ nhiều đáp án)">
+                        <input type="checkbox" ${o.isC ? 'checked' : ''} onchange="toggleOpt(${qIdx}, ${oIdx}, this.checked)" title="Tích chọn đáp án đúng">
                         <input type="text" value="${o.text.replace(/"/g, '&quot;')}" oninput="editOpt(${qIdx}, ${oIdx}, this.value)">
                         <button class="icon-btn" onclick="removeOpt(${qIdx}, ${oIdx})" title="Xóa phương án">&times;</button>
                     </div>
@@ -406,7 +430,7 @@
                 <input type="text" class="q-title-edit" value="${q.title.replace(/"/g, '&quot;')}" oninput="editTitle(${qIdx}, this.value)">
                 ${imgHTML}
                 <div>${optsHTML}</div>
-                <input type="text" class="input-box" style="margin-top:6px;" value="${q.explanation.replace(/"/g, '&quot;')}" placeholder="💡 Nhập giải thích lâm sàng cho câu hỏi này..." oninput="editExp(${qIdx}, this.value)">
+                <input type="text" class="input-box" style="margin-top:6px;" value="${q.explanation.replace(/"/g, '&quot;')}" placeholder="💡 Nhập giải thích lâm sàng (không bắt buộc)..." oninput="editExp(${qIdx}, this.value)">
             `;
             cont.appendChild(card);
         });
@@ -431,7 +455,7 @@
         questions.push({
             title: `Câu ${n}: Nhập nội dung câu hỏi lâm sàng mới...`,
             opts: [{ text: "Phương án A", isC: true }, { text: "Phương án B", isC: false }, { text: "Phương án C", isC: false }, { text: "Phương án D", isC: false }],
-            explanation: "Giải thích cơ chế bệnh sinh..."
+            explanation: ""
         });
         syncPreviewToRaw(false); renderPreview();
     }
@@ -447,7 +471,7 @@
 
     function syncPreviewToRaw(notify = true) {
         document.getElementById('raw-input').value = buildStandardString();
-        if (notify) showToast("🔄 Đã đồng bộ chỉnh sửa từ Preview sang ô Text!");
+        if (notify) showToast("✨ Đã biến ô văn bản bên trái thành chuẩn * và •!");
     }
 
     function copyColD() {
@@ -467,7 +491,7 @@
         const escaped = '"' + code.replace(/"/g, '""') + '"';
         navigator.clipboard.writeText(`${id}\t${title}\t${desc}\t${escaped}`);
         saveSnapshot('Xuất TSV Sheets');
-        showToast("🚀 Đã copy nguyên hàng 4 cột (kèm nhãn Chuyên ngành)! Bấm ô A2 trên Sheets rồi Ctrl+V.");
+        showToast("🚀 Đã copy nguyên hàng 4 cột! Chỉ cần bấm 1 lần vào ô A2 trên Sheets rồi Ctrl+V.");
     }
 
     function exportJSON() {
@@ -564,37 +588,33 @@
         window.open(`${page}.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}`, '_blank');
     }
 
+    // Nạp sẵn đúng 4 câu PDF của bạn để kiểm tra ngay
     function loadSample() {
-        document.getElementById('raw-input').value = `Câu 1: Các triệu chứng lâm sàng điển hình của viêm tủy không hồi phục có triệu chứng bao gồm những gì? (Chọn nhiều đáp án)
-*A. Đau tự phát kéo dài sau khi hết kích thích nhiệt
-*B. Đau lan lên thái dương hoặc tai cùng bên
-• C. Thử tủy điện âm tính hoàn toàn
-• D. Luôn có sưng mặt lan tỏa vùng dưới hàm
-Giải thích: Viêm tủy không hồi phục đặc trưng bởi cơn đau tự phát, kéo dài và đau lan tỏa theo nhánh dây V.
-
-Câu 2: Hình ảnh X-quang quanh chóp ở răng 46 có tổn thương thấu quang giới hạn rõ quanh chóp chân xa. Chẩn đoán phân biệt cần đặt ra là:
-• A. Viêm tủy có hồi phục
-*B. U hạt quanh chóp hoặc Nang quanh chóp
-• C. Viêm quanh thân răng
-• D. Sâu ngà nông
-Giải thích: Thấu quang quanh chóp răng chết tủy thường là u hạt hoặc nang chân răng.`;
+        document.getElementById('raw-input').value = `Câu 1: Mức độ phóng đại thông thường của một kính hiển vi
+nha khoa là
+A. 1,5 đến 25 lần B. 1,5 đến 20 lần
+C. 1,5 đến 35 lần * D. 1,5 đến 30 lần
+Câu 2: Khẳng định nào sau đây là đúng về việc trám bít ống tủy,trừ
+- A. Trám bít để đưa chất trám ra ngoài lỗ chóp chân răng
+B. Với răng chưa đóng chóp là dùng kĩ thuật sinh chóp
+C. Trám bít để vi khuẩn không phát triển
+D. Trám bít để bịt kín hệ thống ống tủy không để lại khoảng
+trống
+Câu 3: Vật liệu trám ngược nào sau đây có tính tương hợp
+sinh học kém nhất
+- A. Amalgan B. MTA
+C. IRM D. Biodentine
+Câu 4: Để tăng hiệu quả của thuốc đặt nội tuỷ, có thể trộn
+Ca(OH)2 với chất nào sau đây?
+A. Cả A và B đúng * B. Chlorhexidine
+C. Cả A và B sai D. NaOCl`;
         parseRawToQuestions();
-        showToast("📄 Đã nạp đề mẫu (gồm cả câu 1 đáp án và câu nhiều đáp án)!");
+        showToast("📄 Đã tự động nối dòng gãy PDF và nhận diện cả dấu * lẫn dấu -!");
     }
 
     window.onload = () => {
         renderHistorySelect();
-        const saved = JSON.parse(localStorage.getItem('rhm_studio_autosave') || 'null');
-        if (saved && saved.raw) {
-            document.getElementById('meta-id').value = saved.id || 'de_rhm_01';
-            document.getElementById('meta-title').value = saved.title || 'Đề RHM';
-            if (saved.spec) document.getElementById('meta-spec').value = saved.spec;
-            document.getElementById('meta-desc').value = saved.desc || '';
-            document.getElementById('raw-input').value = saved.raw;
-            parseRawToQuestions();
-        } else {
-            loadSample();
-        }
+        loadSample();
     };
 </script>
 </body>
